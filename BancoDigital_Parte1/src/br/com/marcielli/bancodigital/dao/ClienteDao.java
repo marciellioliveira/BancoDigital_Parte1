@@ -10,11 +10,6 @@ public class ClienteDao {
 
 	public boolean addCliente(ClienteEntity cliente, int cod) {
 		
-		for(ClienteEntity c : listaDeClientes) {
-			if(cliente.getCpf().equals(c.getCpf())) {
-				return true;
-			}
-		}
 		listaDeClientes.add(cod, cliente);
 		return false;
 	}
@@ -22,6 +17,17 @@ public class ClienteDao {
 	public ArrayList<ClienteEntity> buscarClientes() {
 	
 		return listaDeClientes;
+	}
+	
+	public boolean temCpf(String cpf) {
+		for(ClienteEntity c : listaDeClientes) {
+			
+			if(cpf.equals(c.getCpf())) {				
+				return true;
+			}
+		}		
+		
+		return false;
 	}
 	
 	public boolean removerCliente(String cpf) {
@@ -35,10 +41,5 @@ public class ClienteDao {
 			}		
 			
 			return false;
-	}
-	
-
-	
-	
-	
+	}	
 }

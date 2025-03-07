@@ -1,6 +1,6 @@
 package br.com.marcielli.bancodigital.entity;
 
-public class ClienteEntity {
+public class ClienteEntity { //IDÉIA DO CLIENTE
 	
 	private String cpf;
 	private String nome;

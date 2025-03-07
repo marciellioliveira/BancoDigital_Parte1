@@ -3,85 +3,211 @@ package br.com.marcielli.bancodigital.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
+import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
+import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
 
 public class ClienteService {
 	
-	private ClienteDao clienteDao = new ClienteDao();
+	private ClienteDao clienteDao = new ClienteDao();	
 	
-	public boolean adicionarClienteEntityEmDao(String cpf, String nome, String dataNascimento, Endereco endereco, int cod) {
+	@SuppressWarnings("finally")
+	public void adicionarClienteEntityEmDao(String cpf, String nome, String dataNascimento, Endereco endereco, int cod) throws TamanhoDoCpfException, CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException {
 		
-		try {
-			
-			//Instanciar o entity para pegar o que o usuario digitou como parametro
-			ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimento, endereco);
-			
-			//Setando os dados que recebi como parametro
-			if(!validarCPF(cpf))
-			{	
-				if(cpf.length() > 11) {
-					System.err.println("Você digitou o cpf '"+cpf+"' com "+cpf.length()+" dígitos.\nCPF deve conter 11 dígitos! Digite um CPF válido.");
-				} else if (cpf.length() < 11) {
-					System.err.println("Você digitou o cpf '"+cpf+"' com APENAS "+cpf.length()+" dígitos.\nCPF deve conter 11 dígitos! Digite um CPF válido.");
-				}
-				return false;
-			}
-			
-			if(!validarNome(nome)) {				
-				return false;				
-			}
-			
-			if(!validarDataDeNascimento(dataNascimento)) {
-				return false;
-			}
-			
-			if(!validarCep(endereco)) {
-			
-				return false;
-			}
-			
-			
+		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimento, endereco);	
 		
-			clienteEntity.setCpf(cpf);
-			clienteEntity.setNome(nome);
-			clienteEntity.setDataNascimento(dataNascimento);
-			clienteEntity.setEndereco(endereco);
+		
+			try {
+				
+				removerCaracteresEspeciaisCpf(cpf); 							
+				verTamanhoCpf(cpf);
+				verCpfDuplicado(cpf);
+				validarUltimosNumerosDoCpf(cpf);
 			
-			//Adiciona os dados do endereço
-			clienteDao.addCliente(clienteEntity, cod);			
-			//clienteDao.buscarClientes();
-			return true;
+			} catch (CpfJaCadastradoException e) {
+				
+				System.err.println("CPF duplicado: "+e.getMessage());
+				
+			} catch (TamanhoDoCpfException e) {
+				
+				removerCaracteresEspeciaisCpf(cpf); 
+				System.err.println("Tamanho do CPF: "+e.getMessage());
+				
+			} catch (ValidarUltimosNumerosDoCpfException e) {
+				
+				System.err.println("CPF: "+e.getMessage());
+				
+			} finally {
+				
+				clienteEntity.setCpf(cpf);
+				clienteEntity.setNome(nome);
+				clienteEntity.setDataNascimento(dataNascimento);
+				clienteEntity.setEndereco(endereco);
+
+				clienteDao.addCliente(clienteEntity, cod);	
+				
+			}
+		
+
 			
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return false;
-		}		
+				
+		
+		
+//		try {			
+//			
+//			ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimento, endereco);		
+//			
+//			if(!validarCPF(cpf))
+//			{	
+//				
+//				return false;
+//			}
+//			
+//			if(!validarNome(nome)) {				
+//				return true;				
+//			}
+//			
+//			if(!validarDataDeNascimento(dataNascimento)) {
+//				return true;
+//			}
+//			
+//			if(!validarCep(endereco)) {
+//			
+//				return true;
+//			}
+//		
+//			clienteEntity.setCpf(cpf);
+//			clienteEntity.setNome(nome);
+//			clienteEntity.setDataNascimento(dataNascimento);
+//			clienteEntity.setEndereco(endereco);
+//
+//			clienteDao.addCliente(clienteEntity, cod);			
+//
+//			return true;
+//			
+//		
+//		} catch (CpfException e) {	
+//			
+//			System.out.println("Teste cpf: "+e.getCpf());
+//			System.err.println("Erro: "+e.getMessage()+"\n");
+//			return true;
+//			
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//			return true;
+//		} finally {
+//			
+//		}
 	}
 	
+
+	//Validação de CPF
+	private void removerCaracteresEspeciaisCpf(String cpf) {
+		cpf = cpf.replace(".", "").replace("-", "");
+	}
+	
+	private void verTamanhoCpf(String cpf) throws TamanhoDoCpfException {
+		if(cpf.length() < 11 || cpf.length() > 11){
+			throw new TamanhoDoCpfException("Você digitou "+cpf.length()+" para CPF. \nO CPF deve ter tamanho 11.\nDigite novamente");
+		} 
+	}
+	
+	private void verCpfDuplicado(String cpf) throws CpfJaCadastradoException {
+		if(clienteDao.temCpf(cpf)) {
+			throw new CpfJaCadastradoException("O cpf "+cpf+" já está cadastrado com outro usuário.\nAdicione um CPF único para cada cliente.\n");
+		}
+	}
+	
+	private void validarUltimosNumerosDoCpf(String cpf) throws ValidarUltimosNumerosDoCpfException {
+	int valor = 0;
+	int j = 10;
+
+
+	for(int i=0; i<cpf.length(); i++) { 
+	
+		while(j>1) { 
+			
+			char letra = cpf.charAt(i);
+			int caracter = letra - '0';
+			
+			valor += caracter * j; 			
+			j--;
+			break;
+			
+		}		
+	}
+			
+	int resultado = (valor * 10) % 11;
+		
+	if(resultado == 10) {
+		resultado = 0;
+	} else {
+		
+		char penultimoDig = cpf.charAt(9);			
+		int penultimoDigito = penultimoDig - '0';
+		
+		
+		if(resultado == penultimoDigito) {			
+		
+			int b = 11;
+		
+			int valor2 = 0;
+			
+			for(int a=0; a<10; a++) { 
+				while(b>1) { 
+					char letra2 = cpf.charAt(a); 
+					int caracter2 = letra2 - '0';
+					
+					valor2 += caracter2 * b; 
+					
+					b--;
+					
+					break;
+				}
+			}
+		
+		
+		int resultado2 = (valor2 * 10) % 11;
+		
+		char ultimoDig = cpf.charAt(10);
+		int ultimoDigito = ultimoDig - '0';		
+		
+		if(!(resultado2 == ultimoDigito)) {
+			throw new ValidarUltimosNumerosDoCpfException("O CPF '"+cpf+"' digitado não é válido. Por favor, digite um CPF válido.");
+		}	
+		
+		} 		
+	}	
+}
+	
+	//Fim Validação de CPF
+
+
+
+
+
+
+
 	private boolean validarCep(Endereco endereco) {
-		String cep=endereco.getCep();		
+		String cep = endereco.getCep();		
 		String cepPart1 = "";
 		String line = "-";
-		String cepPart2="";
+		String cepPart2 ="";
 		String novoCep = "";
 		
 			if(cep.length() != 8) {
 				System.err.println("Você digitou um cep com "+cep.length()+", sendo que um CEP deve ter 8 caracteres.");
 				
-				return false;
-				
+				return false;				
 			}
 			
 			cepPart1 = cep.substring(0,5);
 			cepPart2 = cep.substring(5,8);
 			
-			novoCep = cepPart1.concat(line).concat(cepPart2);
-			
-		
+			novoCep = cepPart1.concat(line).concat(cepPart2);				
 		
 		return true;
 	}
@@ -143,110 +269,6 @@ public class ClienteService {
 		}
 		
 		return true;
-	}
-
-	private boolean validarCPF(String cpf) {	
-		
-		String novoCpf = validarCaracteresEspeciais(cpf);	
-		
-		try {
-			if(!validarCpfCompleto(novoCpf)) {
-	
-					return false;
-				}
-			
-			for(ClienteEntity c : clienteDao.buscarClientes()) {
-				if(cpf.equals(c.getCpf())) {
-					System.err.println("O cpf "+cpf+" já está cadastrado com outro usuário.\nAdicione um CPF único para cada cliente.\n");
-					return false;
-				}
-			}
-		
-			return true;	
-		} catch (Exception e) {
-			System.err.println("Erro: "+e.getLocalizedMessage());
-		}
-		
-		
-		
-		return true;
-	}
-
-	private boolean validarCpfCompleto(String novoCpf) {
-		int valor = 0;
-		int j = 10;
-	
-		if(novoCpf.length() < 11 || novoCpf.length() > 11) {
-			return false;
-		}
-		// Fazer a validação do penultimo digito		
-		
-		for(int i=0; i<novoCpf.length(); i++) { 
-		
-			while(j>1) { 
-				
-				char letra = novoCpf.charAt(i);
-				int caracter = letra - '0';
-				
-				valor += caracter * j; 			
-				j--;
-				break;
-				
-			}		
-		}
-				
-		int resultado = (valor * 10) % 11;
-			
-		if(resultado == 10) {
-			resultado = 0;
-		} else {
-			
-			char penultimoDig = novoCpf.charAt(9);			
-			int penultimoDigito = penultimoDig - '0';
-			
-			
-			if(resultado == penultimoDigito) {
-		
-				//Validar o segundo digito				
-			
-				int b = 11;
-			
-				int valor2 = 0;
-				
-				for(int a=0; a<10; a++) { 
-					while(b>1) { 
-						char letra2 = novoCpf.charAt(a); 
-						int caracter2 = letra2 - '0';
-						
-						valor2 += caracter2 * b; 
-						
-						b--;
-						
-						break;
-					}
-				}
-			
-			
-			int resultado2 = (valor2 * 10) % 11;
-			
-			char ultimoDig = novoCpf.charAt(10);
-			int ultimoDigito = ultimoDig - '0';
-			if(resultado2 == ultimoDigito) {
-				return true;
-			}			
-			} 
-			
-		}
-		return false;
-	}
-
-	private String validarCaracteresEspeciais(String cpf) {
-		if(cpf.contains(".") || cpf.contains("-")) {
-			cpf = cpf.replace(".", "").replace("-", "");
-			return cpf;
-		} 		
-		
-		return cpf;
 	}
 
 	public ArrayList<ClienteEntity> listarClientesDaoEmEntity() {

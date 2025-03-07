@@ -1,19 +1,20 @@
 package br.com.marcielli.bancodigital.view;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
+import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
+import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
 import br.com.marcielli.bancodigital.service.ClienteService;
 
 public class Main { //VIEW
 
 	
-	public static void main(String[] args) {	
+	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, ValidarUltimosNumerosDoCpfException {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
@@ -33,8 +34,6 @@ public class Main { //VIEW
 		LocalDate dataNascimentoDATE; 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 		
 		String dataNascimento = "";
-
-		
 		
 		Endereco endereco = new Endereco();
 		endereco.setCep(cep);
@@ -68,11 +67,9 @@ public class Main { //VIEW
 						bairro = "Margem Direita";
 						complemento = "Casa";
 						
-						cpf = "935.125.857-45";
+						cpf = "926.579.490-96"; //926.579.490-96
 						cpf = cpf.replace(".", "").replace("-", "");
-						
 						nome = "Marcielli Oliveira";
-						//dataNascimento = "01/12/1990";
 						dataNascimentoDATE = LocalDate.of(1990, 12, 01);	
 						dataNascimento = dataNascimentoDATE.format(formatter);
 						
@@ -97,11 +94,9 @@ public class Main { //VIEW
 						bairro = "São Benedito";
 						complemento = "Apartamento 23";
 						
-						cpf = "405.288.008-09"; //405.288.008-09
+						cpf = "954.698.100-11"; //954.698.100-11
 						cpf = cpf.replace(".", "").replace("-", "");
-						
 						nome = "João Mauricio"; //João Mauricio
-						//dataNascimento = "05/10/2005";
 						dataNascimentoDATE = LocalDate.of(2005, 10, 05);	
 						dataNascimento = dataNascimentoDATE.format(formatter);
 						
@@ -126,11 +121,9 @@ public class Main { //VIEW
 						bairro = "Marcos José"; //Marcos José
 						complemento = "";
 						
-						cpf = "996.660.620-38";
+						cpf = "126.724.390-28"; //126.724.390-28
 						cpf = cpf.replace(".", "").replace("-", "");
-						
 						nome = "Maria Luiza";
-						//dataNascimento = "05/02/1987";
 						dataNascimentoDATE = LocalDate.of(1987, 02, 05);	
 						dataNascimento = dataNascimentoDATE.format(formatter);
 						

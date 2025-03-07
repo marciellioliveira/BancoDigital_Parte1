@@ -1,7 +1,5 @@
 package br.com.marcielli.bancodigital.entity;
 
-import br.com.marcielli.bancodigital.service.ClienteService;
-
 public  class Endereco { //A IDEIA DO OBJETO
 	
 	private String cep;
@@ -96,9 +94,7 @@ public  class Endereco { //A IDEIA DO OBJETO
 		novoCep = cepPart1.concat(line).concat(cepPart2);
 		
 		return novoCep;
-	}
-
-	
+	}	
 	
 	@Override
 	public String toString() {
