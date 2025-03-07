@@ -82,18 +82,25 @@ public  class Endereco { //A IDEIA DO OBJETO
 		this.complemento = complemento;
 	}
 	
-	public String mascararCep(String cep) {				
-		String cepPart1 = "";
-		String line = "-";
-		String cepPart2="";
-		String novoCep = "";		
+	public String mascararCep(String cep) {	
+	
+		if((cep.length() >= 8) && !cep.contains(".") && !cep.contains("-") ) {
+			
+			String cepPart1 = "";
+			String line = "-";
+			String cepPart2="";
+			String novoCep = "";		
+			
+			cepPart1 = cep.substring(0,5);
+			cepPart2 = cep.substring(5,8);		
+			
+			novoCep = cepPart1.concat(line).concat(cepPart2);
+			
+			cep = novoCep;
+		}	
 		
-		cepPart1 = cep.substring(0,5);
-		cepPart2 = cep.substring(5,8);		
-		
-		novoCep = cepPart1.concat(line).concat(cepPart2);
-		
-		return novoCep;
+		return cep;
+	
 	}	
 	
 	@Override

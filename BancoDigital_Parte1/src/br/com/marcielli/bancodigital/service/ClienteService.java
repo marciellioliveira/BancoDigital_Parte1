@@ -7,6 +7,7 @@ import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
 
@@ -15,7 +16,8 @@ public class ClienteService {
 	private ClienteDao clienteDao = new ClienteDao();	
 	
 	@SuppressWarnings("finally")
-	public void adicionarClienteEntityEmDao(String cpf, String nome, String dataNascimento, Endereco endereco, int cod) throws TamanhoDoCpfException, CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException {
+	public void adicionarClienteEntityEmDao(String cpf, String nome, String dataNascimento, Endereco endereco, int cod) throws TamanhoDoCpfException, 
+	CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, TamanhoDoCepException {
 		
 		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimento, endereco);	
 		
@@ -26,6 +28,8 @@ public class ClienteService {
 				verTamanhoCpf(cpf);
 				verCpfDuplicado(cpf);
 				validarUltimosNumerosDoCpf(cpf);
+				
+				validarCep(endereco);
 			
 			} catch (CpfJaCadastradoException e) {
 				
@@ -39,6 +43,10 @@ public class ClienteService {
 			} catch (ValidarUltimosNumerosDoCpfException e) {
 				
 				System.err.println("CPF: "+e.getMessage());
+			
+			} catch (TamanhoDoCepException e) {
+				removerCaracteresEspeciaisCep(endereco.getCep());
+				System.err.println("CEP: "+e.getMessage());
 				
 			} finally {
 				
@@ -186,31 +194,22 @@ public class ClienteService {
 	//Fim Validação de CPF
 
 
-
-
-
-
-
-	private boolean validarCep(Endereco endereco) {
-		String cep = endereco.getCep();		
-		String cepPart1 = "";
-		String line = "-";
-		String cepPart2 ="";
-		String novoCep = "";
-		
-			if(cep.length() != 8) {
-				System.err.println("Você digitou um cep com "+cep.length()+", sendo que um CEP deve ter 8 caracteres.");
-				
-				return false;				
-			}
-			
-			cepPart1 = cep.substring(0,5);
-			cepPart2 = cep.substring(5,8);
-			
-			novoCep = cepPart1.concat(line).concat(cepPart2);				
-		
-		return true;
+	//Validar CEP
+	
+	private void removerCaracteresEspeciaisCep(String cep) {
+		cep = cep.replace(".", "").replace("-", "");
 	}
+	
+	private void validarCep(Endereco endereco) throws TamanhoDoCepException {
+		
+		String cep = endereco.getCep();		
+		
+			if(cep.length() != 8) {				
+				throw new TamanhoDoCepException("Você digitou um cep com "+cep.length()+" caracteres. Digite um CEP com 8 caracteres sem caracteres especiais.");		
+			}				
+	}
+	//Fim Validação de CEP
+
 
 	private boolean validarDataDeNascimento(String dataNascimento) {
 

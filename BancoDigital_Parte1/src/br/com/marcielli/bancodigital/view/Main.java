@@ -7,6 +7,7 @@ import java.util.Scanner;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
 import br.com.marcielli.bancodigital.service.ClienteService;
@@ -14,7 +15,8 @@ import br.com.marcielli.bancodigital.service.ClienteService;
 public class Main { //VIEW
 
 	
-	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, ValidarUltimosNumerosDoCpfException {	
+	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
+	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
@@ -58,7 +60,7 @@ public class Main { //VIEW
 					
 					if(i == 0) {
 						
-						cep = "12.630-000";
+						cep = "12.630-000"; //12.630-000
 						cep = cep.replace(".", "").replace("-", "");
 						cidade = "Cachoeira Paulista";
 						estado = "SP";
