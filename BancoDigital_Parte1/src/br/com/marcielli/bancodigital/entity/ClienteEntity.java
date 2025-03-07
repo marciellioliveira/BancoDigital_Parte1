@@ -1,17 +1,20 @@
 package br.com.marcielli.bancodigital.entity;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 public class ClienteEntity { //IDÉIA DO CLIENTE
 	
 	private String cpf;
 	private String nome;
-	private String dataNascimento;
+	private LocalDate dataNascimento;
 	private Endereco endereco;
 	
-	public ClienteEntity(String cpf, String nome, String dataNascimento, Endereco endereco) {
+	public ClienteEntity(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco) {
 		super();
 		this.cpf = cpf;
 		this.nome = nome;
-		this.dataNascimento = dataNascimento;
+		this.dataNascimento = dataNascimentoDATE;
 		this.endereco = endereco;
 	}
 	
@@ -33,11 +36,11 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 		this.nome = nome;
 	}
 	
-	public String getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 	
-	public void setDataNascimento(String dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 	

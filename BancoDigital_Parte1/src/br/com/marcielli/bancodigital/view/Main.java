@@ -6,7 +6,10 @@ import java.util.Scanner;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
+import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
+import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
@@ -16,7 +19,7 @@ public class Main { //VIEW
 
 	
 	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
-	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException {	
+	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
@@ -33,9 +36,7 @@ public class Main { //VIEW
 		
 		String cpf = "";
 		String nome = "";
-		LocalDate dataNascimentoDATE; 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 		
-		String dataNascimento = "";
+		LocalDate dataNascimentoDATE = LocalDate.of(1990, 10, 05);
 		
 		Endereco endereco = new Endereco();
 		endereco.setCep(cep);
@@ -72,8 +73,7 @@ public class Main { //VIEW
 						cpf = "926.579.490-96"; //926.579.490-96
 						cpf = cpf.replace(".", "").replace("-", "");
 						nome = "Marcielli Oliveira";
-						dataNascimentoDATE = LocalDate.of(1990, 12, 01);	
-						dataNascimento = dataNascimentoDATE.format(formatter);
+						dataNascimentoDATE = LocalDate.of(1990, 12, 01); //1990, 12, 01	
 						
 						endereco = new Endereco();
 						endereco.setCep(cep);
@@ -100,7 +100,6 @@ public class Main { //VIEW
 						cpf = cpf.replace(".", "").replace("-", "");
 						nome = "João Mauricio"; //João Mauricio
 						dataNascimentoDATE = LocalDate.of(2005, 10, 05);	
-						dataNascimento = dataNascimentoDATE.format(formatter);
 						
 						endereco = new Endereco();
 						endereco.setCep(cep);
@@ -127,7 +126,6 @@ public class Main { //VIEW
 						cpf = cpf.replace(".", "").replace("-", "");
 						nome = "Maria Luiza";
 						dataNascimentoDATE = LocalDate.of(1987, 02, 05);	
-						dataNascimento = dataNascimentoDATE.format(formatter);
 						
 						endereco = new Endereco();
 						endereco.setCep(cep);
@@ -139,7 +137,7 @@ public class Main { //VIEW
 						endereco.setComplemento(complemento);
 					}
 					
-					clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimento, endereco, i);
+					clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, i);
 				}
 				
 				System.out.println("Clientes adicionados:\n");

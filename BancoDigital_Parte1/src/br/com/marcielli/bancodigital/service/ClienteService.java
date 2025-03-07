@@ -1,12 +1,22 @@
 package br.com.marcielli.bancodigital.service;
 
+import java.sql.Date;
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.text.DateFormatter;
+
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
+import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
+import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
@@ -16,20 +26,29 @@ public class ClienteService {
 	private ClienteDao clienteDao = new ClienteDao();	
 	
 	@SuppressWarnings("finally")
-	public void adicionarClienteEntityEmDao(String cpf, String nome, String dataNascimento, Endereco endereco, int cod) throws TamanhoDoCpfException, 
-	CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, TamanhoDoCepException {
+	public void adicionarClienteEntityEmDao(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco, int cod) throws TamanhoDoCpfException, 
+	CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException {
 		
-		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimento, endereco);	
+		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimentoDATE, endereco);	
 		
 		
 			try {
 				
-				removerCaracteresEspeciaisCpf(cpf); 							
+				removerCaracteresEspeciaisCpf(cpf); 
+				
 				verTamanhoCpf(cpf);
+				
 				verCpfDuplicado(cpf);
+				
 				validarUltimosNumerosDoCpf(cpf);
 				
 				validarCep(endereco);
+				
+				validarDataDeNascimento(dataNascimentoDATE);
+				
+				validarTamanhoNome(nome);
+				
+				validarCaracteresEspeciaisNome(nome);
 			
 			} catch (CpfJaCadastradoException e) {
 				
@@ -45,14 +64,27 @@ public class ClienteService {
 				System.err.println("CPF: "+e.getMessage());
 			
 			} catch (TamanhoDoCepException e) {
+				
 				removerCaracteresEspeciaisCep(endereco.getCep());
 				System.err.println("CEP: "+e.getMessage());
+				
+			} catch (DataDeNascMenor18Exception e) {
+				
+				System.err.println("Data de Nascimento: "+e.getMessage());
+			
+			} catch (NomeMenor2EMaior100Exception e) {
+				
+				System.err.println("Nome: "+e.getMessage());
+				
+			} catch (CaracterEspecialNoNomeException e) {
+				
+				System.err.println("Nome: "+e.getMessage());
 				
 			} finally {
 				
 				clienteEntity.setCpf(cpf);
 				clienteEntity.setNome(nome);
-				clienteEntity.setDataNascimento(dataNascimento);
+				clienteEntity.setDataNascimento(dataNascimentoDATE);
 				clienteEntity.setEndereco(endereco);
 
 				clienteDao.addCliente(clienteEntity, cod);	
@@ -209,66 +241,61 @@ public class ClienteService {
 			}				
 	}
 	//Fim Validação de CEP
-
-
-	private boolean validarDataDeNascimento(String dataNascimento) {
-
-		if(dataNascimento.length() >= 4) {
-			String anoNascimento = dataNascimento.substring(dataNascimento.length() - 4);
-			int idadeAtual = Integer.parseInt(anoNascimento);
-			
-			LocalDate dataAtual;
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
-			String dataAtualNova = LocalDate.now().format(formatter);
-			
-			if(dataAtualNova.length() >= 4) {
-				String anoAtualizado = dataAtualNova.substring(dataAtualNova.length() - 4);
-				int anoAtualizado2 = Integer.parseInt(anoAtualizado);
-				
-				if((anoAtualizado2 - idadeAtual) >= 18) {					
-					return true;
-				} else {
-					System.out.println("O cliente que você tentou cadastrar é menor de idade.\nTente adicionar um cliente com idade maior ou igual a 18 anos.\n");
-					return false;
-				}
-			}
-		}
+	
+	
+	
+	//Validar Data de Nascimento
+	private void validarDataDeNascimento(LocalDate dataNascimentoDATE) throws DataDeNascMenor18Exception {		
 		
-		return true;
+		int anoDeNascimento = dataNascimentoDATE.getYear();
+		int anoAtual = LocalDate.now().getYear();
+		
+		if(anoAtual - anoDeNascimento < 18) {
+			throw new DataDeNascMenor18Exception("O cliente que você tentou cadastrar é menor de idade.\\nTente adicionar um cliente com idade maior ou igual a 18 anos.\n");
+		}
+	
 	}
-
-	private boolean validarNome(String nome) {
+	//Fim Validação Data de Nascimento
+	
+	//Validação do Nome
+	private void validarTamanhoNome(String nome) throws NomeMenor2EMaior100Exception {
+		String tam = "";
+		
 		if(nome.length() < 2 || nome.length()> 100) {
+			
 			if(nome.length() < 2) {
-				System.err.println("Você tentou cadastrar um cliente chamado '"+nome+"' com apenas "+nome.length()+" caracter no nome.\nTente cadastrar um cliente com um nome MAIOR.");
+				tam = "MAIOR";
 			}
 			
-			if(nome.length() > 100) {
-				System.err.println("Você tentou cadastrar um cliente chamado '"+nome+"' com "+nome.length()+" caracteres no nome.\nTente cadastrar um cliente com um nome MENOR.");
-			}			
+			if(nome.length() > 2) {
+				tam = "MENOR";
+			}
 			
-			return false;
-		} 
+			throw new NomeMenor2EMaior100Exception("Você tentou cadastrar um cliente chamado '"+nome+"' com "+nome.length()+" caracter no nome.\nTente cadastrar um cliente com um nome "+tam+".");
+		}	
+	}	
+	
+	private void validarCaracteresEspeciaisNome(String nome) throws CaracterEspecialNoNomeException {
 		
-
-		if(nome.contains(",") || nome.contains(".") || nome.contains("!") || nome.contains("\\") || nome.contains("\"") || nome.contains("/") || nome.contains("#") || nome.contains("$") || nome.contains("%") || nome.contains("&") || nome.contains("*") || nome.contains(":") || nome.contains(";") || nome.contains("+") || nome.contains("<") || nome.contains(">") || nome.contains("=") || nome.contains("?") || nome.contains("@") || nome.contains("[") || nome.contains("]") || nome.contains("_") || nome.contains("{") || nome.contains("}") || nome.contains("|")) {
-			System.err.println("O nome não pode ter pontuações: "+nome);
-			return false;
-			
-		}
-		for(int i=0; i<nome.length(); i++) {
-			
+		for(int i=0; i<nome.length(); i++) {			
 			char letra = nome.charAt(i);
 			Boolean flag = Character.isDigit(letra);
 			
 			if(flag) {
-				System.err.println("O nome '"+nome+"' digitado possui um número.\nO nome de cliente não deve possuir números, tente adicionar novamente!");
-				return false;
+				throw new CaracterEspecialNoNomeException("O nome '"+nome+"' digitado possui número.\nO nome de cliente deve conter apenas letras, tente adicionar novamente!");
+				
 			}
-		}
+		}			
 		
-		return true;
+		if(nome.contains(",") || nome.contains(".") || nome.contains("!") || nome.contains("\\") || nome.contains("\"") || nome.contains("/") || nome.contains("#") || nome.contains("$") || nome.contains("%") || nome.contains("&") || nome.contains("*") || nome.contains(":") || nome.contains(";") || nome.contains("+") || nome.contains("<") || nome.contains(">") || nome.contains("=") || nome.contains("?") || nome.contains("@") || nome.contains("[") || nome.contains("]") || nome.contains("_") || nome.contains("{") || nome.contains("}") || nome.contains("|")) {
+			throw new CaracterEspecialNoNomeException("O nome '"+nome+"' digitado possui caracter especial.\nO nome de cliente deve conter apenas letras, tente adicionar novamente!");
+		}		
 	}
+	
+	
+	
+	//Fim Validação do Nome
+		
 
 	public ArrayList<ClienteEntity> listarClientesDaoEmEntity() {
 		return clienteDao.buscarClientes();
