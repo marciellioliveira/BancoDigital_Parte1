@@ -15,16 +15,17 @@ import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
+import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 
 public class ClienteService {
 	
 	private ClienteDao clienteDao = new ClienteDao();	
 	
 	@SuppressWarnings("finally")
-	public boolean adicionarClienteEntityEmDao(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco, int cod) throws TamanhoDoCpfException, 
+	public boolean adicionarClienteEntityEmDao(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco, int cod, CategoriasDeConta categoriaCliente) throws TamanhoDoCpfException, 
 	CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException {
 		
-		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimentoDATE, endereco);	
+		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimentoDATE, endereco, categoriaCliente);
 		
 		
 			try {
@@ -95,6 +96,7 @@ public class ClienteService {
 				clienteEntity.setNome(nome);
 				clienteEntity.setDataNascimento(dataNascimentoDATE);
 				clienteEntity.setEndereco(endereco);
+				clienteEntity.getCategoriaContaCliente();
 
 				clienteDao.addCliente(clienteEntity, cod);	
 				return true;

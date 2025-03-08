@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
+import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
+import br.com.marcielli.bancodigital.entity.ContaEntity;
+import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
@@ -13,6 +16,8 @@ import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
+import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
+import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 import br.com.marcielli.bancodigital.service.ClienteService;
 
 public class Main { //VIEW
@@ -38,6 +43,9 @@ public class Main { //VIEW
 		String nome = "";
 		LocalDate dataNascimentoDATE = LocalDate.of(1990, 10, 05);
 		
+		CategoriasDeConta categoriaCliente;
+		categoriaCliente = CategoriasDeConta.COMUM;
+		
 		Endereco endereco = new Endereco();
 		endereco.setCep(cep);
 		endereco.setCidade(cidade);
@@ -49,8 +57,8 @@ public class Main { //VIEW
 		clienteService = new ClienteService();
 		
 		do {
-			
-			System.out.println("1 - ADICIONAR\n2 - LISTAR\n3 - REMOVER\n0 - SAIR..: ");
+			System.out.println();
+			System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n0 - SAIR..: ");
 			opcao = input.nextInt();
 			
 			switch (opcao) {
@@ -74,6 +82,8 @@ public class Main { //VIEW
 						cpf = cpf.replace(".", "").replace("-", "");
 						nome = "Marcielli Oliveira";
 						dataNascimentoDATE = LocalDate.of(1990, 12, 01); //1990, 12, 01	
+						
+						categoriaCliente = CategoriasDeConta.COMUM;
 						
 						endereco = new Endereco();
 						endereco.setCep(cep);
@@ -101,6 +111,8 @@ public class Main { //VIEW
 						nome = "João Mauricio"; //João Mauricio
 						dataNascimentoDATE = LocalDate.of(2005, 10, 05);	
 						
+						categoriaCliente = CategoriasDeConta.COMUM;
+						
 						endereco = new Endereco();
 						endereco.setCep(cep);
 						endereco.setCidade(cidade);
@@ -127,6 +139,8 @@ public class Main { //VIEW
 						nome = "Maria Luiza";
 						dataNascimentoDATE = LocalDate.of(1987, 02, 05);	
 						
+						categoriaCliente = CategoriasDeConta.COMUM;
+						
 						endereco = new Endereco();
 						endereco.setCep(cep);
 						endereco.setCidade(cidade);
@@ -135,17 +149,16 @@ public class Main { //VIEW
 						endereco.setNumero(numero);
 						endereco.setBairro(bairro);
 						endereco.setComplemento(complemento);
-					}
+					}				
 					
-					
-						clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, i);
+						clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, i, categoriaCliente);
 				}
 				
 				System.out.println("Clientes adicionados:\n");
 			
 				for(ClienteEntity c : clienteService.listarClientesDaoEmEntity()) {
 					
-					System.out.println("Nome: "+c.getNome()+"\nCPF: "+c.getCpf()+"\nData de Nascimento: "+c.getDataNascimento()+"\nEndereço: "+c.getEndereco()+"\n");
+					System.out.println("Nome: "+c.getNome()+"\nCPF: "+c.getCpf()+"\nData de Nascimento: "+c.getDataNascimento()+"\nCategoria: "+c.getCategoriaContaCliente()+"\nEndereço: "+c.getEndereco()+"\n");
 				}				
 			break;
 			case 2:
@@ -185,6 +198,48 @@ public class Main { //VIEW
 				}			
 				
 				opcao = -1;
+			break;
+			case 4:
+				System.out.println("ABRIR CONTA");
+				System.out.println("\nClientes cadastrados: \n");	
+				
+				for(ClienteEntity c : clienteService.listarClientesDaoEmEntity()) {
+					System.out.println(c+"\n");
+				}
+				
+				System.out.println("Digite o CPF do cliente que deseja abrir uma conta: ");
+				String abrirContaCpf = input.next();
+				
+				System.out.println("Digite:\n1 - Abrir Conta Corrente\n2 - Abrir conta Poupança: ");
+				int tipoDeContaEscolhida = input.nextInt();
+				
+				System.out.println("Digite o valor do primeiro depósito: ");
+				float primeiroDeposito = input.nextFloat();				
+				
+				//CategoriasDeConta categoriaDeConta;
+				//categoriaDeConta = CategoriasDeConta.COMUM;	
+				
+				
+				if(tipoDeContaEscolhida == 1) {
+					//Conta Corrente escolhida
+					TiposDeConta contaCorrente;
+					contaCorrente = TiposDeConta.CONTA_CORRENTE;
+					
+					//System.out.println("Primeiro deposito: "+primeiroDeposito+" - Categoria: "+categoriaDeConta);
+					ContaCorrenteEntity criarContaCorrente = new ContaCorrenteEntity(cpf, primeiroDeposito, contaCorrente);
+					
+					
+				} else if(tipoDeContaEscolhida == 2) {
+					//Conta Poupança escolhida
+					TiposDeConta contaPoupanca;
+					contaPoupanca = TiposDeConta.CONTA_POUPANCA;
+					
+					//ContaPoupancaEntity criarContaPoupancaEntity = new ContaPoupancaEntity(abrirContaCpf, contaPoupanca, primeiroDeposito);
+					
+				}		
+				
+				
+				
 			break;
 			case 0:
 				System.out.println("PROGRAMA FINALIZADO COM SUCESSO!");
