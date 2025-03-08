@@ -1,19 +1,14 @@
 package br.com.marcielli.bancodigital.service;
 
-import java.sql.Date;
-import java.text.DateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.text.DateFormatter;
+import java.util.HashMap;
 
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
+import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
 import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
@@ -26,8 +21,8 @@ public class ClienteService {
 	private ClienteDao clienteDao = new ClienteDao();	
 	
 	@SuppressWarnings("finally")
-	public void adicionarClienteEntityEmDao(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco, int cod) throws TamanhoDoCpfException, 
-	CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException {
+	public boolean adicionarClienteEntityEmDao(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco, int cod) throws TamanhoDoCpfException, 
+	CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException {
 		
 		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimentoDATE, endereco);	
 		
@@ -42,6 +37,8 @@ public class ClienteService {
 				
 				validarUltimosNumerosDoCpf(cpf);
 				
+				validarCpfComNumerosIguais(cpf);
+				
 				validarCep(endereco);
 				
 				validarDataDeNascimento(dataNascimentoDATE);
@@ -53,34 +50,46 @@ public class ClienteService {
 			} catch (CpfJaCadastradoException e) {
 				
 				System.err.println("CPF duplicado: "+e.getMessage());
+				return false;
 				
 			} catch (TamanhoDoCpfException e) {
 				
 				removerCaracteresEspeciaisCpf(cpf); 
 				System.err.println("Tamanho do CPF: "+e.getMessage());
+				return false;
 				
 			} catch (ValidarUltimosNumerosDoCpfException e) {
 				
 				System.err.println("CPF: "+e.getMessage());
+				return false;
+				
+			} catch (CpfComNumerosIguaisException e) {
+				
+				System.err.println("CPF: "+e.getMessage());
+				return false;
 			
 			} catch (TamanhoDoCepException e) {
 				
 				removerCaracteresEspeciaisCep(endereco.getCep());
 				System.err.println("CEP: "+e.getMessage());
+				return false;
 				
 			} catch (DataDeNascMenor18Exception e) {
 				
 				System.err.println("Data de Nascimento: "+e.getMessage());
+				return false;
 			
 			} catch (NomeMenor2EMaior100Exception e) {
 				
-				System.err.println("Nome: "+e.getMessage());
+				System.err.println("Nome maior ou menor: "+e.getMessage());
+				return false;
 				
 			} catch (CaracterEspecialNoNomeException e) {
 				
-				System.err.println("Nome: "+e.getMessage());
+				System.err.println("Nome com caracter especial ou número: "+e.getMessage());
+				return false;
 				
-			} finally {
+			} 
 				
 				clienteEntity.setCpf(cpf);
 				clienteEntity.setNome(nome);
@@ -88,59 +97,8 @@ public class ClienteService {
 				clienteEntity.setEndereco(endereco);
 
 				clienteDao.addCliente(clienteEntity, cod);	
-				
-			}
-		
-
-			
-				
-		
-		
-//		try {			
-//			
-//			ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimento, endereco);		
-//			
-//			if(!validarCPF(cpf))
-//			{	
-//				
-//				return false;
-//			}
-//			
-//			if(!validarNome(nome)) {				
-//				return true;				
-//			}
-//			
-//			if(!validarDataDeNascimento(dataNascimento)) {
-//				return true;
-//			}
-//			
-//			if(!validarCep(endereco)) {
-//			
-//				return true;
-//			}
-//		
-//			clienteEntity.setCpf(cpf);
-//			clienteEntity.setNome(nome);
-//			clienteEntity.setDataNascimento(dataNascimento);
-//			clienteEntity.setEndereco(endereco);
-//
-//			clienteDao.addCliente(clienteEntity, cod);			
-//
-//			return true;
-//			
-//		
-//		} catch (CpfException e) {	
-//			
-//			System.out.println("Teste cpf: "+e.getCpf());
-//			System.err.println("Erro: "+e.getMessage()+"\n");
-//			return true;
-//			
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//			return true;
-//		} finally {
-//			
-//		}
+				return true;
+						
 	}
 	
 
@@ -222,6 +180,35 @@ public class ClienteService {
 		} 		
 	}	
 }
+	
+	public void validarCpfComNumerosIguais(String cpf) throws CpfComNumerosIguaisException {
+		//int i = 0;
+		int numOcorrencias = 1;		
+		HashMap<Character, Integer> findDuplicated = new HashMap<Character, Integer>();
+		String novoCpf = "";
+		
+		//Usar o hashmap para contar os caracteres duplicados da string cpf
+		
+		char[] meuCpf = cpf.toCharArray();
+		
+		for(int i=0; i<meuCpf.length; i++) {
+			if(!findDuplicated.containsKey(meuCpf[i])) {
+				findDuplicated.put(meuCpf[i], 1);
+				novoCpf += meuCpf[i];
+				
+			} else {
+				findDuplicated.put(meuCpf[i], 1);
+				numOcorrencias++; 
+			}
+		}
+		
+		if(numOcorrencias >= 11) {
+			throw new CpfComNumerosIguaisException("O CPF '"+cpf+"' digitado não é válido. Por favor, digite um CPF válido.");
+		}
+		
+	}
+	
+	
 	
 	//Fim Validação de CPF
 

@@ -1,12 +1,12 @@
 package br.com.marcielli.bancodigital.view;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
+import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
 import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
@@ -19,7 +19,7 @@ public class Main { //VIEW
 
 	
 	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
-	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException {	
+	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
@@ -113,7 +113,7 @@ public class Main { //VIEW
 					
 					if(i == 2) {
 						
-						cep = "45.245-268";
+						cep = "45.245-268"; //45.245-268
 						cep = cep.replace(".", "").replace("-", "");
 						cidade = "Rio de Janeiro";
 						estado = "RJ";
@@ -137,12 +137,14 @@ public class Main { //VIEW
 						endereco.setComplemento(complemento);
 					}
 					
-					clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, i);
+					
+						clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, i);
 				}
 				
 				System.out.println("Clientes adicionados:\n");
 			
 				for(ClienteEntity c : clienteService.listarClientesDaoEmEntity()) {
+					
 					System.out.println("Nome: "+c.getNome()+"\nCPF: "+c.getCpf()+"\nData de Nascimento: "+c.getDataNascimento()+"\nEndereço: "+c.getEndereco()+"\n");
 				}				
 			break;

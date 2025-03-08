@@ -15,6 +15,13 @@ public class ClienteDao {
 	}
 	
 	public ArrayList<ClienteEntity> buscarClientes() {
+		
+		for(ClienteEntity c: listaDeClientes) {
+			if(c.getCpf() != null) {
+				String cpfComCaracteres = c.getCpf().replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
+				c.setCpf(cpfComCaracteres);
+			}
+		}
 	
 		return listaDeClientes;
 	}

@@ -1,6 +1,5 @@
 package br.com.marcielli.bancodigital.entity;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class ClienteEntity { //IDÉIA DO CLIENTE
@@ -50,10 +49,11 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 	
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
-	}
+	}	
 
 	@Override
-	public String toString() {
+	public String toString() {		
+		
 		return "CPF: " + cpf + ", NOME: " + nome + ", DATA DE NASCIMENTO: " + dataNascimento + "\nENDEREÇO "
 				+ endereco;
 	}
