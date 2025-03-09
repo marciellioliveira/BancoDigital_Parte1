@@ -6,12 +6,10 @@ import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 public class ContaCorrenteEntity extends ContaEntity {
 	
 	private float taxaManutencaoMensal;
-	private CategoriasDeConta categoriaDeConta;
 	
-	public ContaCorrenteEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta) {
-		super(cpfClienteDaConta, saldo, tipoDeConta);	
-		
-		
+	
+	public ContaCorrenteEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta) {
+		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta);
 		
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;
@@ -38,12 +36,11 @@ public class ContaCorrenteEntity extends ContaEntity {
 		}
 	}
 	
-	
-	
+	public ContaCorrenteEntity() {}		
 
 	@Override
 	public float exibirSaldo() {		
-		return 0;
+		return getSaldo();
 	}
 
 	@Override
@@ -54,11 +51,12 @@ public class ContaCorrenteEntity extends ContaEntity {
 	public void descontarTaxaManutencaoMensal(ClienteEntity cliente) {
 		
 	}
-	
-	
 
-	
-	
-	
+	public float getTaxaManutencaoMensal() {
+		return taxaManutencaoMensal;
+	}
 
+	public void setTaxaManutencaoMensal(float taxaManutencaoMensal) {
+		this.taxaManutencaoMensal = taxaManutencaoMensal;
+	}
 }

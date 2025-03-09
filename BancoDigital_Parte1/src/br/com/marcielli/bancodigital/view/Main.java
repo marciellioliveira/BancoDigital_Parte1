@@ -3,12 +3,11 @@ package br.com.marcielli.bancodigital.view;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
-import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
-import br.com.marcielli.bancodigital.entity.ContaEntity;
-import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
+import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
@@ -19,42 +18,28 @@ import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfExcepti
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 import br.com.marcielli.bancodigital.service.ClienteService;
+import br.com.marcielli.bancodigital.service.ContaCorrenteService;
 
 public class Main { //VIEW
 
 	
 	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
-	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException {	
+	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
 		int cadastro = 3;
+		
 		ClienteService clienteService;
-		
-		String cep = "";
-		String cidade = "";
-		String estado = "";
-		String rua = "";
-		String numero = "";
-		String bairro = "";
-		String complemento = "";
-		
-		String cpf = "";
-		String nome = "";
-		LocalDate dataNascimentoDATE = LocalDate.of(1990, 10, 05);
+		clienteService = new ClienteService();
 		
 		CategoriasDeConta categoriaCliente;
 		categoriaCliente = CategoriasDeConta.COMUM;
 		
-		Endereco endereco = new Endereco();
-		endereco.setCep(cep);
-		endereco.setCidade(cidade);
-		endereco.setEstado(estado);
-		endereco.setRua(rua);
-		endereco.setNumero(numero);
-		endereco.setBairro(bairro);
-		endereco.setComplemento(complemento);
-		clienteService = new ClienteService();
+		
+		
+		
+		
 		
 		do {
 			System.out.println();
@@ -65,109 +50,97 @@ public class Main { //VIEW
 			case 1:
 				System.out.println("\nADICIONAR\n");
 				
-				for(int i=0; i<cadastro; i++) {
-					
-					if(i == 0) {
-						
-						cep = "12.630-000"; //12.630-000
-						cep = cep.replace(".", "").replace("-", "");
-						cidade = "Cachoeira Paulista";
-						estado = "SP";
-						rua = "12 de abril";
-						numero = "321";
-						bairro = "Margem Direita";
-						complemento = "Casa";
-						
-						cpf = "926.579.490-96"; //926.579.490-96
-						cpf = cpf.replace(".", "").replace("-", "");
-						nome = "Marcielli Oliveira";
-						dataNascimentoDATE = LocalDate.of(1990, 12, 01); //1990, 12, 01	
-						
-						categoriaCliente = CategoriasDeConta.COMUM;
-						
-						endereco = new Endereco();
-						endereco.setCep(cep);
-						endereco.setCidade(cidade);
-						endereco.setEstado(estado);
-						endereco.setRua(rua);
-						endereco.setNumero(numero);
-						endereco.setBairro(bairro);
-						endereco.setComplemento(complemento);
-					}
-					
-					if(i == 1) {
-						
-						cep = "12.362-450";
-						cep = cep.replace(".", "").replace("-", "");
-						cidade = "Guaratinguetá";
-						estado = "SP";
-						rua = "9 de dezembro";
-						numero = "21";
-						bairro = "São Benedito";
-						complemento = "Apartamento 23";
-						
-						cpf = "954.698.100-11"; //954.698.100-11
-						cpf = cpf.replace(".", "").replace("-", "");
-						nome = "João Mauricio"; //João Mauricio
-						dataNascimentoDATE = LocalDate.of(2005, 10, 05);	
-						
-						categoriaCliente = CategoriasDeConta.COMUM;
-						
-						endereco = new Endereco();
-						endereco.setCep(cep);
-						endereco.setCidade(cidade);
-						endereco.setEstado(estado);
-						endereco.setRua(rua);
-						endereco.setNumero(numero);
-						endereco.setBairro(bairro);
-						endereco.setComplemento(complemento);
-					}
-					
-					if(i == 2) {
-						
-						cep = "45.245-268"; //45.245-268
-						cep = cep.replace(".", "").replace("-", "");
-						cidade = "Rio de Janeiro";
-						estado = "RJ";
-						rua = "8 de novembro";
-						numero = "2";
-						bairro = "Marcos José"; //Marcos José
-						complemento = "";
-						
-						cpf = "126.724.390-28"; //126.724.390-28
-						cpf = cpf.replace(".", "").replace("-", "");
-						nome = "Maria Luiza";
-						dataNascimentoDATE = LocalDate.of(1987, 02, 05);	
-						
-						categoriaCliente = CategoriasDeConta.COMUM;
-						
-						endereco = new Endereco();
-						endereco.setCep(cep);
-						endereco.setCidade(cidade);
-						endereco.setEstado(estado);
-						endereco.setRua(rua);
-						endereco.setNumero(numero);
-						endereco.setBairro(bairro);
-						endereco.setComplemento(complemento);
-					}				
-					
-						clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, i, categoriaCliente);
-				}
+				String cep1 = "12.630-000"; //12.630-000
+				cep1 = cep1.replace(".", "").replace("-", "");
+				String cidade1 = "Cachoeira Paulista";
+				String estado1 = "SP";
+				String rua1 = "12 de abril";
+				String numero1 = "321";
+				String bairro1 = "Margem Direita";
+				String complemento1 = "Casa";
 				
-				System.out.println("Clientes adicionados:\n");
-			
-				for(ClienteEntity c : clienteService.listarClientesDaoEmEntity()) {
-					
-					System.out.println("Nome: "+c.getNome()+"\nCPF: "+c.getCpf()+"\nData de Nascimento: "+c.getDataNascimento()+"\nCategoria: "+c.getCategoriaContaCliente()+"\nEndereço: "+c.getEndereco()+"\n");
-				}				
+				String cpf1 = "926.579.490-96"; //926.579.490-96
+				cpf1 = cpf1.replace(".", "").replace("-", "");
+				String nome1 = "Marcielli Oliveira";
+				LocalDate dataNascimentoDATE1  = LocalDate.of(1990, 12, 01); //1990, 12, 01
+										
+				Endereco endereco1 = new Endereco();
+				endereco1 = new Endereco();
+				endereco1.setCep(cep1);
+				endereco1.setCidade(cidade1);
+				endereco1.setEstado(estado1);
+				endereco1.setRua(rua1);
+				endereco1.setNumero(numero1);
+				endereco1.setBairro(bairro1);
+				endereco1.setComplemento(complemento1);
+				
+				clienteService.adicionarClienteEntityEmDao(cpf1, nome1, dataNascimentoDATE1, endereco1, 1, categoriaCliente);	
+				
+				String cep2 = "12.362-450";
+				cep2 = cep2.replace(".", "").replace("-", "");
+				String cidade2 = "Guaratinguetá";
+				String estado2 = "SP";
+				String rua2 = "9 de dezembro";
+				String numero2 = "21";
+				String bairro2 = "São Benedito";
+				String complemento2 = "Apartamento 23";
+				
+				String cpf2 = "954.698.100-11"; //954.698.100-11
+				cpf2 = cpf2.replace(".", "").replace("-", "");
+				String 	nome2 = "João Mauricio"; //João Mauricio
+				LocalDate dataNascimentoDATE2  = LocalDate.of(2005, 10, 05);	
+										
+				Endereco endereco2 = new Endereco();
+				endereco2 = new Endereco();
+				endereco2.setCep(cep2);
+				endereco2.setCidade(cidade2);
+				endereco2.setEstado(estado2);
+				endereco2.setRua(rua2);
+				endereco2.setNumero(numero2);
+				endereco2.setBairro(bairro2);
+				endereco2.setComplemento(complemento2);
+				
+				clienteService.adicionarClienteEntityEmDao(cpf2, nome2, dataNascimentoDATE2, endereco2, 2, categoriaCliente);
+				
+				String 	cep3 = "45.245-268"; //45.245-268
+				cep3 = cep3.replace(".", "").replace("-", "");
+				String 	cidade3 = "Rio de Janeiro";
+				String 	estado3 = "RJ";
+				String 	rua3 = "8 de novembro";
+				String 	numero3 = "2";
+				String 	bairro3 = "Marcos José"; //Marcos José
+				String 	complemento3 = "";
+				
+				String 	cpf3 = "126.724.390-28"; //126.724.390-28
+				cpf3 = cpf3.replace(".", "").replace("-", "");
+				String 	nome3 = "Maria Luiza";
+				LocalDate dataNascimentoDATE3  = LocalDate.of(1987, 02, 05);	
+				
+				Endereco endereco3 = new Endereco();
+				endereco3 = new Endereco();
+				endereco3.setCep(cep3);
+				endereco3.setCidade(cidade3);
+				endereco3.setEstado(estado3);
+				endereco3.setRua(rua3);
+				endereco3.setNumero(numero3);
+				endereco3.setBairro(bairro3);
+				endereco3.setComplemento(complemento3);
+				
+				clienteService.adicionarClienteEntityEmDao(cpf3, nome3, dataNascimentoDATE3, endereco3, 3, categoriaCliente);
+		
+				
+				System.out.println("Clientes adicionados:\n");				
+				
+				for(ClienteEntity c : clienteService.verClientesCadastradosDao()) {
+					System.out.println(c+"\n");
+				}		
 			break;
 			case 2:
 				System.out.println("\nLISTAR\n");
 				System.out.println("\nClientes cadastrados: \n");
-				for(ClienteEntity c : clienteService.listarClientesDaoEmEntity()) {
+				for(ClienteEntity c : clienteService.verClientesCadastradosDao()) {
 					System.out.println(c+"\n");
-				}
-					
+				}					
 				opcao = -1;
 			break;
 			case 3:
@@ -203,6 +176,7 @@ public class Main { //VIEW
 				System.out.println("ABRIR CONTA");
 				System.out.println("\nClientes cadastrados: \n");	
 				
+				
 				for(ClienteEntity c : clienteService.listarClientesDaoEmEntity()) {
 					System.out.println(c+"\n");
 				}
@@ -215,18 +189,18 @@ public class Main { //VIEW
 				
 				System.out.println("Digite o valor do primeiro depósito: ");
 				float primeiroDeposito = input.nextFloat();				
-				
-				//CategoriasDeConta categoriaDeConta;
-				//categoriaDeConta = CategoriasDeConta.COMUM;	
-				
+			
 				
 				if(tipoDeContaEscolhida == 1) {
 					//Conta Corrente escolhida
 					TiposDeConta contaCorrente;
 					contaCorrente = TiposDeConta.CONTA_CORRENTE;
 					
-					//System.out.println("Primeiro deposito: "+primeiroDeposito+" - Categoria: "+categoriaDeConta);
-					ContaCorrenteEntity criarContaCorrente = new ContaCorrenteEntity(cpf, primeiroDeposito, contaCorrente);
+					ContaCorrenteService contaCorrenteService = new ContaCorrenteService();
+					contaCorrenteService.adicionarContaCorrenteEntityEmDao(abrirContaCpf, primeiroDeposito, contaCorrente, categoriaCliente);
+					
+					
+					
 					
 					
 				} else if(tipoDeContaEscolhida == 2) {
@@ -234,7 +208,8 @@ public class Main { //VIEW
 					TiposDeConta contaPoupanca;
 					contaPoupanca = TiposDeConta.CONTA_POUPANCA;
 					
-					//ContaPoupancaEntity criarContaPoupancaEntity = new ContaPoupancaEntity(abrirContaCpf, contaPoupanca, primeiroDeposito);
+					//ContaPoupancaService contaPoupancaService = new ContaPoupancaService();
+					//contaPoupancaService.adicionarContaPoupancaEntityEmDao(abrirContaCpf, primeiroDeposito, contaPoupanca, categoriaCliente);
 					
 				}		
 				

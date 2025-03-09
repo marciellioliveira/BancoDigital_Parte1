@@ -19,13 +19,12 @@ import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 
 public class ClienteService {
 	
-	private ClienteDao clienteDao = new ClienteDao();	
+	//private ClienteDao clienteDao = new ClienteDao();	
+	ClienteDao clienteDao = ClienteDao.getInstancia();
 	
 	@SuppressWarnings("finally")
 	public boolean adicionarClienteEntityEmDao(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco, int cod, CategoriasDeConta categoriaCliente) throws TamanhoDoCpfException, 
 	CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException {
-		
-		ClienteEntity clienteEntity = new ClienteEntity(cpf, nome, dataNascimentoDATE, endereco, categoriaCliente);
 		
 		
 			try {
@@ -92,15 +91,25 @@ public class ClienteService {
 				
 			} 
 				
+				ClienteEntity clienteEntity = new ClienteEntity();
 				clienteEntity.setCpf(cpf);
 				clienteEntity.setNome(nome);
 				clienteEntity.setDataNascimento(dataNascimentoDATE);
 				clienteEntity.setEndereco(endereco);
 				clienteEntity.getCategoriaContaCliente();
-
-				clienteDao.addCliente(clienteEntity, cod);	
+			
+				clienteDao.adicionarCliente(clienteEntity);
+				System.err.println("Tamanho: "+clienteDao.buscarClientes().size());	
 				return true;
 						
+	}
+	
+	public ArrayList<ClienteEntity> verClientesCadastradosDao() {
+		return clienteDao.verClientesCadastrados();
+	}
+	
+	public ClienteEntity verExisteClienteComCpf(String cpf) {		
+		return clienteDao.buscarClienteComCpfCadastrado(cpf);	
 	}
 	
 
@@ -287,7 +296,9 @@ public class ClienteService {
 		
 
 	public ArrayList<ClienteEntity> listarClientesDaoEmEntity() {
-		return clienteDao.buscarClientes();
+		
+			return clienteDao.buscarClientes();
+		
 	}
 	
 	public boolean removerCliente(String cpf) {
