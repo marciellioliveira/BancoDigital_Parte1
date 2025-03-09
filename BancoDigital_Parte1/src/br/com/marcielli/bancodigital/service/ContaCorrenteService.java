@@ -1,9 +1,12 @@
 package br.com.marcielli.bancodigital.service;
 
 
+import java.util.ArrayList;
+
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
+import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
@@ -12,7 +15,7 @@ import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public class ContaCorrenteService {
 	
-	private ContaCorrenteDao contaCorrenteDao = new ContaCorrenteDao();
+	ContaCorrenteDao contaCorrenteDao = ContaCorrenteDao.getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();
 	
 	
@@ -20,53 +23,54 @@ public class ContaCorrenteService {
 	
 	public void adicionarContaCorrenteEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
 		
-		System.err.println("CPF: "+cpfClienteDaConta);
-		System.err.println("Saldo: "+saldo);
-		System.err.println("Tipo: "+tipoDeConta);
-		System.err.println("Categoria: "+categoriaDeConta);
+//		System.err.println("CPF: "+cpfClienteDaConta);
+//		System.err.println("Saldo: "+saldo);
+//		System.err.println("Tipo: "+tipoDeConta);
+//		System.err.println("Categoria: "+categoriaDeConta);		
 		
-		//ClienteEntity cliente = new ClienteEntity();
-		
-		
-		
-		//System.err.println("lista de Clientes: "+clienteDao.buscarClientes().size());
-		for(ClienteEntity c : clienteDao.buscarClientes()) {
-			System.err.println(c);
-			
-		}
-	
-		
-		
-		
-		
-		
-		
-		//ContaCorrenteEntity criarContaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta);
-		
-		/*Primeiro preciso conseguir ver se no clientedao tem alguem cadastrado com esse cpf, mas não estou conseguindo 
-		 * Verificar se já tem algum cliente com esse CPF e adicionar conta a ele
-		 * caso não tenha, pedir pra primeiro criar um cliente e depois criar uma conta pro cliente*/
-		
-		//System.out.println("Quero ver se imprime todos os clientes aqui");
-		//System.out.println();
-//		System.out.println("Teste: "+clienteDao.buscarClientesComCpf(cpfClienteDaConta));
-		
-//		try {
-//			verSeClienteExisteNoDao(cpfClienteDaConta);
-//			
-//		
-//		} catch (ClienteNuloNoDaoException e) {
-//			
-//			System.err.println("Cliente: "+e.getMessage());
-//			
-//		} catch (Exception e) {
-//			
-//			System.err.println("Erro: "+e.getMessage());
-//
+//		for(ClienteEntity c : clienteDao.buscarClientes()) {
+//			System.err.println(c);			
 //		}
+//		
+		//verSeCpfACadastrarJatemClienteCadastrado(cpfClienteDaConta); 
+		
+		try {
+			
+			System.out.println("\nA conta cadastrada no cpf "+cpfClienteDaConta+" do titular, tem:\n");
+			
+			for(ClienteEntity c : clienteDao.buscarClientes()) {
+				
+				if(cpfClienteDaConta.equals(c.getCpf())) {
+					
+					ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta);	
+					contaCorrenteDao.adicionarContaCorrente(contaCorrente);
+					System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" do cpf "+cpfClienteDaConta+" cadastrada com sucesso!");				
+				} 
+				
+			}
+			
+		} catch (Exception e) {
+			System.err.println("Erro: "+e.getMessage());
+		}	
+
 	}
 	
-
+	public boolean verSeCpfACadastrarJatemClienteCadastrado(String cpf) {	
+		
+		for(ClienteEntity c : clienteDao.buscarClientes()) {
+			if(cpf.equals(c.getCpf())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	public ArrayList<ContaCorrenteEntity> verContasCorrentesCadastradasDao(){
+		return contaCorrenteDao.verContasCorrenteAdicionadas();
+	}
+	
 	
 	
 	

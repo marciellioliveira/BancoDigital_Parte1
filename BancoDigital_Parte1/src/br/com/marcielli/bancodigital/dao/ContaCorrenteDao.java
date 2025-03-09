@@ -6,8 +6,27 @@ import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 
 public class ContaCorrenteDao {
 	
-	private ArrayList<ContaCorrenteEntity> listaDeContasCorrente = new ArrayList<ContaCorrenteEntity>();
+	private static ContaCorrenteDao instancia;
 	
+	public  ArrayList<ContaCorrenteEntity> listaDeContasCorrente = new ArrayList<ContaCorrenteEntity>();
+	
+	private ContaCorrenteDao() {}
+	
+	public static ContaCorrenteDao getInstancia() {
+		if(instancia == null) {
+			instancia = new ContaCorrenteDao();
+		}
+		
+		return instancia;
+	}
+	
+	public void adicionarContaCorrente(ContaCorrenteEntity contaCorrente) {
+		listaDeContasCorrente.add(contaCorrente);
+	}	
+	
+	public ArrayList<ContaCorrenteEntity> verContasCorrenteAdicionadas(){
+		return listaDeContasCorrente;
+	}
 
 	public ArrayList<ContaCorrenteEntity> getListaDeContasCorrente() {
 		return listaDeContasCorrente;
@@ -17,9 +36,5 @@ public class ContaCorrenteDao {
 		this.listaDeContasCorrente = listaDeContasCorrente;
 	}
 	
-	//Acesso ao Dao do cliente
-	public void teste(String cpf) {
-		String cpfNovo = cpf.replace(".", "").replace("-", "");
-		System.err.println("CPF "+cpfNovo);	
-	}
+
 }

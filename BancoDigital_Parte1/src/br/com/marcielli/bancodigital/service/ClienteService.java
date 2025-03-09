@@ -99,7 +99,6 @@ public class ClienteService {
 				clienteEntity.getCategoriaContaCliente();
 			
 				clienteDao.adicionarCliente(clienteEntity);
-				System.err.println("Tamanho: "+clienteDao.buscarClientes().size());	
 				return true;
 						
 	}

@@ -56,4 +56,8 @@ public abstract class ContaEntity {
 	public void setCategoriaDeConta(CategoriasDeConta categoriaDeConta) {
 		this.categoriaDeConta = categoriaDeConta;
 	}
+
+	
+	
+	
 }

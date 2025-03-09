@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
+import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
@@ -36,14 +37,14 @@ public class Main { //VIEW
 		CategoriasDeConta categoriaCliente;
 		categoriaCliente = CategoriasDeConta.COMUM;
 		
-		
+		ContaCorrenteService contaCorrenteService = new ContaCorrenteService();
 		
 		
 		
 		
 		do {
 			System.out.println();
-			System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n0 - SAIR..: ");
+			System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n5 - VER TODAS AS CONTAS\n0 - SAIR..: ");
 			opcao = input.nextInt();
 			
 			switch (opcao) {
@@ -184,6 +185,13 @@ public class Main { //VIEW
 				System.out.println("Digite o CPF do cliente que deseja abrir uma conta: ");
 				String abrirContaCpf = input.next();
 				
+				if(!contaCorrenteService.verSeCpfACadastrarJatemClienteCadastrado(abrirContaCpf)) {
+					System.err.println("Você precisa digitar um CPF de um cliente já cadastrado no sistema para criar uma conta");
+					
+					opcao = -1;
+					break;
+				}
+				
 				System.out.println("Digite:\n1 - Abrir Conta Corrente\n2 - Abrir conta Poupança: ");
 				int tipoDeContaEscolhida = input.nextInt();
 				
@@ -194,13 +202,9 @@ public class Main { //VIEW
 				if(tipoDeContaEscolhida == 1) {
 					//Conta Corrente escolhida
 					TiposDeConta contaCorrente;
-					contaCorrente = TiposDeConta.CONTA_CORRENTE;
+					contaCorrente = TiposDeConta.CONTA_CORRENTE;					
 					
-					ContaCorrenteService contaCorrenteService = new ContaCorrenteService();
 					contaCorrenteService.adicionarContaCorrenteEntityEmDao(abrirContaCpf, primeiroDeposito, contaCorrente, categoriaCliente);
-					
-					
-					
 					
 					
 				} else if(tipoDeContaEscolhida == 2) {
@@ -213,7 +217,16 @@ public class Main { //VIEW
 					
 				}		
 				
+				opcao = -1;
 				
+			break;
+			case 5:
+				System.out.println("VER TODAS AS CONTAS CORRENTES");
+				System.out.println("\nContas Correntes Cadastradass: \n");	
+				
+				for(ContaCorrenteEntity cc : contaCorrenteService.verContasCorrentesCadastradasDao()) {
+					System.out.println(cc);
+				}
 				
 			break;
 			case 0:
