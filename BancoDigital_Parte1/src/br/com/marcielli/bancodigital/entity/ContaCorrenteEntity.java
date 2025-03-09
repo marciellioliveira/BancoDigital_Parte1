@@ -66,8 +66,5 @@ public class ContaCorrenteEntity extends ContaEntity {
 	@Override
 	public String toString() {
 		return ""+getTipoDeConta().getDescricaoDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+getSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal();
-	}
-	
-	
-	
+	}		
 }

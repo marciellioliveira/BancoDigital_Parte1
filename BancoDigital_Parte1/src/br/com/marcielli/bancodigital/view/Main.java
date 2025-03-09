@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
+import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
@@ -20,6 +21,7 @@ import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 import br.com.marcielli.bancodigital.service.ClienteService;
 import br.com.marcielli.bancodigital.service.ContaCorrenteService;
+import br.com.marcielli.bancodigital.service.ContaPoupancaService;
 
 public class Main { //VIEW
 
@@ -38,8 +40,7 @@ public class Main { //VIEW
 		categoriaCliente = CategoriasDeConta.COMUM;
 		
 		ContaCorrenteService contaCorrenteService = new ContaCorrenteService();
-		
-		
+		ContaPoupancaService contaPoupancaService = new ContaPoupancaService();
 		
 		
 		do {
@@ -212,8 +213,7 @@ public class Main { //VIEW
 					TiposDeConta contaPoupanca;
 					contaPoupanca = TiposDeConta.CONTA_POUPANCA;
 					
-					//ContaPoupancaService contaPoupancaService = new ContaPoupancaService();
-					//contaPoupancaService.adicionarContaPoupancaEntityEmDao(abrirContaCpf, primeiroDeposito, contaPoupanca, categoriaCliente);
+					contaPoupancaService.adicionarContaPoupancaEntityEmDao(abrirContaCpf, primeiroDeposito, contaPoupanca, categoriaCliente);
 					
 				}		
 				
@@ -221,11 +221,17 @@ public class Main { //VIEW
 				
 			break;
 			case 5:
-				System.out.println("VER TODAS AS CONTAS CORRENTES");
-				System.out.println("\nContas Correntes Cadastradass: \n");	
+				System.out.println("VER TODAS AS CONTAS");
+				System.out.println("\nContas Cadastradass: \n");	
 				
+				System.out.println("\nContas Corrente:");
 				for(ContaCorrenteEntity cc : contaCorrenteService.verContasCorrentesCadastradasDao()) {
 					System.out.println(cc);
+				}
+				
+				System.out.println("\nContas Poupança: ");
+				for(ContaPoupancaEntity cp : contaPoupancaService.verContasPoupancaCadastradasDao()) {
+					System.out.println(cp);
 				}
 				
 			break;
