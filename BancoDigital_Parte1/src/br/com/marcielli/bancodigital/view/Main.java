@@ -135,6 +135,8 @@ public class Main { //VIEW
 				
 				for(ClienteEntity c : clienteService.verClientesCadastradosDao()) {
 					System.out.println(c+"\n");
+					
+				
 				}		
 			break;
 			case 2:
@@ -206,6 +208,7 @@ public class Main { //VIEW
 					contaCorrente = TiposDeConta.CONTA_CORRENTE;					
 					
 					contaCorrenteService.adicionarContaCorrenteEntityEmDao(abrirContaCpf, primeiroDeposito, contaCorrente, categoriaCliente);
+					
 					
 					
 				} else if(tipoDeContaEscolhida == 2) {

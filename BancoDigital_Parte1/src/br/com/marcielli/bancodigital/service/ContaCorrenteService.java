@@ -7,6 +7,8 @@ import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
+import br.com.marcielli.bancodigital.entity.ContaEntity;
+import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
@@ -38,16 +40,25 @@ public class ContaCorrenteService {
 			
 			System.out.println("\nA conta cadastrada no cpf "+cpfClienteDaConta+" do titular, tem:\n");
 			
+			
+			
 			for(ClienteEntity c : clienteDao.buscarClientes()) {
 				
 				if(cpfClienteDaConta.equals(c.getCpf())) {
 					
-					ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta);	
+					ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteDaConta, categoriaDeConta, tipoDeConta);
+					
+					ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contaDoCliente);	
 					contaCorrenteDao.adicionarContaCorrente(contaCorrente);
-					System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" do cpf "+cpfClienteDaConta+" cadastrada com sucesso!");				
+					
+					System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" do cpf "+cpfClienteDaConta+" cadastrada com sucesso!");			
+					
+					descontarTaxaManutencaoMensal(c);
 				} 
 				
 			}
+			
+			
 			
 		} catch (Exception e) {
 			System.err.println("Erro: "+e.getMessage());
@@ -72,7 +83,19 @@ public class ContaCorrenteService {
 	}
 	
 	
+	public void descontarTaxaManutencaoMensal(ClienteEntity cliente) {
+
+		for(ContaCorrenteEntity cce : contaCorrenteDao.verContasCorrenteAdicionadas()) {
+			System.err.println("----------------------------------------------");
+			System.out.println("Dentro de contas correntes adicionadas");
+			System.out.println("CCE: "+cce.getContasDoClientePorCpf());
+		
+		}
+
+		
+
+	
 	
 	
 }
-	
+}

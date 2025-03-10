@@ -2,13 +2,17 @@ package br.com.marcielli.bancodigital.dao;
 
 import java.util.ArrayList;
 
+import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
+import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 
 public class ContaCorrenteDao {
 	
 	private static ContaCorrenteDao instancia;
 	
 	public  ArrayList<ContaCorrenteEntity> listaDeContasCorrente = new ArrayList<ContaCorrenteEntity>();
+	
+	
 	
 	private ContaCorrenteDao() {}
 	
@@ -19,6 +23,9 @@ public class ContaCorrenteDao {
 		
 		return instancia;
 	}
+	
+
+
 	
 	public void adicionarContaCorrente(ContaCorrenteEntity contaCorrente) {
 		listaDeContasCorrente.add(contaCorrente);
@@ -35,6 +42,15 @@ public class ContaCorrenteDao {
 	public void setListaDeContasCorrente(ArrayList<ContaCorrenteEntity> listaDeContasCorrente) {
 		this.listaDeContasCorrente = listaDeContasCorrente;
 	}
+
+	
+
+	
+
+	
+	
+	
+	
 	
 
 }

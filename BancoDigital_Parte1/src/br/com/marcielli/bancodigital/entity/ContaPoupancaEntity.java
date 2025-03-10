@@ -7,6 +7,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 	
 	private float acrescimoTaxaRendimento;
 	
+	
 	public ContaPoupancaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta) {
 		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta);
 				
