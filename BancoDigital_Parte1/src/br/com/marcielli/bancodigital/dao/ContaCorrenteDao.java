@@ -24,6 +24,12 @@ public class ContaCorrenteDao {
 		return instancia;
 	}
 	
+	public void atualizarSaldo(float SaldoNovo) {
+		for(ContaCorrenteEntity cc : listaDeContasCorrente) {
+			cc.setSaldo(SaldoNovo);
+		}
+	}
+	
 
 
 	

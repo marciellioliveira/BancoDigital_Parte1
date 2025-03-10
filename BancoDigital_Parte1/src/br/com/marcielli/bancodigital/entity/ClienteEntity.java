@@ -12,8 +12,7 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 	private LocalDate dataNascimento;
 	private Endereco endereco;
 	private CategoriasDeConta categoriaDeConta;
-	//private ContasDoCliente contasDoCliente;
-	//private ArrayList<ContasDoCliente> todasAsContasDoCliente;
+
 	
 	public ClienteEntity(String cpf, String nome, LocalDate dataNascimentoDATE, Endereco endereco, CategoriasDeConta categoriaDeConta) {
 		super();
@@ -22,15 +21,11 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 		this.dataNascimento = dataNascimentoDATE;
 		this.endereco = endereco;
 		this.categoriaDeConta = categoriaDeConta;
-		//this.contasDoCliente = getContasDoCliente();
 		
 	}
 	
 	public ClienteEntity() {}
-	
-//	public ClienteEntity(ArrayList<ContasDoCliente> todasAsContasDoCliente) {
-//		this.todasAsContasDoCliente = todasAsContasDoCliente;
-//	}
+
 	
 	public String getCpf() {
 		return cpf;
@@ -76,13 +71,6 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 		this.categoriaDeConta = categoriaDeConta;
 	}
 
-//	public ContasDoCliente getContasDoCliente() {
-//		return contasDoCliente;
-//	}
-//
-//	public void setContasDoCliente(ContasDoCliente contasDoCliente) {
-//		this.contasDoCliente = contasDoCliente;
-//	}
 
 	@Override
 	public String toString() {		

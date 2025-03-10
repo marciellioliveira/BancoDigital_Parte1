@@ -24,7 +24,6 @@ import br.com.marcielli.bancodigital.service.ContaCorrenteService;
 import br.com.marcielli.bancodigital.service.ContaPoupancaService;
 
 public class Main { //VIEW
-
 	
 	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
 	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException {	
@@ -45,7 +44,7 @@ public class Main { //VIEW
 		
 		do {
 			System.out.println();
-			System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n5 - VER TODAS AS CONTAS\n0 - SAIR..: ");
+			System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n5 - VER TODAS AS CONTAS\n6 - VER TAXA/DESCONTO FUNCIONANDO\n0 - SAIR..: ");
 			opcao = input.nextInt();
 			
 			switch (opcao) {
@@ -237,6 +236,29 @@ public class Main { //VIEW
 					System.out.println(cp);
 				}
 				
+				opcao = -1;
+			break;
+			case 6:
+				System.out.println("VER FUNÇÃO DE TAXA E DESCONTO FUNCIONANDO");
+				
+				System.err.println("\n\n-----------------------------------------");
+				System.out.println("Conta Corrente com valor descontado: ");
+				for(ContaCorrenteEntity cc : contaCorrenteService.verContasCorrentesCadastradasDao()) {
+					
+					for(ClienteEntity c : clienteService.verClientesCadastradosDao()) {
+						contaCorrenteService.descontarTaxaManutencaoMensal(c);
+					}				
+				}
+				
+				System.err.println("-------------------------------------------------");
+				System.out.println("Conta Poupança com valor acrescentado: ");
+				for(ContaPoupancaEntity cc : contaPoupancaService.verContasPoupancaCadastradasDao()) {
+					
+					for(ClienteEntity c : clienteService.verClientesCadastradosDao()) {
+						contaPoupancaService.creditarTaxaVigenteMensal(c);
+					}				
+				}
+				opcao = -1;
 			break;
 			case 0:
 				System.out.println("PROGRAMA FINALIZADO COM SUCESSO!");

@@ -2,6 +2,7 @@ package br.com.marcielli.bancodigital.dao;
 
 import java.util.ArrayList;
 
+import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 
 public class ContaPoupancaDao {
@@ -15,6 +16,12 @@ public class ContaPoupancaDao {
 			instancia = new ContaPoupancaDao();
 		}		
 		return instancia;
+	}
+	
+	public void atualizarSaldo(float SaldoNovo) {
+		for(ContaPoupancaEntity cc : listaDeContasPoupanca) {
+			cc.setSaldo(SaldoNovo);
+		}
 	}
 	
 	public void adicionarContaPoupanca(ContaPoupancaEntity contaPoupanca) {

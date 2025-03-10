@@ -4,21 +4,22 @@ import java.time.LocalDate;
 
 
 import br.com.marcielli.bancodigital.dao.ClienteDao;
+import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
+import br.com.marcielli.bancodigital.service.ContaCorrenteService;
 
 public class ContaCorrenteEntity extends ContaEntity {
 	
 	private float taxaManutencaoMensal;
 	private String nomeClienteDonoDaConta;
-	private ContasDoCliente contasDoClientePorCpf;
-	//private ArrayList<ContasDoCliente> todasAsContasDoClientePorcpf;
+
 	
 	
 	public ContaCorrenteEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf) {
-		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta);
+		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contasDoClientePorCpf);
 		
-		this.contasDoClientePorCpf = contasDoClientePorCpf;
+		//this.contasDoClientePorCpf = contasDoClientePorCpf;
 		
 		//System.out.println("ContaCorrenteEn tity: "+contasDoClientePorCpf);
 		
@@ -76,24 +77,12 @@ public class ContaCorrenteEntity extends ContaEntity {
 	public void fazerTransferenciaViaPix() {		
 		
 	}
-	
-	
-	
-	public ContasDoCliente getContasDoClientePorCpf() {
-		return contasDoClientePorCpf;
-	}
 
-	public void setContasDoClientePorCpf(ContasDoCliente contasDoClientePorCpf) {
-		this.contasDoClientePorCpf = contasDoClientePorCpf;
-	}
+	
 
-	public float descontarTaxaManutencaoMensal(ClienteEntity cliente) {
-		LocalDate dataDeAgora = LocalDate.now();					
-		LocalDate dataEsperada = LocalDate.of(dataDeAgora.getYear(), dataDeAgora.getMonth(), 1);
-		
-		//Voltar aqui e fazer primeiro dia útil da semana/mês
-		float saldoNovo = getSaldo() - getTaxaManutencaoMensal(); 		
-		return saldoNovo;
+	public void descontarTaxaManutencaoMensal(ClienteEntity cliente) {	
+		ContaCorrenteService ccService = new ContaCorrenteService();
+		ccService.descontarTaxaManutencaoMensal(cliente);		
 	}
 
 	public String getNomeClienteDonoDaConta() {
@@ -112,18 +101,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 		this.taxaManutencaoMensal = taxaManutencaoMensal;
 	}
 	
-	
 
-	
-//
-//	public ArrayList<ContasDoCliente> getTodasAsContasDoClientePorcpf() {
-//		return todasAsContasDoClientePorcpf;
-//	}
-//
-//	public void setTodasAsContasDoClientePorcpf(ArrayList<ContasDoCliente> todasAsContasDoClientePorcpf) {
-//		this.todasAsContasDoClientePorcpf = todasAsContasDoClientePorcpf;
-//		todasAsContasDoClientePorcpf.add(contasDoClientePorCpf);
-//	}
 
 	@Override
 	public String toString() {

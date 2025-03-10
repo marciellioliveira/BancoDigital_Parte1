@@ -36,6 +36,7 @@ public class ClienteDao {
 		return null;
 	}
 	
+	
 	public boolean temCpf(String cpf) {
 		for(ClienteEntity c : listaDeClientes) {
 			

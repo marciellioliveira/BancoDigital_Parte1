@@ -91,12 +91,14 @@ public class ClienteService {
 				
 			} 
 				
+			
 				ClienteEntity clienteEntity = new ClienteEntity();
 				clienteEntity.setCpf(cpf);
 				clienteEntity.setNome(nome);
 				clienteEntity.setDataNascimento(dataNascimentoDATE);
 				clienteEntity.setEndereco(endereco);
-				clienteEntity.getCategoriaContaCliente();
+				clienteEntity.setCategoriaDeConta(categoriaCliente);
+			
 			
 				clienteDao.adicionarCliente(clienteEntity);
 				return true;

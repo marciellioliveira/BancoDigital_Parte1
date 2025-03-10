@@ -9,12 +9,14 @@ public abstract class ContaEntity {
 	private TiposDeConta tipoDeConta;
 	private CategoriasDeConta categoriaDeConta;
 	private float saldo;
+	private ContasDoCliente contasDoClientePorCpf;
 	
 	
-	public ContaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta) {
+	public ContaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf) {
 		this.cpfClienteDaConta = cpfClienteDaConta;
 		this.saldo = saldo;
 		this.tipoDeConta = tipoDeConta;
+		this.contasDoClientePorCpf = contasDoClientePorCpf;
 		
 		
 	}
@@ -55,6 +57,14 @@ public abstract class ContaEntity {
 
 	public void setCategoriaDeConta(CategoriasDeConta categoriaDeConta) {
 		this.categoriaDeConta = categoriaDeConta;
+	}
+
+	public ContasDoCliente getContasDoClientePorCpf() {
+		return contasDoClientePorCpf;
+	}
+
+	public void setContasDoClientePorCpf(ContasDoCliente contasDoClientePorCpf) {
+		this.contasDoClientePorCpf = contasDoClientePorCpf;
 	}
 
 	

@@ -1,6 +1,7 @@
 package br.com.marcielli.bancodigital.service;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import br.com.marcielli.bancodigital.dao.ClienteDao;
@@ -24,17 +25,7 @@ public class ContaCorrenteService {
 	
 	
 	public void adicionarContaCorrenteEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
-		
-//		System.err.println("CPF: "+cpfClienteDaConta);
-//		System.err.println("Saldo: "+saldo);
-//		System.err.println("Tipo: "+tipoDeConta);
-//		System.err.println("Categoria: "+categoriaDeConta);		
-		
-//		for(ClienteEntity c : clienteDao.buscarClientes()) {
-//			System.err.println(c);			
-//		}
-//		
-		//verSeCpfACadastrarJatemClienteCadastrado(cpfClienteDaConta); 
+
 		
 		try {
 			
@@ -81,21 +72,28 @@ public class ContaCorrenteService {
 	public ArrayList<ContaCorrenteEntity> verContasCorrentesCadastradasDao(){
 		return contaCorrenteDao.verContasCorrenteAdicionadas();
 	}
-	
-	
+		
 	public void descontarTaxaManutencaoMensal(ClienteEntity cliente) {
-
-		for(ContaCorrenteEntity cce : contaCorrenteDao.verContasCorrenteAdicionadas()) {
-			System.err.println("----------------------------------------------");
-			System.out.println("Dentro de contas correntes adicionadas");
-			System.out.println("CCE: "+cce.getContasDoClientePorCpf());
 		
+		float saldoNovo = 0.0f;
+		LocalDate dataDeAgora = LocalDate.now();
+		LocalDate dataEsperada = LocalDate.of(dataDeAgora.getYear(), dataDeAgora.getMonth(), 01); //Deixei como padrão aqui 1, mas em programa real eu teria que ver o primeiro dia útil do mês
+
+		if(dataEsperada.getDayOfMonth() == 01 ) {
+			for(ContaCorrenteEntity cce : contaCorrenteDao.verContasCorrenteAdicionadas()) {
+				
+				if(cliente.getCpf().equals(cce.getContasDoClientePorCpf().getCpfDoCliente())) {
+					saldoNovo += cce.getSaldo() - cce.getTaxaManutencaoMensal();			
+					
+					contaCorrenteDao.atualizarSaldo(saldoNovo);
+					System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi descontada uma taxa de "+cce.getTaxaManutencaoMensal()+" da conta do cliente "+cce.getContasDoClientePorCpf().getNomeDoCliente()+" portador do CPF "+cce.getContasDoClientePorCpf().getCpfDoCliente()+" porque está cadastrado na conta "+cce.getContasDoClientePorCpf().getCategoriaDaContaDoCpf());					
+					System.out.println("Saldo novo: "+cce.exibirSaldo());
+				}
+			}
 		}
-
-		
-
+	}
 	
 	
 	
 }
-}
+
