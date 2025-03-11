@@ -9,12 +9,14 @@ public class ContasDoCliente {
 	private String cpfDoCliente;
 	private CategoriasDeConta categoriaDaContaDoCpf;
 	private TiposDeConta tipoDeContaDoCpf;
+	private String numeroDaConta;
 	
-	public ContasDoCliente(String nomeDoCliente, String cpfDoCliente, CategoriasDeConta categoriaDaContaDoCpf, TiposDeConta tipoDeContaDoCpf) {
+	public ContasDoCliente(String nomeDoCliente, String cpfDoCliente, CategoriasDeConta categoriaDaContaDoCpf, TiposDeConta tipoDeContaDoCpf, String numeroDaConta) {
 		this.nomeDoCliente = nomeDoCliente;
 		this.cpfDoCliente = cpfDoCliente;
 		this.categoriaDaContaDoCpf = categoriaDaContaDoCpf;
 		this.tipoDeContaDoCpf = tipoDeContaDoCpf;
+		this.numeroDaConta = numeroDaConta;
 	}
 	
 	public ContasDoCliente() {}
@@ -49,8 +51,16 @@ public class ContasDoCliente {
 
 	public void setTipoDeContaDoCpf(TiposDeConta tipoDeContaDoCpf) {
 		this.tipoDeContaDoCpf = tipoDeContaDoCpf;
-	}
+	}	
 	
+	public String getNumeroDaConta() {
+		return numeroDaConta;
+	}
+
+	public void setNumeroDaConta(String numeroDaConta) {
+		this.numeroDaConta = numeroDaConta;
+	}
+
 	@Override
 	public String toString() {			
 		return "CONTAS DO CLIENTE: Nome "+getNomeDoCliente()+", CPF "+getCpfDoCliente()+", Categoria da Conta "+getCategoriaDaContaDoCpf()+", Tipo de Conta "+getTipoDeContaDoCpf();

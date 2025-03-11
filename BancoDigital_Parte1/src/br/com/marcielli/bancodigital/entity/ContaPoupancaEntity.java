@@ -10,8 +10,8 @@ public class ContaPoupancaEntity extends ContaEntity {
 	private double taxaMensal;
 	
 	
-	public ContaPoupancaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf) {
-		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contasDoClientePorCpf);
+	public ContaPoupancaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf, String numeroDaConta) {
+		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contasDoClientePorCpf, numeroDaConta);
 				
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;

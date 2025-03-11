@@ -3,6 +3,9 @@ package br.com.marcielli.bancodigital.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
@@ -29,20 +32,21 @@ public class ContaCorrenteService {
 		
 		try {
 			
-			System.out.println("\nA conta cadastrada no cpf "+cpfClienteDaConta+" do titular, tem:\n");
-			
 			
 			
 			for(ClienteEntity c : clienteDao.buscarClientes()) {
 				
 				if(cpfClienteDaConta.equals(c.getCpf())) {
 					
-					ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteDaConta, categoriaDeConta, tipoDeConta);
+					String numeroDaConta = geraNumeroDaConta();		
+					System.out.println("\nA conta número "+numeroDaConta+" foi cadastrada no cpf "+cpfClienteDaConta+" do titular:\n");
 					
-					ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contaDoCliente);	
+					ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteDaConta, categoriaDeConta, tipoDeConta, numeroDaConta);
+					
+					ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contaDoCliente, numeroDaConta);	
 					contaCorrenteDao.adicionarContaCorrente(contaCorrente);
 					
-					System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" do cpf "+cpfClienteDaConta+" cadastrada com sucesso!");			
+					System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" número "+numeroDaConta+" do cliente portador do cpf número "+cpfClienteDaConta+" foi cadastrada com sucesso!\n");			
 					
 					descontarTaxaManutencaoMensal(c);
 				} 
@@ -55,6 +59,29 @@ public class ContaCorrenteService {
 			System.err.println("Erro: "+e.getMessage());
 		}	
 
+	}
+	
+	public String geraNumeroDaConta() {
+		
+		int[] sequencia = new int[8];
+		Random random = new Random();
+		String minhaConta = "";
+		
+		
+		for(int i=0; i<sequencia.length; i++) {			
+			sequencia[i] = 1 + random.nextInt(8);
+		}
+		
+		for(int i=0; i<sequencia.length; i++) {			
+			minhaConta += Integer.toString(sequencia[i]);
+		}		
+		
+		ContaEntity cent = new ContaCorrenteEntity();
+		
+		cent.setNumeroDaConta(minhaConta.concat("-cc"));
+	
+		
+		return cent.getNumeroDaConta();
 	}
 	
 	public boolean verSeCpfACadastrarJatemClienteCadastrado(String cpf) {	
@@ -86,7 +113,7 @@ public class ContaCorrenteService {
 					saldoNovo += cce.getSaldo() - cce.getTaxaManutencaoMensal();			
 					
 					contaCorrenteDao.atualizarSaldo(saldoNovo);
-					System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi descontada uma taxa de "+cce.getTaxaManutencaoMensal()+" da conta do cliente "+cce.getContasDoClientePorCpf().getNomeDoCliente()+" portador do CPF "+cce.getContasDoClientePorCpf().getCpfDoCliente()+" porque está cadastrado na conta "+cce.getContasDoClientePorCpf().getCategoriaDaContaDoCpf());					
+					System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi descontada uma taxa de "+cce.getTaxaManutencaoMensal()+" da conta número "+cce.getNumeroDaConta()+" do cliente "+cce.getContasDoClientePorCpf().getNomeDoCliente()+" portador do CPF "+cce.getContasDoClientePorCpf().getCpfDoCliente()+" porque está cadastrado na conta "+cce.getContasDoClientePorCpf().getCategoriaDaContaDoCpf());					
 					System.out.println("Saldo novo: "+cce.exibirSaldo());
 				}
 			}

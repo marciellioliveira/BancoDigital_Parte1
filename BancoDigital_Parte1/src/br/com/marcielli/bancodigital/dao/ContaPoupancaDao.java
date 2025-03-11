@@ -18,9 +18,9 @@ public class ContaPoupancaDao {
 		return instancia;
 	}
 	
-	public void atualizarSaldo(float SaldoNovo) {
-		for(ContaPoupancaEntity cc : listaDeContasPoupanca) {
-			cc.setSaldo(SaldoNovo);
+	public void atualizarSaldo(float saldoNovo) {
+		for(ContaPoupancaEntity cc : listaDeContasPoupanca) {	
+			cc.setSaldo(saldoNovo);
 		}
 	}
 	

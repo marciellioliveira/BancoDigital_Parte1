@@ -16,12 +16,14 @@ public class ContaCorrenteEntity extends ContaEntity {
 
 	
 	
-	public ContaCorrenteEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf) {
-		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contasDoClientePorCpf);
+	public ContaCorrenteEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf, String numeroDaConta) {
+		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contasDoClientePorCpf, numeroDaConta);
 		
 		//this.contasDoClientePorCpf = contasDoClientePorCpf;
 		
 		//System.out.println("ContaCorrenteEn tity: "+contasDoClientePorCpf);
+		
+		
 		
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;
@@ -39,6 +41,8 @@ public class ContaCorrenteEntity extends ContaEntity {
 			}
 			
 			this.nomeClienteDonoDaConta = getNomeClienteDonoDaConta();
+			
+			
 
 			
 		}
@@ -108,7 +112,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfClienteDaConta())) {
-				texto = "Conta de: "+cli.getNome()+" - "+getTipoDeConta().getDescricaoDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal();
+				texto = "Conta de: "+cli.getNome()+" - "+getTipoDeConta().getDescricaoDaConta()+" número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal();
 			}
 		}		
 		return texto;

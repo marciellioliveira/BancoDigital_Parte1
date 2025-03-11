@@ -1,5 +1,7 @@
 package br.com.marcielli.bancodigital.entity;
 
+import java.util.Random;
+
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
@@ -10,18 +12,19 @@ public abstract class ContaEntity {
 	private CategoriasDeConta categoriaDeConta;
 	private float saldo;
 	private ContasDoCliente contasDoClientePorCpf;
+	private String numeroDaConta;
 	
 	
-	public ContaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf) {
+	public ContaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf, String numeroDaConta) {
 		this.cpfClienteDaConta = cpfClienteDaConta;
 		this.saldo = saldo;
 		this.tipoDeConta = tipoDeConta;
-		this.contasDoClientePorCpf = contasDoClientePorCpf;
-		
-		
+		this.contasDoClientePorCpf = contasDoClientePorCpf;	
+		this.numeroDaConta = numeroDaConta;
 	}
 	
 	public ContaEntity() {}
+		
 	
 	public abstract float exibirSaldo();
 	
@@ -66,6 +69,20 @@ public abstract class ContaEntity {
 	public void setContasDoClientePorCpf(ContasDoCliente contasDoClientePorCpf) {
 		this.contasDoClientePorCpf = contasDoClientePorCpf;
 	}
+
+	public String getNumeroDaConta() {
+		return numeroDaConta;
+	}
+
+	public void setNumeroDaConta(String numeroDaConta) {
+		this.numeroDaConta = numeroDaConta;
+	}
+	
+	@Override
+	public String toString() {
+		return "\nNúmero da Conta: "+numeroDaConta;
+	}	
+
 
 	
 	
