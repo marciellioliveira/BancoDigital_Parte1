@@ -188,14 +188,8 @@ public class Main { //VIEW
 				}
 				
 				System.out.println("Digite o CPF do cliente que deseja abrir uma conta: ");
-				String abrirContaCpf = input.next();
+				String abrirContaCpf = input.next();				
 				
-				if(!contaCorrenteService.verSeCpfACadastrarJatemClienteCadastrado(abrirContaCpf)) {
-					System.err.println("Você precisa digitar um CPF de um cliente já cadastrado no sistema para criar uma conta");
-					
-					opcao = -1;
-					break;
-				}
 				
 				System.out.println("Digite:\n1 - Abrir Conta Corrente\n2 - Abrir conta Poupança: ");
 				int tipoDeContaEscolhida = input.nextInt();
@@ -218,8 +212,7 @@ public class Main { //VIEW
 					TiposDeConta contaPoupanca;
 					contaPoupanca = TiposDeConta.CONTA_POUPANCA;
 					
-					contaPoupancaService.adicionarContaPoupancaEntityEmDao(abrirContaCpf, primeiroDeposito, contaPoupanca, categoriaCliente);
-					
+					contaPoupancaService.adicionarContaPoupancaEntityEmDao(abrirContaCpf, primeiroDeposito, contaPoupanca, categoriaCliente);					
 				}		
 				
 				opcao = -1;
@@ -236,6 +229,8 @@ public class Main { //VIEW
 						}
 					}
 				}			
+				
+				System.out.println();
 				
 				for(ContaCorrenteEntity cc : contaCorrenteService.verContasCorrentesCadastradasDao()) {
 					if(contaCorrenteService.verContasCorrentesCadastradasDao().size() != 0) {
@@ -257,9 +252,11 @@ public class Main { //VIEW
 					}					
 				}
 				
-				if(naoExistemContas != true)
-				System.err.println("Não existem contas cadastradas no momento.");
-				System.out.println("Digite 1 para Adicionar um cliente. Após o cadastro do cliente, você poderá criar uma nova conta!\n");
+				if(naoExistemContas != true) {
+					System.err.println("Não existem contas cadastradas no momento.");
+					System.out.println("Digite 1 para Adicionar um cliente. Após o cadastro do cliente, você poderá criar uma nova conta!\n");
+				}
+				
 				
 				opcao = -1;
 			break;

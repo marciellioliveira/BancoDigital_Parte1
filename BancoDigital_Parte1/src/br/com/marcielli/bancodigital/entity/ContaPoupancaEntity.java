@@ -1,5 +1,6 @@
 package br.com.marcielli.bancodigital.entity;
 
+import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 import br.com.marcielli.bancodigital.service.ContaPoupancaService;
@@ -80,10 +81,22 @@ public class ContaPoupancaEntity extends ContaEntity {
 	public double getTaxaMensal() {
 		return taxaMensal;
 	}
-
+	
 	@Override
 	public String toString() {
-		return ""+getTipoDeConta().getDescricaoDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+getSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento();
+		String texto = "";
+		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
+			if(cli.getCpf().equals(getCpfClienteDaConta())) {
+				texto = "Conta de: "+cli.getNome()+" - "+getTipoDeConta().getDescricaoDaConta()+" número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento();
+			}
+		}		
+		return texto;
+		
 	}	
+
+//	@Override
+//	public String toString() {
+//		return ""+getTipoDeConta().getDescricaoDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+getSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento();
+//	}	
 
 }

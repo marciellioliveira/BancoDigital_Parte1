@@ -13,6 +13,7 @@ import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
+import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
@@ -21,31 +22,67 @@ public class ContaPoupancaService {
 	ContaPoupancaDao contaPoupancaDao = new ContaPoupancaDao().getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();
 	
-	public void adicionarContaPoupancaEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
+	public boolean adicionarContaPoupancaEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
 		
 		try {						
+			verSeTemContaComEsseCPF(cpfClienteDaConta);
+//			for(ClienteEntity c : clienteDao.buscarClientes()) {
+//				
+//				if(cpfClienteDaConta.equals(c.getCpf())) {
+//					
+//					String numeroDaConta = geraNumeroDaConta();	
+//					System.out.println("\nA conta número "+numeroDaConta+" foi cadastrada no cpf "+cpfClienteDaConta+" do titular:\n");
+//					
+//					ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteDaConta, categoriaDeConta, tipoDeConta, numeroDaConta);
+//					ContaPoupancaEntity contaPoupanca = new ContaPoupancaEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contaDoCliente, numeroDaConta);
+//					contaPoupancaDao.adicionarContaPoupanca(contaPoupanca);
+//					System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" número "+numeroDaConta+" do cliente portador do cpf número "+cpfClienteDaConta+" foi cadastrada com sucesso!\n");				
+//					
+//					creditarTaxaVigenteMensal(c);
+//				} 
+//				
+//			}
+		} catch (ContaComCPFExistenteException e) {
 			
-			for(ClienteEntity c : clienteDao.buscarClientes()) {
-				
-				if(cpfClienteDaConta.equals(c.getCpf())) {
-					
-					String numeroDaConta = geraNumeroDaConta();	
-					System.out.println("\nA conta número "+numeroDaConta+" foi cadastrada no cpf "+cpfClienteDaConta+" do titular:\n");
-					
-					ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteDaConta, categoriaDeConta, tipoDeConta, numeroDaConta);
-					ContaPoupancaEntity contaPoupanca = new ContaPoupancaEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contaDoCliente, numeroDaConta);
-					contaPoupancaDao.adicionarContaPoupanca(contaPoupanca);
-					System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" número "+numeroDaConta+" do cliente portador do cpf número "+cpfClienteDaConta+" foi cadastrada com sucesso!\n");				
-					
-					creditarTaxaVigenteMensal(c);
-				} 
-				
-			}
+			System.err.println("CPF: "+e.getMessage());
+			return false;
 			
 		} catch (Exception e) {
 			System.err.println("Erro: "+e.getMessage());
-		}	
+			return false;
+		}
 		
+		for(ClienteEntity c : clienteDao.buscarClientes()) {
+			
+			if(cpfClienteDaConta.equals(c.getCpf())) {
+				
+				String numeroDaConta = geraNumeroDaConta();	
+				System.out.println("\nA conta número "+numeroDaConta+" foi cadastrada no cpf "+cpfClienteDaConta+" do titular:\n");
+				
+				ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteDaConta, categoriaDeConta, tipoDeConta, numeroDaConta);
+				ContaPoupancaEntity contaPoupanca = new ContaPoupancaEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contaDoCliente, numeroDaConta);
+				contaPoupancaDao.adicionarContaPoupanca(contaPoupanca);
+				System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" número "+numeroDaConta+" do cliente portador do cpf número "+cpfClienteDaConta+" foi cadastrada com sucesso!\n");				
+				
+				creditarTaxaVigenteMensal(c);
+			} 
+			
+		}
+		return true;
+		
+	}
+	
+	private boolean verSeTemContaComEsseCPF(String cpf) throws ContaComCPFExistenteException {
+		
+		for(ContaPoupancaEntity cc : contaPoupancaDao.listaDeContasPoupanca) {
+			if(clienteDao.temCpf(cpf)) {
+				if(cpf.equals(cc.getCpfClienteDaConta())) {
+					throw new ContaComCPFExistenteException("Esse CPF "+cpf+" já possui uma conta poupança.\nVocê só pode ter uma conta poupança por CPF.\n");
+				}				
+			}
+		}
+		
+		return false;
 	}
 	
 	public String geraNumeroDaConta() {
