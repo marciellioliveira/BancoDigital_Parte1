@@ -22,9 +22,7 @@ import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 public class ContaCorrenteService {
 	
 	ContaCorrenteDao contaCorrenteDao = ContaCorrenteDao.getInstancia();
-	ClienteDao clienteDao = ClienteDao.getInstancia();
-	
-	
+	ClienteDao clienteDao = ClienteDao.getInstancia();	
 	
 	
 	public void adicionarContaCorrenteEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
