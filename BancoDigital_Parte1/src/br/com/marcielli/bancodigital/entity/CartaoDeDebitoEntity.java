@@ -9,8 +9,8 @@ public class CartaoDeDebitoEntity extends CartaoEntity {
 	private float limiteDiarioDeTransacao;
 
 	public CartaoDeDebitoEntity(String numeroDoCartao, String nomeDoDono, String cpfDoDono, TiposDeConta tipoDaConta,
-			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha,  ContasDoCliente contasDoCliente) {
-		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha, contasDoCliente);
+			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha) {
+		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha);
 		
 	}
 

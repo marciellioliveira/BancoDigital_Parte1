@@ -15,11 +15,11 @@ public abstract class ContaEntity {
 	private String numeroDaConta;
 	
 	
-	public ContaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf, String numeroDaConta) {
+	public ContaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta,  String numeroDaConta) {
 		this.cpfClienteDaConta = cpfClienteDaConta;
 		this.saldo = saldo;
 		this.tipoDeConta = tipoDeConta;
-		this.contasDoClientePorCpf = contasDoClientePorCpf;	
+		//this.contasDoClientePorCpf = contasDoClientePorCpf;	
 		this.numeroDaConta = numeroDaConta;
 	}
 	

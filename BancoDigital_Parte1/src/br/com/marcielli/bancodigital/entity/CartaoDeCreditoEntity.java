@@ -12,8 +12,8 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	private float taxaSeguroViagem;
 
 	public CartaoDeCreditoEntity(String numeroDoCartao, String nomeDoDono, String cpfDoDono, TiposDeConta tipoDaConta,
-			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha,  ContasDoCliente contasDoCliente) {
-		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha, contasDoCliente);		
+			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha) {
+		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha);		
 		
 		if(categoriaDaConta.equals(CategoriasDeConta.COMUM)) {
 			this.limiteDeCreditoPreAprovado = 1.000f;

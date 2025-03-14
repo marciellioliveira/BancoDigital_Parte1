@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
+import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public class ContaPoupancaDao {
 	
@@ -23,6 +24,20 @@ public class ContaPoupancaDao {
 		for(ContaPoupancaEntity cc : listaDeContasPoupanca) {	
 			cc.setSaldo(saldoNovo);
 		}
+	}
+	
+	public boolean existeContaCadastradaNoCPF(String cpf, int tipoDeContaEscolhida) {
+		TiposDeConta tipoDeConta = null;
+		if(tipoDeContaEscolhida == 2) {
+			 tipoDeConta = TiposDeConta.CONTA_POUPANCA;
+		}
+		
+		for(ContaPoupancaEntity ce : listaDeContasPoupanca) {
+			if(cpf.contains(ce.getCpfClienteDaConta()) && tipoDeConta.equals(ce.getTipoDeConta())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	

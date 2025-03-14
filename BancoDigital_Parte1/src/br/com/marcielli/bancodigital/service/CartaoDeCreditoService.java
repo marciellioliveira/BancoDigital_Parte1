@@ -33,15 +33,19 @@ public class CartaoDeCreditoService {
 					TiposDeConta tpc= buscarTipoDaContaDoCliente(cpfClienteEmitirCartao);
 					String numeroDaConta = buscarNumeroDaConta(cpfClienteEmitirCartao);
 					
-					
 					System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");					
 					
 					
-					ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteEmitirCartao, c.getCategoriaDeConta(), tpc, numeroDaConta);
+					//ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteEmitirCartao, c.getCategoriaDeConta(), tpc, numeroDaConta);
 					
 					CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
-							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaDoCliente);
+							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_CREDITO, true, senha);
+					
+					//Adicionando Cartão de Crédito no Cliente			
+					c.setCartaoDeCredito(cartaoDeCreditoNovo);
+					
 					contaCorrenteDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
+					
 					
 					System.out.println("\n"+TipoDeCartao.CARTAO_DE_CREDITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrada com sucesso!\n");
 					

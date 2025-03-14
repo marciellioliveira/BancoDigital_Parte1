@@ -11,8 +11,8 @@ public class ContaPoupancaEntity extends ContaEntity {
 	private double taxaMensal;
 	
 	
-	public ContaPoupancaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, ContasDoCliente contasDoClientePorCpf, String numeroDaConta) {
-		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contasDoClientePorCpf, numeroDaConta);
+	public ContaPoupancaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta, String numeroDaConta) {
+		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta,  numeroDaConta);
 				
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;
@@ -87,16 +87,9 @@ public class ContaPoupancaEntity extends ContaEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfClienteDaConta())) {
-				texto = "Conta de: "+cli.getNome()+" - "+getTipoDeConta().getDescricaoDaConta()+" número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento();
+				texto = "Conta Poupança: "+cli.getNome()+" - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento()+".";
 			}
 		}		
-		return texto;
-		
+		return texto;		
 	}	
-
-//	@Override
-//	public String toString() {
-//		return ""+getTipoDeConta().getDescricaoDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+getSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento();
-//	}	
-
 }

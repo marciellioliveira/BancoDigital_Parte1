@@ -11,6 +11,8 @@ public class ContasDoCliente {
 	private TiposDeConta tipoDeContaDoCpf;
 	private String numeroDaConta;
 	
+	
+	
 	public ContasDoCliente(String nomeDoCliente, String cpfDoCliente, CategoriasDeConta categoriaDaContaDoCpf, TiposDeConta tipoDeContaDoCpf, String numeroDaConta) {
 		this.nomeDoCliente = nomeDoCliente;
 		this.cpfDoCliente = cpfDoCliente;

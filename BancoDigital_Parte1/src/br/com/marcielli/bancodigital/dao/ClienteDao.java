@@ -65,6 +65,11 @@ public class ClienteDao {
 		return listaDeClientes;
 	}
 	
+	
+	
+	
+	
+	
 	public boolean removerCliente(String cpf) {
 
 			for(ClienteEntity c : listaDeClientes) {

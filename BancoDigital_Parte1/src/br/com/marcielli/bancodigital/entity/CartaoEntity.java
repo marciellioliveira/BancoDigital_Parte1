@@ -14,10 +14,10 @@ public abstract class CartaoEntity {
 	private TipoDeCartao tipoDeCartao;
 	private boolean status;
 	public String senha;
-	private ContasDoCliente contasDoCliente;
+	//private ContasDoCliente contasDoCliente;
 	
 	public CartaoEntity(String numeroDoCartao, String nomeDoDono, String cpfDoDono, TiposDeConta tipoDaConta,
-			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha, ContasDoCliente contasDoCliente) {
+			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha) {
 		super();
 		this.numeroDoCartao = numeroDoCartao;
 		this.nomeDoDono = nomeDoDono;
@@ -27,7 +27,7 @@ public abstract class CartaoEntity {
 		this.tipoDeCartao = tipoDeCartao;
 		this.status = status;
 		this.senha = senha;
-		this.contasDoCliente = contasDoCliente;
+		//this.contasDoCliente = contasDoCliente;
 	}	
 	
 	/* **
@@ -111,14 +111,14 @@ public abstract class CartaoEntity {
 		this.senha = senha;
 	}
 
-	public ContasDoCliente getContasDoCliente() {
-		return contasDoCliente;
-	}
-
-	public void setContasDoCliente(ContasDoCliente contasDoCliente) {
-		this.contasDoCliente = contasDoCliente;
-	}
-	
+//	public ContasDoCliente getContasDoCliente() {
+//		return contasDoCliente;
+//	}
+//
+//	public void setContasDoCliente(ContasDoCliente contasDoCliente) {
+//		this.contasDoCliente = contasDoCliente;
+//	}
+//	
 	@Override
 	public String toString() {
 		return "\nNúmero o Cartão: "+numeroDoCartao;

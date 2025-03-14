@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContasDoCliente;
+import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public class ContaCorrenteDao {
 	
@@ -27,6 +28,20 @@ public class ContaCorrenteDao {
 			cc.setSaldo(SaldoNovo);
 		}
 	}	
+	
+	public boolean existeContaCadastradaNoCPF(String cpf, int tipoDeContaEscolhida) {
+		TiposDeConta tipoDeConta = null;
+		if(tipoDeContaEscolhida == 1) {
+			 tipoDeConta = TiposDeConta.CONTA_CORRENTE;
+		}
+		
+		for(ContaCorrenteEntity ce : listaDeContasCorrente) {
+			if(cpf.contains(ce.getCpfClienteDaConta()) && tipoDeConta.equals(ce.getTipoDeConta())) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public void adicionarContaCorrente(ContaCorrenteEntity contaCorrente) {
 		listaDeContasCorrente.add(contaCorrente);

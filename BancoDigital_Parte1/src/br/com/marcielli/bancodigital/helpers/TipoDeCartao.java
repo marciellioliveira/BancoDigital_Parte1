@@ -3,7 +3,9 @@ package br.com.marcielli.bancodigital.helpers;
 public enum TipoDeCartao {
 
 	CARTAO_DE_CREDITO(1, "Cartão de Crédito"),
-	CARTAO_DE_DEBITO(2, "Cartão de Débito");
+	CARTAO_DE_DEBITO(2, "Cartão de Débito"),
+	CARTAO_CADASTRO(3, "Cartão de Cadastro");
+	
 	
 	private final int codigoDoTipoDeCartao;
 	private final String descricaoDoTipoDeCartao;

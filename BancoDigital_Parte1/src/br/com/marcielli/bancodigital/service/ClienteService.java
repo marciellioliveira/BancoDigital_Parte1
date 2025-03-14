@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import br.com.marcielli.bancodigital.dao.ClienteDao;
+import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
+import br.com.marcielli.bancodigital.entity.CartaoDeDebitoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
+import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
+import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
+import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.AnoNascimentoDiferente4Exception;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
@@ -20,6 +25,8 @@ import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
+import br.com.marcielli.bancodigital.helpers.TipoDeCartao;
+import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public class ClienteService {
 	
@@ -38,8 +45,20 @@ public class ClienteService {
 		clienteEntity.setEndereco(endereco);
 		clienteEntity.setCategoriaDeConta(categoriaCliente);
 		
+		//Começando as contas com dados inicias 
+		
+//		CartaoDeCreditoEntity cartaoDeCreditoCad = new CartaoDeCreditoEntity("", nome, cpf, TiposDeConta.CONTA_CADASTRO,
+//				categoriaCliente, TipoDeCartao.CARTAO_CADASTRO, false, "0");
+//		clienteEntity.setCartaoDeCredito(cartaoDeCreditoCad);
+//		
+//		CartaoDeDebitoEntity cartaoDeDebitoCad = new CartaoDeDebitoEntity("", nome, cpf, TiposDeConta.CONTA_CADASTRO, categoriaCliente, TipoDeCartao.CARTAO_CADASTRO, false, "0");
+//		clienteEntity.setCartaoDeDebito(cartaoDeDebitoCad);
+		
+	
+		
 		if(clienteDao.buscarClientes().size() == 0) {
 			clienteDao.adicionarCliente(clienteEntity);
+			
 			return true;
 		}
 	
@@ -51,112 +70,13 @@ public class ClienteService {
 				
 				
 			}else {
-				System.err.println("CPF: "+cpf);
-				System.err.println("CLI GETCPF: "+cpfParaValidar);
+				return false;
+//				System.err.println("CPF: "+cpf);
+//				System.err.println("CLI GETCPF: "+cpfParaValidar);
 			}
 		}
 		
 		return false;
-		
-		
-		
-		
-		
-		
-//			try {		
-//						removerCaracteresEspeciaisCpf(cpf); 
-//						
-//						verTamanhoCpf(cpf);
-//						
-//						verCpfDuplicado(cpf);
-//						
-//						validarUltimosNumerosDoCpf(cpf);
-//						
-//						validarCpfComNumerosIguais(cpf); //Números iguais em sequência 000000000
-//						
-//						validarCep(endereco);
-//						
-//						validarDataDeNascimento(dataNascimentoDATE);
-//						
-//						validarTamanhoNome(nome);
-//						
-//						validarCaracteresEspeciaisNome(nome);
-//			
-//				
-//				
-//			
-//			} catch (CpfJaCadastradoException e) {
-//								
-//				System.err.println("CPF duplicado: "+e.getMessage());
-//				return false;
-//				
-//			} catch (TamanhoDoCpfException e) {
-//				
-//				removerCaracteresEspeciaisCpf(cpf); 
-//				System.err.println("Tamanho do CPF: "+e.getMessage());
-//				return false;
-//				
-//			} catch (ValidarUltimosNumerosDoCpfException e) {
-//				
-//				System.err.println("CPF: "+e.getMessage());
-//				return false;
-//				
-//			} catch (CpfComNumerosIguaisException e) {
-//				
-//				System.err.println("CPF: "+e.getMessage());
-//				return false;
-//			
-//			} catch (TamanhoDoCepException e) {
-//				
-//				removerCaracteresEspeciaisCep(endereco.getCep());
-//				System.err.println("CEP: "+e.getMessage());
-//				return false;
-//				
-//			} catch (DataDeNascMenor18Exception e) {
-//				
-//				System.err.println("Data de Nascimento: "+e.getMessage());
-//				return false;
-//			
-//			} catch (NomeMenor2EMaior100Exception e) {
-//				
-//				System.err.println("Nome maior ou menor: "+e.getMessage());
-//				return false;
-//				
-//			} catch (CaracterEspecialNoNomeException e) {
-//				
-//				System.err.println("Nome com caracter especial ou número: "+e.getMessage());
-//				return false;
-//				
-//			} 
-//				
-//			
-//				ClienteEntity clienteEntity = new ClienteEntity();
-//				clienteEntity.setCpf(cpf);
-//				clienteEntity.setNome(nome);
-//				clienteEntity.setDataNascimento(dataNascimentoDATE);
-//				clienteEntity.setEndereco(endereco);
-//				clienteEntity.setCategoriaDeConta(categoriaCliente);
-//				
-//				if(clienteDao.buscarClientes().size() == 0) {
-//					clienteDao.adicionarCliente(clienteEntity);
-//					return true;
-//				}
-//			
-//				for(ClienteEntity cli : clienteDao.buscarClientes()) {
-//					String cpfParaValidar = cli.getCpf().replace("-", "").replace(".", "");
-//					if(!cpf.equals(cpfParaValidar)) {
-//						clienteDao.adicionarCliente(clienteEntity);
-//						return true;
-//						
-//						
-//					}else {
-//						System.err.println("CPF: "+cpf);
-//						System.err.println("CLI GETCPF: "+cpfParaValidar);
-//					}
-//				}
-//				
-//				return false;
-				
 						
 	}
 	
@@ -186,7 +106,7 @@ public class ClienteService {
 //		return clienteDao.buscarClienteComCpfCadastrado(cpf);	
 //	}
 	
-	public void validarCpf(String cpf) throws TamanhoDoCpfException, CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, ValidarUltimosNumerosDoCpfException, CpfComNumerosIguaisException  {
+	public void validarCpf(String cpf) throws TamanhoDoCpfException, CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, CpfComNumerosIguaisException  {
 		//cpf = cpf.replace(".", "").replace("-", "");
 		
 		if(!cpf.contains(".") && cpf.contains("-")) {
@@ -480,6 +400,35 @@ public class ClienteService {
 		
 		if(numOcorrencias >= 11) {
 			throw new CidadeComNumerosIguaisException("O bairro '"+bairro+"' digitado não é válido. Por favor, digite um bairro válido.");
+		}		
+	}
+	
+	public void validarComplemento(String complemento) throws MesmosCaracteresEmStringException, CidadeComNumerosIguaisException {
+		String pattern = "([a-zA-Z])\\1*";
+		if(complemento.matches(pattern)) {
+			throw new MesmosCaracteresEmStringException("Tente cadastrar um complemento existente!");
+		}		
+		
+		int numOcorrencias = 1;		
+		HashMap<Character, Integer> findDuplicated = new HashMap<Character, Integer>();
+		String novoComplemento = "";
+		
+		
+		char[] meuComplemento = complemento.toCharArray();
+		
+		for(int i=0; i<meuComplemento.length; i++) {
+			if(!findDuplicated.containsKey(meuComplemento[i])) {
+				findDuplicated.put(meuComplemento[i], 1);
+				novoComplemento += meuComplemento[i];
+				
+			} else {
+				findDuplicated.put(meuComplemento[i], 1);
+				numOcorrencias++; 
+			}
+		}
+		
+		if(numOcorrencias >= 11) {
+			throw new CidadeComNumerosIguaisException("O complemento '"+complemento+"' digitado não é válido. Por favor, digite um complemento válido.");
 		}		
 	}
 
