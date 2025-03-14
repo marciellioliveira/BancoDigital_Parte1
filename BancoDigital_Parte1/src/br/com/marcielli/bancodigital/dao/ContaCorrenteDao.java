@@ -12,8 +12,6 @@ public class ContaCorrenteDao {
 	
 	public  ArrayList<ContaCorrenteEntity> listaDeContasCorrente = new ArrayList<ContaCorrenteEntity>();
 	
-	
-	
 	private ContaCorrenteDao() {}
 	
 	public static ContaCorrenteDao getInstancia() {
@@ -28,10 +26,7 @@ public class ContaCorrenteDao {
 		for(ContaCorrenteEntity cc : listaDeContasCorrente) {
 			cc.setSaldo(SaldoNovo);
 		}
-	}
-	
-
-
+	}	
 	
 	public void adicionarContaCorrente(ContaCorrenteEntity contaCorrente) {
 		listaDeContasCorrente.add(contaCorrente);

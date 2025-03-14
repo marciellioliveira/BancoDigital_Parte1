@@ -1,19 +1,23 @@
 package br.com.marcielli.bancodigital.view;
 
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
-import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.entity.Endereco;
+import br.com.marcielli.bancodigital.exception.AnoNascimentoDiferente4Exception;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;
+import br.com.marcielli.bancodigital.exception.CidadeComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
+import br.com.marcielli.bancodigital.exception.DiaEMesNascimentoDiferente2Exception;
+import br.com.marcielli.bancodigital.exception.MesmosCaracteresEmStringException;
 import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
@@ -28,7 +32,7 @@ import br.com.marcielli.bancodigital.service.ContaPoupancaService;
 public class Main { //VIEW
 	
 	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
-	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException {	
+	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException, AnoNascimentoDiferente4Exception, DiaEMesNascimentoDiferente2Exception, MesmosCaracteresEmStringException, CidadeComNumerosIguaisException {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
@@ -44,101 +48,299 @@ public class Main { //VIEW
 		ContaPoupancaService contaPoupancaService = new ContaPoupancaService();
 		CartaoDeCreditoService cartaoDeCreditoService = new CartaoDeCreditoService();
 		
+		boolean flagNome = true, flagCpf = true, flagAnoNascimento = true, flagMesNascimento = true, flagDiaNascimento = true, flagCep = true, flagCidade = true, flagEstado= true, flagRua= true, flagNumero= true, flagBairro= true, flagComplemento= true;
+		String nome = null, cpf = null, cep = null, cidade = null, estado = null, rua = null, numero = null, bairro = null, complemento = null;
+		int anoNascimento = 0, mesNascimento = 0, diaNascimento = 0;
+		Endereco endereco = new Endereco();
 		
+		int i=1;
 		do {
 			System.out.println();
 			System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n5 - VER TODAS AS CONTAS\n6 - VER TAXA/DESCONTO FUNCIONANDO\n7 - EMITIR CARTÃO\n0 - SAIR..: ");
 			opcao = input.nextInt();
+			input.nextLine();
 			
 			switch (opcao) {
 			case 1:
 				System.out.println("\nADICIONAR\n");
 				
-				String cep1 = "12.630-000"; //12.630-000
-				cep1 = cep1.replace(".", "").replace("-", "");
-				String cidade1 = "Cachoeira Paulista";
-				String estado1 = "SP";
-				String rua1 = "12 de abril";
-				String numero1 = "321";
-				String bairro1 = "Margem Direita";
-				String complemento1 = "Casa";
+				while(flagNome) {
+					try {						
+						System.out.println("Digite o nome: ");	
+						nome = input.nextLine();	
+						clienteService.validarNome(nome);
+						flagNome = false;
+					} catch (NomeMenor2EMaior100Exception e) {
+						System.err.println("\nErro: "+e.getMessage());
+						flagNome = true;
+						
+					} catch (CaracterEspecialNoNomeException e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagNome = true;
+					} catch (InputMismatchException e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagNome = true;		
+						input.nextLine();
+					}	
+				}
 				
-				String cpf1 = "926.579.490-96"; //926.579.490-96
-				cpf1 = cpf1.replace(".", "").replace("-", "");
-				String nome1 = "Marcielli Oliveira";
-				LocalDate dataNascimentoDATE1  = LocalDate.of(1990, 12, 01); //1990, 12, 01
-										
-				Endereco endereco1 = new Endereco();
-				endereco1 = new Endereco();
-				endereco1.setCep(cep1);
-				endereco1.setCidade(cidade1);
-				endereco1.setEstado(estado1);
-				endereco1.setRua(rua1);
-				endereco1.setNumero(numero1);
-				endereco1.setBairro(bairro1);
-				endereco1.setComplemento(complemento1);
+				while(flagCpf) {
+					try {						
+						System.out.println("\nO CPF deve conter pontos e traços!");
+						System.out.println("Digite o cpf - EX: 353.321-854-21: ");	
+						cpf = input.nextLine();	
+						clienteService.validarCpf(cpf);
+						flagCpf = false;
+					} catch (TamanhoDoCpfException e) {
+						System.err.println("\nErro: "+e.getMessage());
+						flagCpf = true;
+						
+					} catch (CpfJaCadastradoException e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagCpf = true;
+					} catch (ValidarUltimosNumerosDoCpfException e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagCpf = true;
+					} catch (CpfComNumerosIguaisException  e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagCpf = true;
+					} catch (InputMismatchException e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagCpf = true;		
+						input.nextLine();
+					}	
+				}
 				
-				clienteService.adicionarClienteEntityEmDao(cpf1, nome1, dataNascimentoDATE1, endereco1, 1, categoriaCliente);	
+				while(flagAnoNascimento) { 
+					try {						
+						System.out.println("\nDigite o ano do seu nascimento: ");	
+						String ano = input.nextLine();
+						clienteService.validarAnoNascimento(ano);
+						anoNascimento = Integer.parseInt(ano);
+						flagAnoNascimento = false;
+						
+					} catch (AnoNascimentoDiferente4Exception e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagAnoNascimento = true;					
+					}  catch (DataDeNascMenor18Exception e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagAnoNascimento = true;
+					} catch (InputMismatchException e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagAnoNascimento = true;		
+						input.nextLine();
+					} finally {
+						
+					}					
+				}
 				
-				String cep2 = "12.362-450";
-				cep2 = cep2.replace(".", "").replace("-", "");
-				String cidade2 = "Guaratinguetá";
-				String estado2 = "SP";
-				String rua2 = "9 de dezembro";
-				String numero2 = "21";
-				String bairro2 = "São Benedito";
-				String complemento2 = "Apartamento 23";
+				while(flagMesNascimento) { 
+					try {						
+						System.out.println("Digite o mês do seu nascimento: EX: 12 ");	
+						String mes = input.nextLine();
+						clienteService.validarMesNascimento(mes);
+						mesNascimento = Integer.parseInt(mes);
+						flagMesNascimento = false;
+						
+					}  catch (DiaEMesNascimentoDiferente2Exception e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagMesNascimento = true;
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagMesNascimento = true;		
+						input.nextLine();
+					}	
+				}
 				
-				String cpf2 = "954.698.100-11"; //954.698.100-11
-				cpf2 = cpf2.replace(".", "").replace("-", "");
-				String 	nome2 = "João Mauricio"; //João Mauricio
-				LocalDate dataNascimentoDATE2  = LocalDate.of(2005, 10, 05);	
-										
-				Endereco endereco2 = new Endereco();
-				endereco2 = new Endereco();
-				endereco2.setCep(cep2);
-				endereco2.setCidade(cidade2);
-				endereco2.setEstado(estado2);
-				endereco2.setRua(rua2);
-				endereco2.setNumero(numero2);
-				endereco2.setBairro(bairro2);
-				endereco2.setComplemento(complemento2);
+				while(flagDiaNascimento) { 
+					try {						
+						System.out.println("Digite o dia do seu nascimento: EX: 01 ");	
+						String dia = input.nextLine();
+						clienteService.validarDiaNascimento(dia);
+						diaNascimento = Integer.parseInt(dia);
+						flagDiaNascimento = false;
+						
+					}  catch (DiaEMesNascimentoDiferente2Exception e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagDiaNascimento = true;
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagDiaNascimento = true;		
+						input.nextLine();
+					}	
+				}
 				
-				clienteService.adicionarClienteEntityEmDao(cpf2, nome2, dataNascimentoDATE2, endereco2, 2, categoriaCliente);
+				LocalDate dataNascimentoDATE  = LocalDate.of(anoNascimento, mesNascimento, diaNascimento); //1990, 12, 01
 				
-				String 	cep3 = "45.245-268"; //45.245-268
-				cep3 = cep3.replace(".", "").replace("-", "");
-				String 	cidade3 = "Rio de Janeiro";
-				String 	estado3 = "RJ";
-				String 	rua3 = "8 de novembro";
-				String 	numero3 = "2";
-				String 	bairro3 = "Marcos José"; //Marcos José
-				String 	complemento3 = "";
+				while(flagCep) { //Validar direito a logica
+					try {						
+						System.out.println("O CEP deve conter traço antes dos 3 últimos dígitos");
+						System.out.println("Digite o cep - EX: 12630-000: ");	
+						cep = input.nextLine();	
+						clienteService.validarCep(cep);
+						endereco.setCep(cep);
+						flagCep = false;	
+					} catch (TamanhoDoCepException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagCep = true;	
+					} catch (CpfComNumerosIguaisException  e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagCep = true;
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagCep = true;		
+						input.nextLine();
+					}	
+				}			
 				
-				String 	cpf3 = "126.724.390-28"; //126.724.390-28
-				cpf3 = cpf3.replace(".", "").replace("-", "");
-				String 	nome3 = "Maria Luiza";
-				LocalDate dataNascimentoDATE3  = LocalDate.of(1987, 02, 05);	
 				
-				Endereco endereco3 = new Endereco();
-				endereco3 = new Endereco();
-				endereco3.setCep(cep3);
-				endereco3.setCidade(cidade3);
-				endereco3.setEstado(estado3);
-				endereco3.setRua(rua3);
-				endereco3.setNumero(numero3);
-				endereco3.setBairro(bairro3);
-				endereco3.setComplemento(complemento3);
+				while(flagCidade) { 
+					try {						
+						System.out.println("Digite sua cidade: ");	
+						cidade = input.nextLine();	
+						clienteService.validarCidade(cidade);
+						endereco.setCidade(cidade);
+						flagCidade = false;		
+					} catch (MesmosCaracteresEmStringException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagCidade = true;	
+					} catch (CidadeComNumerosIguaisException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagCidade = true;	
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagCidade = true;		
+						input.nextLine();
+					}	
+				}
 				
-				clienteService.adicionarClienteEntityEmDao(cpf3, nome3, dataNascimentoDATE3, endereco3, 3, categoriaCliente);
-		
 				
+				
+				while(flagEstado) { 
+					try {						
+						System.out.println("Digite seu estado: ");	
+						estado = input.nextLine();	
+						clienteService.validarCidade(estado);
+						endereco.setEstado(estado);
+						flagEstado = false;		
+					} catch (MesmosCaracteresEmStringException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagEstado = true;	
+					} catch (CidadeComNumerosIguaisException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagEstado = true;	
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagEstado = true;		
+						input.nextLine();
+					}	
+				}
+				
+				
+				
+				while(flagRua) { 
+					try {						
+						System.out.println("Digite sua rua: ");	
+						rua = input.nextLine();	
+						clienteService.validarRua(rua);
+						endereco.setRua(rua);
+						flagRua = false;		
+					} catch (MesmosCaracteresEmStringException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagRua = true;	
+					} catch (CidadeComNumerosIguaisException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagRua = true;	
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagRua = true;		
+						input.nextLine();
+					}	
+				}
+				
+				
+				
+				while(flagNumero) { 
+					try {						
+						System.out.println("Digite o número: ");	
+						numero = input.nextLine();	
+						clienteService.validarNumero(numero);
+						endereco.setNumero(numero);
+						flagNumero = false;		
+					} catch (MesmosCaracteresEmStringException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagNumero = true;	
+					} catch (CidadeComNumerosIguaisException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagNumero = true;	
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagNumero = true;		
+						input.nextLine();
+					}	
+				}
+				
+				endereco.setNumero(numero);
+				
+				while(flagBairro) { 
+					try {						
+						System.out.println("Digite o bairro: ");	
+						bairro = input.nextLine();	
+						clienteService.validarBairro(bairro);
+						endereco.setBairro(bairro);
+						flagBairro = false;		
+					} catch (MesmosCaracteresEmStringException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagBairro = true;	
+					} catch (CidadeComNumerosIguaisException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagBairro = true;	
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagBairro = true;		
+						input.nextLine();
+					}	
+				}
+				
+				while(flagComplemento) { 
+					try {						
+						System.out.println("Digite o complemento: ");	
+						complemento = input.nextLine();	
+						clienteService.validarBairro(complemento);
+						endereco.setComplemento(complemento);
+						flagComplemento = false;		
+					} catch (MesmosCaracteresEmStringException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagComplemento = true;	
+					} catch (CidadeComNumerosIguaisException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagComplemento = true;	
+					} catch (InputMismatchException e) {
+						System.err.println("Erro: "+e.getMessage());	
+						flagComplemento = true;		
+						input.nextLine();
+					}	
+				}
+				
+				if(clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, categoriaCliente)) {
+					flagNome = true;
+					flagCpf = true;
+					flagAnoNascimento = true;
+					flagMesNascimento = true;
+					flagDiaNascimento = true;
+					flagCep = true;
+					flagCidade = true;
+					flagEstado= true;
+					flagRua= true;
+					flagNumero= true;
+					flagBairro= true;
+					flagComplemento= true;
+				}
+											
 				System.out.println("Clientes adicionados:\n");				
 				
 				for(ClienteEntity c : clienteService.verClientesCadastradosDao()) {
 					System.out.println(c+"\n");
-					
-				
 				}		
 			break;
 			case 2:

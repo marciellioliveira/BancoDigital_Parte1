@@ -16,6 +16,7 @@ import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
 import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.NumeroDaContaGeradoExistenteException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
@@ -77,6 +78,7 @@ public class ContaCorrenteService {
 			ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, contaDoCliente, numeroDaConta);	
 			contaCorrenteDao.adicionarContaCorrente(contaCorrente);
 			
+			
 			System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" número "+numeroDaConta+" do cliente portador do cpf número "+cpfClienteDaConta+" foi cadastrada com sucesso!\n");			
 			
 			descontarTaxaManutencaoMensal(c);
@@ -116,7 +118,7 @@ public class ContaCorrenteService {
 		
 		ContaEntity cent = new ContaCorrenteEntity();
 		
-		cent.setNumeroDaConta(minhaConta.concat("-cc"));
+		cent.setNumeroDaConta(minhaConta.concat("-cp"));
 	
 		
 		return cent.getNumeroDaConta();

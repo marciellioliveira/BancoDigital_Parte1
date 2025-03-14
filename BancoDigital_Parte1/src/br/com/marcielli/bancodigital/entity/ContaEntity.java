@@ -82,9 +82,4 @@ public abstract class ContaEntity {
 	public String toString() {
 		return "\nNúmero da Conta: "+numeroDaConta;
 	}	
-
-
-	
-	
-	
 }

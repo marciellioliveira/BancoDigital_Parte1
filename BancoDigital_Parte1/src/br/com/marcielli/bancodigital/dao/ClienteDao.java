@@ -20,6 +20,11 @@ public class ClienteDao {
 	}
 	
 	public void adicionarCliente(ClienteEntity cliente) {
+//		for(ClienteEntity a : listaDeClientes) {
+//			if(cliente.getCpf().equals(a.getCpf())) {
+//				
+//			}
+//		}
 		listaDeClientes.add(cliente);
 	}
 	

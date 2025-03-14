@@ -21,9 +21,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 		
 		//this.contasDoClientePorCpf = contasDoClientePorCpf;
 		
-		//System.out.println("ContaCorrenteEn tity: "+contasDoClientePorCpf);
-		
-		
+		//System.out.println("ContaCorrenteEn tity: "+contasDoClientePorCpf);			
 		
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;
@@ -40,11 +38,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 				}
 			}
 			
-			this.nomeClienteDonoDaConta = getNomeClienteDonoDaConta();
-			
-			
-
-			
+			this.nomeClienteDonoDaConta = getNomeClienteDonoDaConta();	
 		}
 		
 		if(saldo > 1000 && saldo <= 5000) {
@@ -104,8 +98,6 @@ public class ContaCorrenteEntity extends ContaEntity {
 	public void setTaxaManutencaoMensal(float taxaManutencaoMensal) {
 		this.taxaManutencaoMensal = taxaManutencaoMensal;
 	}
-	
-
 
 	@Override
 	public String toString() {
@@ -115,7 +107,6 @@ public class ContaCorrenteEntity extends ContaEntity {
 				texto = "Conta de: "+cli.getNome()+" - "+getTipoDeConta().getDescricaoDaConta()+" número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria().toLowerCase()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal();
 			}
 		}		
-		return texto;
-		
+		return texto;		
 	}		
 }

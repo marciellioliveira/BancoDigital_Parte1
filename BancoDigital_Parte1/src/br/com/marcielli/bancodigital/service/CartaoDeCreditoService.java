@@ -5,6 +5,7 @@ import java.util.Random;
 
 import br.com.marcielli.bancodigital.dao.CartaoDeCreditoDao;
 import br.com.marcielli.bancodigital.dao.ClienteDao;
+import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
 import br.com.marcielli.bancodigital.dao.ContaPoupancaDao;
 import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
@@ -44,18 +45,14 @@ public class CartaoDeCreditoService {
 					
 					System.out.println("\n"+TipoDeCartao.CARTAO_DE_CREDITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrada com sucesso!\n");
 					
-					
 				}
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		
-		
+			System.err.println(e.getMessage());
+		}			
 	}
-	
+		
 
 	public TiposDeConta buscarTipoDaContaDoCliente(String cpf) {
 		ContaCorrenteService ccService = new ContaCorrenteService();
