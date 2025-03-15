@@ -120,12 +120,39 @@ public class ClienteService {
 		ArrayList<ContaEntity> contasDoCliente = new ArrayList<ContaEntity>();	
 		
 		for(ClienteEntity c : ClienteDao.getInstancia().buscarClientes()) {
-			if(c.getContaCorrente() != null) {
-				contasDoCliente.add(c.getContaCorrente());
+			
+			if(cpf.equals(c.getCpf())) {
+				if(c.getContaCorrente() != null) {
+					contasDoCliente.add(c.getContaCorrente());
+				}
+				if(c.getContaPoupanca() != null) {
+					contasDoCliente.add(c.getContaPoupanca());
+				}
 			}
-			if(c.getContaPoupanca() != null) {
-				contasDoCliente.add(c.getContaPoupanca());
+			
+			
+		}
+		
+		return contasDoCliente;
+	}
+	
+	public ArrayList<ContaEntity> clienteTemContasNoDao(String cpf, String conta) {
+		
+		ArrayList<ContaEntity> contasDoCliente = new ArrayList<ContaEntity>();	
+		
+		for(ClienteEntity c : ClienteDao.getInstancia().buscarClientes()) {
+			
+			if(cpf.equals(c.getCpf())) {
+				
+				if(c.getContaCorrente() != null && conta.equals(c.getContaCorrente().getNumeroDaConta())) {
+					contasDoCliente.add(c.getContaCorrente());
+				}
+				if(c.getContaPoupanca() != null && conta.equals(c.getContaPoupanca().getNumeroDaConta())) {
+					contasDoCliente.add(c.getContaPoupanca());
+				}
 			}
+			
+			
 		}
 		
 		return contasDoCliente;

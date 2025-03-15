@@ -1,5 +1,6 @@
 package br.com.marcielli.bancodigital.entity;
 
+import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TipoDeCartao;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
@@ -45,6 +46,18 @@ public class CartaoDeDebitoEntity extends CartaoEntity {
 		
 		return 0;
 	}
+	
+	@Override
+	public String toString() {
+		String texto = "";
+		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
+			if(cli.getCpf().equals(getCpfDoDono())) {
+				texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": "+cli.getNome()+" - número "+getNumeroDoCartao()+" do cpf "+getCpfDoDono()+" cadastrado com limite diário de transações de R$ "+getLimiteDiarioDeTransacao();
+			}
+		}		
+		return texto;
+		
+	}		
 	
 	
 

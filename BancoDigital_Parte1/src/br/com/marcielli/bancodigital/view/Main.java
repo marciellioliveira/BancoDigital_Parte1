@@ -61,11 +61,15 @@ public class Main { //VIEW
 		int i=1;
 		do {
 			
-				
-				System.out.println();
-				System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n5 - VER TODAS AS CONTAS\n6 - VER TAXA/DESCONTO FUNCIONANDO\n7 - EMITIR CARTÃO\n0 - SAIR..: ");
-				opcao = input.nextInt();				
-				input.nextLine();
+				try {
+					System.out.println();
+					System.out.println("1 - ADICIONAR CLIENTE\n2 - LISTAR CLIENTES\n3 - REMOVER CLIENTES\n4 - ABRIR CONTA\n5 - VER TODAS AS CONTAS\n6 - VER TAXA/DESCONTO FUNCIONANDO\n7 - EMITIR CARTÃO\n0 - SAIR..: ");
+					opcao = input.nextInt();				
+					input.nextLine();
+				} catch (Exception e) {
+					opcao = -1;
+					input.nextLine();
+				}
 			
 			switch (opcao) {
 			case 1:
@@ -389,7 +393,7 @@ public class Main { //VIEW
 					System.out.println("\nClientes cadastrados: \n");		
 					
 					for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
-						System.out.println("Cliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaContaCliente()+"\nEndereço: "+contasCliente.getEndereco());
+						System.out.println("Cliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaContaCliente()+"\nEndereço: "+contasCliente.getEndereco()+"\n");
 					}
 					
 					System.out.println("Digite o CPF do cliente que deseja remover: ");
@@ -532,20 +536,18 @@ public class Main { //VIEW
 					
 					if(contasCliente.getContaCorrente() != null || contasCliente.getContaPoupanca() != null || contasCliente.getCartaoDeCredito() != null || contasCliente.getCartaoDeDebito() != null) {
 						System.out.println("Cliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaContaCliente()+"\nEndereço: "+contasCliente.getEndereco());
-					} else if(contasCliente.getContaCorrente() == null || contasCliente.getContaPoupanca() == null || contasCliente.getCartaoDeCredito() == null || contasCliente.getCartaoDeDebito() == null) {
-						System.err.println("O sistema não possui contas cadastradas. Crie uma conta a partir do CPF de um cliente para acessálas aqui.");
 					} 
 					
 					if(!(contasCliente.getContaCorrente() == null)) {
-						System.out.println(""+contasCliente.getContaCorrente());
+						System.out.println("Conta Corrente: "+contasCliente.getContaCorrente());
 					} 
 					
 					if(!(contasCliente.getContaPoupanca() == null)) {
-						System.out.println(""+contasCliente.getContaPoupanca());
+						System.out.println("Conta Poupança: "+contasCliente.getContaPoupanca());
 					} 
 					
 					if(!(contasCliente.getCartaoDeCredito() == null)) {
-						System.out.println("Cartão de Crédito: "+contasCliente.getCartaoDeCredito());
+						System.out.println(contasCliente.getCartaoDeCredito());
 					}
 					
 					if(!(contasCliente.getCartaoDeDebito() == null)) {
@@ -632,10 +634,6 @@ public class Main { //VIEW
 				for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
 					if(contasCliente.getContaCorrente() != null || contasCliente.getContaPoupanca() != null || contasCliente.getCartaoDeCredito() != null || contasCliente.getCartaoDeDebito() != null) {
 						System.out.println("Cliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaContaCliente()+"\nEndereço: "+contasCliente.getEndereco());
-					}  else if(contasCliente.getContaCorrente() == null || contasCliente.getContaPoupanca() == null || contasCliente.getCartaoDeCredito() == null || contasCliente.getCartaoDeDebito() == null) {
-						System.err.println("O sistema não possui contas cadastradas. Crie uma conta a partir do CPF de um cliente para acessálas aqui.");
-						opcao = -1;
-						break;
 					} 
 					if(!(contasCliente.getContaCorrente() == null)) {
 						System.out.println(""+contasCliente.getContaCorrente());
@@ -667,7 +665,10 @@ public class Main { //VIEW
 					clienteService.validarCpfSemAutenticar(cpfParaEmitirCartao);
 					
 					if(clienteService.clienteExisteNoDao(cpfParaEmitirCartao)) { //O cliente existe		
-						if(!clienteService.clienteTemContasNoDao(cpfParaEmitirCartao).isEmpty()) { //O cliente existe e pode ser emitido um cartão no nome dele							
+						
+						//Se o CPF que me passou para abrir conta é igual ao CPF da conta que ele ja tem cadastrado	
+						
+						if(!clienteService.clienteTemContasNoDao(cpfParaEmitirCartao).isEmpty()) { 						
 							emitirCartao = true;	
 							
 							System.out.println("\nO cliente portador do CPF "+cpfParaEmitirCartao+" pode emitir um cartão para: ");
@@ -698,11 +699,24 @@ public class Main { //VIEW
 				if(emitirCartao == false) {
 					System.err.println("\nVocê precisa ter um cliente e uma conta cadastrada para emitir um cartão.");
 					break;
-				}	
+				}			
 				
+				System.out.println("\nDigite a conta que deseja emitir o Cartão: ");
+				String contaEmitirCartao = input.nextLine();
+				
+				
+				if(!clienteService.clienteTemContasNoDao(cpfParaEmitirCartao, contaEmitirCartao).isEmpty()) { 						
+					
+					System.err.println("Tem que imprimir a conta do CPF que eu quero");
+					for(ContaEntity contaPermitida : clienteService.clienteTemContasNoDao(cpfParaEmitirCartao, contaEmitirCartao)) {								
+						System.out.println("\nConta: "+contaPermitida.getCategoriaDeConta().getTipoDaCategoria()+"\nNúmero da Conta: "+contaPermitida.getNumeroDaConta()+"\nTipo da Conta: "+contaPermitida.getTipoDeConta().getDescricaoDaConta()+"\nSado: "+contaPermitida.getSaldo());
+					}
+				}
 				
 				System.out.println("\nDigite uma senha para o seu cartão: ");
 				String senhaCartao = input.next();	
+				input.nextLine();
+				
 				
 				try {
 					
@@ -711,11 +725,11 @@ public class Main { //VIEW
 					
 					if(cartaoEscolhido == 1) {
 						
-						cartaoDeCreditoService.adicionarCartaoDeCreditoEntityEmDao(cpfParaEmitirCartao, cartaoEscolhido, senhaCartao);						
+						//cartaoDeCreditoService.adicionarCartaoDeCreditoEntityEmDao(cpfParaEmitirCartao, cartaoEscolhido, senhaCartao);						
 						
 					} else if(cartaoEscolhido == 2)  {
 
-						cartaoDeDebitoService.adicionarCartaoDeDebitoEntityEmDao(cpfParaEmitirCartao, cartaoEscolhido, senhaCartao);	
+						//cartaoDeDebitoService.adicionarCartaoDeDebitoEntityEmDao(cpfParaEmitirCartao, cartaoEscolhido, senhaCartao);	
 				
 						
 					} else if(tipoDeContaEscolhida > 2) {

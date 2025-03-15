@@ -80,7 +80,7 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfDoDono())) {
-				texto = "Cartão de Crédito de: "+cli.getNome()+" - "+getTipoDeCartao()+" número "+getNumeroDoCartao()+" do cpf "+getCpfDoDono()+" cadastrado com sucesso. Limite inicial de R$ "+getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+taxaDeUtilizacao;
+				texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": "+cli.getNome()+" - número "+getNumeroDoCartao()+" do cpf "+getCpfDoDono()+" cadastrado com limite inicial de R$ "+getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+taxaDeUtilizacao;
 			}
 		}		
 		return texto;
