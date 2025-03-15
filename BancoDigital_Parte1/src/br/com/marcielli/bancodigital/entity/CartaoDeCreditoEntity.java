@@ -18,6 +18,7 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 		if(categoriaDaConta.equals(CategoriasDeConta.COMUM)) {
 			this.limiteDeCreditoPreAprovado = 1.000f;
 			setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);
+			
 		}
 		
 		if(categoriaDaConta.equals(CategoriasDeConta.SUPER)) {

@@ -111,6 +111,6 @@ public  class Endereco { //A IDEIA DO OBJETO
 		
 		mascararCep(cep);
 		
-		return "COMPLETO: Rua "+rua+", n° "+numero+", Bairro "+bairro+", Complemento "+complemento+", Cidade "+cidade+"/"+estado+", Cep "+mascararCep(cep);
+		return "Rua "+rua+", n° "+numero+", Bairro "+bairro+", Complemento "+complemento+", Cidade "+cidade+"/"+estado+", Cep "+mascararCep(cep);
 	}	
 }

@@ -1,28 +1,24 @@
 package br.com.marcielli.bancodigital.service;
 
-import java.util.Iterator;
 import java.util.Random;
 
-import br.com.marcielli.bancodigital.dao.CartaoDeCreditoDao;
+import br.com.marcielli.bancodigital.dao.CartaoDeDebitoDao;
 import br.com.marcielli.bancodigital.dao.ClienteDao;
-import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
-import br.com.marcielli.bancodigital.dao.ContaPoupancaDao;
 import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
+import br.com.marcielli.bancodigital.entity.CartaoDeDebitoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
-import br.com.marcielli.bancodigital.entity.ContasDoCliente;
-import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TipoDeCartao;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
-public class CartaoDeCreditoService {
-
-	CartaoDeCreditoDao cartaoDeCreditoDao = CartaoDeCreditoDao.getInstancia();
+public class CartaoDeDebitoService {
+	
+	CartaoDeDebitoDao cartaoDeDebitoDao = CartaoDeDebitoDao.getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();
 	
-	public void adicionarCartaoDeCreditoEntityEmDao(String cpfClienteEmitirCartao, int tipoDeCartaoEscolhido, String senha) {
+	public void adicionarCartaoDeDebitoEntityEmDao(String cpfClienteEmitirCartao, int tipoDeCartaoEscolhido, String senha) {
 		
 		try {
 			
@@ -35,14 +31,14 @@ public class CartaoDeCreditoService {
 					
 					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");					
 					
-					
-					CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+					CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_CREDITO, true, senha);
+				
 					
-					//Adicionando Cartão de Crédito no Cliente			
-					c.setCartaoDeCredito(cartaoDeCreditoNovo);
+					//Adicionando Cartão de Débito no Cliente	
+					c.setCartaoDeDebito(cartaoDeDebitoNovo);
 					
-					cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
+					cartaoDeDebitoDao.adicionarCartaoDeDebito(cartaoDeDebitoNovo);
 					
 					
 					System.out.println("\n"+TipoDeCartao.CARTAO_DE_CREDITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrada com sucesso!\n");
@@ -54,8 +50,7 @@ public class CartaoDeCreditoService {
 			System.err.println(e.getMessage());
 		}			
 	}
-		
-
+	
 	public TiposDeConta buscarTipoDaContaDoCliente(String cpf) {
 		ContaCorrenteService ccService = new ContaCorrenteService();
 		ContaPoupancaService cpService = new ContaPoupancaService();
@@ -97,8 +92,7 @@ public class CartaoDeCreditoService {
 		
 		return nc;				
 	}
-
-
+	
 	public String geraNumeroDoCartaoDeCredito() {
 		
 		int[] sequencia = new int[8];
@@ -133,23 +127,7 @@ public class CartaoDeCreditoService {
 		
 		return false;
 	}
+		
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

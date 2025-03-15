@@ -1,7 +1,9 @@
 package br.com.marcielli.bancodigital.entity;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 
@@ -103,7 +105,7 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 		return dataNascimento;
 	}
 	
-	public void setDataNascimento(LocalDate dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {		
 		this.dataNascimento = dataNascimento;
 	}
 	
@@ -128,16 +130,10 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 	}
 
 	@Override
-	public String toString() {		
+	public String toString() {			
 		
 		return "NOME: " + nome + ", CPF: "+cpf+", DATA DE NASCIMENTO: " + dataNascimento + ", CATEGORIA DE CONTA: "+getCategoriaContaCliente()+"\nENDEREÇO "
 				+ endereco;
 	}
 
-//	@Override
-//	public String toString() {		
-//		
-//		return "NOME: " + nome + ", CPF: "+cpf+", DATA DE NASCIMENTO: " + dataNascimento + ", CATEGORIA DE CONTA: "+getCategoriaContaCliente()+"\nENDEREÇO "
-//				+ endereco;
-//	}
 }

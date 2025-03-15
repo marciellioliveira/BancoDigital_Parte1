@@ -7,8 +7,10 @@ import java.util.HashMap;
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
 import br.com.marcielli.bancodigital.entity.CartaoDeDebitoEntity;
+import br.com.marcielli.bancodigital.entity.CartaoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
+import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.entity.Endereco;
@@ -106,9 +108,139 @@ public class ClienteService {
 //		return clienteDao.buscarClienteComCpfCadastrado(cpf);	
 //	}
 	
-	public void validarCpf(String cpf) throws TamanhoDoCpfException, CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, CpfComNumerosIguaisException  {
-		//cpf = cpf.replace(".", "").replace("-", "");
+	public boolean clienteExisteNoDao(String cpf) {
+		if(clienteDao.temCpf(cpf)) {			
+			return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<ContaEntity> clienteTemContasNoDao(String cpf) {
 		
+		ArrayList<ContaEntity> contasDoCliente = new ArrayList<ContaEntity>();	
+		
+		for(ClienteEntity c : ClienteDao.getInstancia().buscarClientes()) {
+			if(c.getContaCorrente() != null) {
+				contasDoCliente.add(c.getContaCorrente());
+			}
+			if(c.getContaPoupanca() != null) {
+				contasDoCliente.add(c.getContaPoupanca());
+			}
+		}
+		
+		return contasDoCliente;
+	}
+	
+	
+	
+	
+	
+	public void validarCpfSemAutenticar(String cpf) throws TamanhoDoCpfException, ValidarUltimosNumerosDoCpfException, CpfComNumerosIguaisException  {
+		
+		if(!cpf.contains(".") && cpf.contains("-")) {
+			if(cpf.length() < 14 || cpf.length() > 14){
+				throw new TamanhoDoCpfException("Você digitou "+cpf.length()+" para CPF. \nO CPF deve ter tamanho 14..\nDigite novamente o CPF com pontos e traços. EX: 12.630-000");
+			} 
+		}
+		
+		if(cpf.length() < 14 || cpf.length() > 14){
+			throw new TamanhoDoCpfException("Você digitou "+cpf.length()+" para CPF. \nO CPF deve ter tamanho 14.\nDigite novamente");
+		} 
+		
+//		if(clienteDao.temCpf(cpf)) {
+//			throw new CpfJaCadastradoException("O cpf "+cpf+" já está cadastrado com outro usuário.\nAdicione um CPF único para cada cliente.\n");
+//		}
+		
+		//Validar ultimos numeros do cpf
+		int valor = 0;
+		int j = 10;
+
+
+		for(int i=0; i<cpf.length(); i++) { 
+		
+			while(j>1) { 
+				
+				char letra = cpf.charAt(i);
+				int caracter = letra - '0';
+				
+				valor += caracter * j; 			
+				j--;
+				break;
+				
+			}		
+		}
+				
+		int resultado = (valor * 10) % 11;
+			
+		if(resultado == 10) {
+			resultado = 0;
+		} else {
+			
+			char penultimoDig = cpf.charAt(9);			
+			int penultimoDigito = penultimoDig - '0';
+			
+			
+			if(resultado == penultimoDigito) {			
+			
+				int b = 11;
+			
+				int valor2 = 0;
+				
+				for(int a=0; a<10; a++) { 
+					while(b>1) { 
+						char letra2 = cpf.charAt(a); 
+						int caracter2 = letra2 - '0';
+						
+						valor2 += caracter2 * b; 
+						
+						b--;
+						
+						break;
+					}
+				}
+			
+			
+			int resultado2 = (valor2 * 10) % 11;
+			
+			char ultimoDig = cpf.charAt(10);
+			int ultimoDigito = ultimoDig - '0';		
+			
+			if(!(resultado2 == ultimoDigito)) {
+				throw new ValidarUltimosNumerosDoCpfException("O CPF '"+cpf+"' digitado não é válido. Por favor, digite um CPF válido.");
+			}	
+			
+			} 		
+		}
+		
+		
+		//Validar cpf com numeros iguais
+		int numOcorrencias = 1;		
+		HashMap<Character, Integer> findDuplicated = new HashMap<Character, Integer>();
+		String novoCpf = "";
+		
+		//Usar o hashmap para contar os caracteres duplicados da string cpf
+		
+		char[] meuCpf = cpf.toCharArray();
+		
+		for(int i=0; i<meuCpf.length; i++) {
+			if(!findDuplicated.containsKey(meuCpf[i])) {
+				findDuplicated.put(meuCpf[i], 1);
+				novoCpf += meuCpf[i];
+				
+			} else {
+				findDuplicated.put(meuCpf[i], 1);
+				numOcorrencias++; 
+			}
+		}
+		
+		if(numOcorrencias >= 11) {
+			throw new CpfComNumerosIguaisException("O CPF '"+cpf+"' digitado não é válido. Por favor, digite um CPF válido.");
+		}
+	}
+	
+	
+	public void validarCpf(String cpf) throws TamanhoDoCpfException, CpfJaCadastradoException, ValidarUltimosNumerosDoCpfException, CpfComNumerosIguaisException  {
+				
 		if(!cpf.contains(".") && cpf.contains("-")) {
 			if(cpf.length() < 14 || cpf.length() > 14){
 				throw new TamanhoDoCpfException("Você digitou "+cpf.length()+" para CPF. \nO CPF deve ter tamanho 14..\nDigite novamente o CPF com pontos e traços. EX: 12.630-000");

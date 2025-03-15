@@ -39,9 +39,7 @@ public class ContaCorrenteService {
 		if(cpfClienteDaConta.equals(c.getCpf())) {
 			
 			String numeroDaConta = geraNumeroDaConta();		
-			System.out.println("\nA conta número "+numeroDaConta+" foi cadastrada no cpf "+cpfClienteDaConta+" do titular:\n");
-			
-		//	ContasDoCliente contaDoCliente = new ContasDoCliente(c.getNome(), cpfClienteDaConta, categoriaDeConta, tipoDeConta, numeroDaConta);
+			System.out.println("\nA conta número "+numeroDaConta+" foi cadastrada no cpf "+cpfClienteDaConta+" do titular:\n");			
 			
 			ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, numeroDaConta);	
 			
@@ -55,12 +53,19 @@ public class ContaCorrenteService {
 			
 			
 			
+			
 			//descontarTaxaManutencaoMensal(c);
 		} 
 		
 	}
 		return true;
 	}
+	
+//	public boolean contaCorrenteFoiAdicionada() {
+//		
+//		if
+//		
+//	}
 	
 	public void verSeTemContaComEsseCPF(String cpf, int tipoDeContaEscolhida) throws ContaComCPFExistenteException {
 		
