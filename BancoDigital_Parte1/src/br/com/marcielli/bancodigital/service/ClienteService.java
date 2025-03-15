@@ -12,7 +12,6 @@ import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
-import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.entity.Endereco;
 import br.com.marcielli.bancodigital.exception.AnoNascimentoDiferente4Exception;
 import br.com.marcielli.bancodigital.exception.CaracterEspecialNoNomeException;

@@ -1,5 +1,6 @@
 package br.com.marcielli.bancodigital.service;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import br.com.marcielli.bancodigital.dao.CartaoDeDebitoDao;
@@ -18,7 +19,7 @@ public class CartaoDeDebitoService {
 	CartaoDeDebitoDao cartaoDeDebitoDao = CartaoDeDebitoDao.getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();
 	
-	public void adicionarCartaoDeDebitoEntityEmDao(String cpfClienteEmitirCartao, int tipoDeCartaoEscolhido, String senha) {
+	public void adicionarCartaoDeDebitoEntityEmDao(String cpfClienteEmitirCartao, int tipoDeCartaoEscolhido, String senha, String contaVinculadaAoCartao) {
 		
 		try {
 			
@@ -32,16 +33,16 @@ public class CartaoDeDebitoService {
 					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");					
 					
 					CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
-							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_CREDITO, true, senha);
+							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
 				
 					
-					//Adicionando Cartão de Débito no Cliente	
+					//Adicionando Cartão de Débito no Cliente	ou na conta?
 					c.setCartaoDeDebito(cartaoDeDebitoNovo);
 					
 					cartaoDeDebitoDao.adicionarCartaoDeDebito(cartaoDeDebitoNovo);
 					
 					
-					System.out.println("\n"+TipoDeCartao.CARTAO_DE_CREDITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrada com sucesso!\n");
+					System.out.println("\n"+TipoDeCartao.CARTAO_DE_DEBITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" vinculado a conta "+contaVinculadaAoCartao+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrado com sucesso!\n");
 					
 				}
 			}
@@ -49,6 +50,16 @@ public class CartaoDeDebitoService {
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}			
+	}
+	
+	public void buscarCartoesDeDebito(String cpf) {
+		for(CartaoDeDebitoEntity cartaoDEntity : cartaoDeDebitoDao.buscarCartoesDeDebito()) {
+			if(cpf.equals(cartaoDEntity.getCpfDoDono())) {
+				
+				System.out.println(cartaoDEntity.getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+cartaoDEntity.getNumeroDoCartao()+" vinculado à conta "+cartaoDEntity.getNumeroContaVinculada()+" e ao cpf "+cartaoDEntity.getCpfDoDono()+", cadastrado com limite diário de transações de R$ "+cartaoDEntity.getLimiteDiarioDeTransacao()+".");
+	
+			}
+		}
 	}
 	
 	public TiposDeConta buscarTipoDaContaDoCliente(String cpf) {

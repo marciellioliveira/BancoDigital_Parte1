@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import br.com.marcielli.bancodigital.dao.CartaoDeCreditoDao;
+import br.com.marcielli.bancodigital.dao.CartaoDeDebitoDao;
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
+import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
-import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
 import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
@@ -30,6 +32,9 @@ public class ContaCorrenteService {
 	
 	ContaCorrenteDao contaCorrenteDao = ContaCorrenteDao.getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();	
+	
+	//CartaoDeCreditoDao cartaoDeCreditoDao = CartaoDeCreditoDao.getInstancia();
+	//CartaoDeDebitoDao cartaoDeDebitoDao = CartaoDeDebitoDao.getInstancia();
 	
 	
 	public boolean adicionarContaCorrenteEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
@@ -242,14 +247,17 @@ public class ContaCorrenteService {
 
 		if(dataEsperada.getDayOfMonth() == 01 ) {
 			for(ContaCorrenteEntity cce : contaCorrenteDao.verContasCorrenteAdicionadas()) {
-				
-				if(cliente.getCpf().equals(cce.getContasDoClientePorCpf().getCpfDoCliente())) {
+				float saldoAntigo = cce.exibirSaldo();
+				if(cliente.getCpf().equals(cce.getCpfClienteDaConta())) {
 					saldoNovo += cce.getSaldo() - cce.getTaxaManutencaoMensal();			
 					
 					contaCorrenteDao.atualizarSaldo(saldoNovo);
-					System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi descontada uma taxa de "+cce.getTaxaManutencaoMensal()+" da conta número "+cce.getNumeroDaConta()+" do cliente "+cce.getContasDoClientePorCpf().getNomeDoCliente()+" portador do CPF "+cce.getContasDoClientePorCpf().getCpfDoCliente()+" porque está cadastrado na conta "+cce.getContasDoClientePorCpf().getCategoriaDaContaDoCpf());					
-					System.out.println("Saldo novo: "+cce.exibirSaldo());
+					System.out.println("Cliente: "+cliente.getNome());
+					System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi descontada uma taxa de "+cce.getTaxaManutencaoMensal()+" da conta número "+cce.getNumeroDaConta()+" do cliente "+cliente.getNome()+" portador do CPF "+cce.getCpfClienteDaConta()+" porque está cadastrado na conta "+cce.getCategoriaDeConta().getTipoDaCategoria());					
+					System.out.println("Saldo Antigo: "+saldoAntigo);
+					System.out.println("Saldo novo: "+cce.exibirSaldo()+"\n");
 				}
+
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package br.com.marcielli.bancodigital.entity;
 
 import java.time.LocalDate;
-
+import java.util.ArrayList;
 
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
@@ -75,6 +75,12 @@ public class ContaCorrenteEntity extends ContaEntity {
 	public void fazerTransferenciaViaPix() {		
 		
 	}
+	
+	
+	public ArrayList<CartaoEntity> salvarCartoesDaConta() {
+		
+		return null;
+	}		
 
 	
 
@@ -104,9 +110,11 @@ public class ContaCorrenteEntity extends ContaEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfClienteDaConta())) {
-				texto = "Conta Corrente: "+cli.getNome()+" - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal()+".";
+				texto = "Conta Corrente: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal()+".";
 			}
 		}		
 		return texto;		
-	}		
+	}
+
+	
 }

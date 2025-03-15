@@ -29,6 +29,7 @@ public abstract class CartaoEntity {
 		this.senha = senha;
 		//this.contasDoCliente = contasDoCliente;
 	}	
+
 	
 	/* **
 	 * Cartões de Crédito e Débito:** Emitir cartões vinculados às contas dos clientes, 
@@ -46,6 +47,8 @@ public abstract class CartaoEntity {
 	
 	public abstract float fazerPagamento();
 	
+	
+
 
 	public String getNumeroDoCartao() {
 		return numeroDoCartao;
@@ -111,14 +114,6 @@ public abstract class CartaoEntity {
 		this.senha = senha;
 	}
 
-//	public ContasDoCliente getContasDoCliente() {
-//		return contasDoCliente;
-//	}
-//
-//	public void setContasDoCliente(ContasDoCliente contasDoCliente) {
-//		this.contasDoCliente = contasDoCliente;
-//	}
-//	
 	@Override
 	public String toString() {
 		return "\nNúmero o Cartão: "+numeroDoCartao;

@@ -10,15 +10,15 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	private float limiteDeCreditoPreAprovado;
 	private float taxaDeUtilizacao;
 	private float taxaSeguroViagem;
+	private String numeroContaVinculada;
 
 	public CartaoDeCreditoEntity(String numeroDoCartao, String nomeDoDono, String cpfDoDono, TiposDeConta tipoDaConta,
-			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha) {
+			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha, String numeroContaVinculada) {
 		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha);		
 		
 		if(categoriaDaConta.equals(CategoriasDeConta.COMUM)) {
 			this.limiteDeCreditoPreAprovado = 1.000f;
-			setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);
-			
+			setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);			
 		}
 		
 		if(categoriaDaConta.equals(CategoriasDeConta.SUPER)) {
@@ -31,6 +31,7 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 			setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);		
 		}
 		
+		this.numeroContaVinculada = numeroContaVinculada;
 		/*
 		 * - **Seguro Viagem:** Gratuito para clientes Premium; opcional para clientes Comum e Super, com taxa de R$ 50,00 por mês.
 		 * 
@@ -51,7 +52,20 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	
 		this.limiteDeCreditoPreAprovado = limiteDeCreditoPreAprovado;
 	}
+	
+	
 
+	public String getNumeroContaVinculada() {
+		return numeroContaVinculada;
+	}
+
+	public void setNumeroContaVinculada(String numeroContaVinculada) {
+		this.numeroContaVinculada = numeroContaVinculada;
+	}
+	
+	
+
+	
 	@Override
 	public String alterarSenha() {		
 		return null;
@@ -77,13 +91,21 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	
 	@Override
 	public String toString() {
-		String texto = "";
-		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
-			if(cli.getCpf().equals(getCpfDoDono())) {
-				texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": "+cli.getNome()+" - número "+getNumeroDoCartao()+" do cpf "+getCpfDoDono()+" cadastrado com limite inicial de R$ "+getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+taxaDeUtilizacao;
-			}
-		}		
+		String texto = "";	
+		texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+getNumeroDoCartao()+" vinculado à conta "+getNumeroContaVinculada()+" e ao cpf "+getCpfDoDono()+", cadastrado com limite inicial de R$ "+getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+taxaDeUtilizacao;
 		return texto;
 		
-	}		
+	}	
+	
+//	@Override
+//	public String toString() {
+//		String texto = "";
+//		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
+//			if(cli.getCpf().equals(getCpfDoDono())) {
+//				texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+getNumeroDoCartao()+" vinculado à conta "+getNumeroContaVinculada()+" e ao cpf "+getCpfDoDono()+", cadastrado com limite inicial de R$ "+getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+taxaDeUtilizacao;
+//			}
+//		}		
+//		return texto;
+//		
+//	}		
 }

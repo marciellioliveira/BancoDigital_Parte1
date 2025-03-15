@@ -8,11 +8,13 @@ import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 public class CartaoDeDebitoEntity extends CartaoEntity {
 	
 	private float limiteDiarioDeTransacao;
+	private String numeroContaVinculada;
 
 	public CartaoDeDebitoEntity(String numeroDoCartao, String nomeDoDono, String cpfDoDono, TiposDeConta tipoDaConta,
-			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha) {
+			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha, String numeroContaVinculada) {
 		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha);
 		
+		this.numeroContaVinculada = numeroContaVinculada;
 	}
 
 	public float getLimiteDiarioDeTransacao() {
@@ -21,6 +23,16 @@ public class CartaoDeDebitoEntity extends CartaoEntity {
 
 	public void setLimiteDiarioDeTransacao(float limiteDiarioDeTransacao) {
 		this.limiteDiarioDeTransacao = limiteDiarioDeTransacao;
+	}
+
+	
+	
+	public String getNumeroContaVinculada() {
+		return numeroContaVinculada;
+	}
+
+	public void setNumeroContaVinculada(String numeroContaVinculada) {
+		this.numeroContaVinculada = numeroContaVinculada;
 	}
 
 	@Override
@@ -52,7 +64,7 @@ public class CartaoDeDebitoEntity extends CartaoEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfDoDono())) {
-				texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": "+cli.getNome()+" - número "+getNumeroDoCartao()+" do cpf "+getCpfDoDono()+" cadastrado com limite diário de transações de R$ "+getLimiteDiarioDeTransacao();
+				texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+getNumeroDoCartao()+" vinculado à conta "+getNumeroContaVinculada()+" e ao cpf "+getCpfDoDono()+", cadastrado com limite diário de transações de R$ "+getLimiteDiarioDeTransacao();			
 			}
 		}		
 		return texto;

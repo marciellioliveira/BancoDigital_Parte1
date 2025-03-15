@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
-import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public class ContaCorrenteDao {

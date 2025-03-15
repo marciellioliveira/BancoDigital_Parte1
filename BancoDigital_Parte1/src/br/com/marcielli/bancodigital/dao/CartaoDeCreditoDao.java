@@ -3,6 +3,8 @@ package br.com.marcielli.bancodigital.dao;
 import java.util.ArrayList;
 
 import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
+import br.com.marcielli.bancodigital.entity.CartaoEntity;
+import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 
 public class CartaoDeCreditoDao {
@@ -31,4 +33,11 @@ public class CartaoDeCreditoDao {
 	public void setListaDeCartoesDeCredito(ArrayList<CartaoDeCreditoEntity> listaDeCartoesDeCredito) {
 		this.listaDeCartoesDeCredito = listaDeCartoesDeCredito;
 	}	
+	
+	public ArrayList<CartaoDeCreditoEntity> buscarCartoesDeCredito() {
+		return listaDeCartoesDeCredito;
+	}
+	
+	
+
 }

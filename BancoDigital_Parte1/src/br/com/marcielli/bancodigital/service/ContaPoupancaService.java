@@ -12,7 +12,6 @@ import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
-import br.com.marcielli.bancodigital.entity.ContasDoCliente;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
 import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
@@ -253,18 +252,16 @@ public class ContaPoupancaService {
 
 		if(dataEsperada.getDayOfMonth() == 01 ) {
 			for(ContaPoupancaEntity cpe1 : contaPoupancaDao.verContasPoupancaAdicionadas()) {
-				
-				if(cliente.getCpf().equals(cpe1.getContasDoClientePorCpf().getCpfDoCliente())) {
+				float saldoAntigo = cpe1.exibirSaldo();
+				if(cliente.getCpf().equals(cpe1.getCpfClienteDaConta())) {
 					 m += (float) (cpe1.getSaldo() * Math.pow(1 + cpe1.getTaxaMensal(), 12));
-						saldoNovo += m + cpe1.getAcrescimoTaxaRendimento();
-										
-					contaPoupancaDao.atualizarSaldo(saldoNovo);
-					System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi acrescentada uma taxa de "+cpe1.getAcrescimoTaxaRendimento()+" da conta do cliente "+cpe1.getContasDoClientePorCpf().getNomeDoCliente()+" portador do CPF "+cpe1.getContasDoClientePorCpf().getCpfDoCliente()+" porque está cadastrado na conta "+cpe1.getCategoriaDeConta());					
-					System.out.println("Saldo novo: "+cpe1.exibirSaldo());
-				
-					
-				
+					 saldoNovo += m + cpe1.getAcrescimoTaxaRendimento();
+					 contaPoupancaDao.atualizarSaldo(saldoNovo);
+					 System.out.println("Cliente: "+cliente.getNome());
+					 System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi acrescentada uma taxa de "+cpe1.getAcrescimoTaxaRendimento()+" da conta número "+cpe1.getNumeroDaConta()+" do cliente "+cliente.getNome()+" portador do CPF "+cpe1.getCpfClienteDaConta()+" porque está cadastrado na conta "+cpe1.getCategoriaDeConta().getTipoDaCategoria());					
+					 System.out.println("Saldo novo: "+cpe1.exibirSaldo()+"\n");
 				}
+	
 			}
 		}
 		

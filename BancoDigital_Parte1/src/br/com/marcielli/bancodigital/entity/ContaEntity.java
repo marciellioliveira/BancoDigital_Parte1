@@ -1,5 +1,6 @@
 package br.com.marcielli.bancodigital.entity;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
@@ -11,8 +12,13 @@ public abstract class ContaEntity {
 	private TiposDeConta tipoDeConta;
 	private CategoriasDeConta categoriaDeConta;
 	private float saldo;
-	private ContasDoCliente contasDoClientePorCpf;
+	//private ContasDoCliente contasDoClientePorCpf;
 	private String numeroDaConta;
+	
+	
+	
+//	private CartaoDeCreditoEntity cartaoDeCredito;
+//	private CartaoDeDebitoEntity cartaoDeDebito;
 	
 	
 	public ContaEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta,  String numeroDaConta) {
@@ -23,12 +29,55 @@ public abstract class ContaEntity {
 		this.numeroDaConta = numeroDaConta;
 	}
 	
+	
+	
+	
+	
+//	public ContaEntity(CartaoDeCreditoEntity cartaoDeCredito) {
+//		super();
+//		this.cartaoDeCredito = cartaoDeCredito;
+//	}
+//	
+//	public ContaEntity(CartaoDeDebitoEntity cartaoDeDebito) {
+//		super();
+//		this.cartaoDeDebito = cartaoDeDebito;
+//	}
+
+
+
+	
+
+
+
 	public ContaEntity() {}
 		
 	
 	public abstract float exibirSaldo();
 	
-	public abstract void fazerTransferenciaViaPix();		
+	public abstract void fazerTransferenciaViaPix();	
+	
+	//public abstract ArrayList<CartaoEntity> salvarCartoesDaConta();
+	
+	
+//
+//	public CartaoDeCreditoEntity getCartaoDeCredito() {
+//		return cartaoDeCredito;
+//	}
+//
+//	public void setCartaoDeCredito(CartaoDeCreditoEntity cartaoDeCredito) {
+//		this.cartaoDeCredito = cartaoDeCredito;
+//	}
+//
+//	public CartaoDeDebitoEntity getCartaoDeDebito() {
+//		return cartaoDeDebito;
+//	}
+//
+//	public void setCartaoDeDebito(CartaoDeDebitoEntity cartaoDeDebito) {
+//		this.cartaoDeDebito = cartaoDeDebito;
+//	}
+	
+
+
 
 	public String getCpfClienteDaConta() {
 		return cpfClienteDaConta;
@@ -62,13 +111,13 @@ public abstract class ContaEntity {
 		this.categoriaDeConta = categoriaDeConta;
 	}
 
-	public ContasDoCliente getContasDoClientePorCpf() {
-		return contasDoClientePorCpf;
-	}
-
-	public void setContasDoClientePorCpf(ContasDoCliente contasDoClientePorCpf) {
-		this.contasDoClientePorCpf = contasDoClientePorCpf;
-	}
+//	public ContasDoCliente getContasDoClientePorCpf() {
+//		return contasDoClientePorCpf;
+//	}
+//
+//	public void setContasDoClientePorCpf(ContasDoCliente contasDoClientePorCpf) {
+//		this.contasDoClientePorCpf = contasDoClientePorCpf;
+//	}
 
 	public String getNumeroDaConta() {
 		return numeroDaConta;

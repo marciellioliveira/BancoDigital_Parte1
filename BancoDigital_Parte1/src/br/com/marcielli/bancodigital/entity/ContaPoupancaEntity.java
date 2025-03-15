@@ -87,7 +87,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfClienteDaConta())) {
-				texto = "Conta Poupança: "+cli.getNome()+" - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento()+".";
+				texto = "Conta Poupança: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento()+".";
 			}
 		}		
 		return texto;		

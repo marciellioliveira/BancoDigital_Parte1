@@ -31,6 +31,10 @@ public class CartaoDeDebitoDao {
 		this.listaDeCartoesDeDebito = listaDeCartoesDeDebito;
 	}
 	
+	public ArrayList<CartaoDeDebitoEntity> buscarCartoesDeDebito() {
+		return listaDeCartoesDeDebito;
+	}
+	
 	
 
 }
