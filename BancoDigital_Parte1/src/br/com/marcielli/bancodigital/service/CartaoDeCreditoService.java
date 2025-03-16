@@ -25,30 +25,95 @@ public class CartaoDeCreditoService {
 	ContaPoupancaDao contaPoupancaDao = ContaPoupancaDao.getInstancia();
 	ContaCorrenteDao contaCorrenteDao = ContaCorrenteDao.getInstancia();
 	
+	
 	public void adicionarCartaoDeCreditoEntityEmDao(String cpfClienteEmitirCartao, int tipoDeCartaoEscolhido, String senha, String contaVinculadaAoCartao) {
 		
 		try {
 			
+			String categoriaConta = "";
+			
+		
 			for(ClienteEntity c : clienteDao.buscarClientes()) {
-				if(cpfClienteEmitirCartao.equals(c.getCpf())) {
+				if(cpfClienteEmitirCartao.equals(c.getCpf())) {					
+					
+					//Pegar o numero da conta contaEmitirCartao = contaVinculadaAoCartao
+					//Procurar se é corrente ou poupança
+					//Pegar a categoria dela
+					//colocar no lugar de c.getCategoriaDeConta() onde ta criando o cartão - pq sempre ta criando um cartão comum
+					
+					if(!(contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao) == null)) {
+						categoriaConta = contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
+					}
+					
+					if(!(contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao) == null)) {
+						categoriaConta = contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
+					}
+					
+//					System.err.println("Conta Poupança: "+contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao));
+//					System.err.println("Conta Corrente: "+contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao));
+				//	System.err.println("GET Categoria>: "+categoriaConta);
+					
+					
+					
+//					System.err.println("Conta Poupança");
+//					contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
+//					
+//					System.err.println("Conta Corrente");
+//					contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
 					
 					String numeroDoCartaoDeCredito = geraNumeroDoCartaoDeCredito();	
 					TiposDeConta tpc= buscarTipoDaContaDoCliente(cpfClienteEmitirCartao);
 					String numeroDaConta = buscarNumeroDaConta(cpfClienteEmitirCartao);
 					
-					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");					
+					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");	
 					
 					
-					CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
-							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
+						
+					if(categoriaConta.equals("COMUM")) {
+						System.err.println("1 : "+categoriaConta);
+						
+						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+								CategoriasDeConta.COMUM, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
+						//Adicionando Cartão de Crédito no Cliente 		
+						c.setCartaoDeCredito(cartaoDeCreditoNovo);
+						cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
+						
+					}
+					
+					if(categoriaConta.equals("SUPER")) {
+						System.err.println("2 : "+categoriaConta);
+						
+						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+								CategoriasDeConta.SUPER, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
+						//Adicionando Cartão de Crédito no Cliente 		
+						c.setCartaoDeCredito(cartaoDeCreditoNovo);
+						cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
+						
+					}
+					
+					if(categoriaConta.equals("PREMIUM")) {
+						System.err.println("3 : "+categoriaConta);
+						
+						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+								CategoriasDeConta.PREMIUM, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
+						//Adicionando Cartão de Crédito no Cliente 		
+						c.setCartaoDeCredito(cartaoDeCreditoNovo);
+						cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
+						
+					}
+					
+
+					
+//					CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+//							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
 					
 					//Adicionando Cartão de Crédito no Cliente 		
-					c.setCartaoDeCredito(cartaoDeCreditoNovo);
+//					c.setCartaoDeCredito(cartaoDeCreditoNovo);
 			
 					
 					
 					
-					cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
+//					cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
 					
 					
 					System.out.println("\n"+TipoDeCartao.CARTAO_DE_CREDITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" vinculado a conta "+contaVinculadaAoCartao+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrado com sucesso!\n");
@@ -69,7 +134,7 @@ public class CartaoDeCreditoService {
 		for(CartaoDeCreditoEntity cartaoCEntity : cartaoDeCreditoDao.buscarCartoesDeCredito()) {
 			if(cpf.equals(cartaoCEntity.getCpfDoDono())) {
 				
-				System.out.println(cartaoCEntity.getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+cartaoCEntity.getNumeroDoCartao()+" vinculado à conta "+cartaoCEntity.getNumeroContaVinculada()+" e ao cpf "+cartaoCEntity.getCpfDoDono()+", cadastrado com limite inicial de R$ "+cartaoCEntity.getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+cartaoCEntity.taxaDeUtilizacao());
+				System.out.println(cartaoCEntity.getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+cartaoCEntity.getNumeroDoCartao()+" vinculado à conta "+cartaoCEntity.getNumeroContaVinculada()+" e ao cpf "+cartaoCEntity.getCpfDoDono()+", cadastrado com limite de crédito pré-aprovado de R$ "+cartaoCEntity.getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+cartaoCEntity.taxaDeUtilizacao());
 
 			}
 		}	

@@ -5,12 +5,15 @@ import java.util.Random;
 
 import br.com.marcielli.bancodigital.dao.CartaoDeDebitoDao;
 import br.com.marcielli.bancodigital.dao.ClienteDao;
+import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
+import br.com.marcielli.bancodigital.dao.ContaPoupancaDao;
 import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
 import br.com.marcielli.bancodigital.entity.CartaoDeDebitoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
+import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TipoDeCartao;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
@@ -18,28 +21,76 @@ public class CartaoDeDebitoService {
 	
 	CartaoDeDebitoDao cartaoDeDebitoDao = CartaoDeDebitoDao.getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();
+	ContaPoupancaDao contaPoupancaDao = ContaPoupancaDao.getInstancia();
+	ContaCorrenteDao contaCorrenteDao = ContaCorrenteDao.getInstancia();
 	
 	public void adicionarCartaoDeDebitoEntityEmDao(String cpfClienteEmitirCartao, int tipoDeCartaoEscolhido, String senha, String contaVinculadaAoCartao) {
 		
 		try {
+			String categoriaConta = "";
 			
 			for(ClienteEntity c : clienteDao.buscarClientes()) {
 				if(cpfClienteEmitirCartao.equals(c.getCpf())) {
+					
+					if(!(contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao) == null)) {
+						categoriaConta = contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
+					}
+					
+					if(!(contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao) == null)) {
+						categoriaConta = contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
+					}
 					
 					String numeroDoCartaoDeCredito = geraNumeroDoCartaoDeCredito();	
 					TiposDeConta tpc= buscarTipoDaContaDoCliente(cpfClienteEmitirCartao);
 					String numeroDaConta = buscarNumeroDaConta(cpfClienteEmitirCartao);
 					
-					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");					
+					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");	
 					
-					CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
-							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
+					if(categoriaConta.equals("COMUM")) {
+						System.err.println("1 : "+categoriaConta);
+						
+						CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+								CategoriasDeConta.COMUM, TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
+						//Adicionando Cartão de Débito no Cliente
+						c.setCartaoDeDebito(cartaoDeDebitoNovo);
+						cartaoDeDebitoDao.adicionarCartaoDeDebito(cartaoDeDebitoNovo);
+						
+					}
+					
+					if(categoriaConta.equals("SUPER")) {
+						System.err.println("2 : "+categoriaConta);
+						
+						CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+								CategoriasDeConta.SUPER, TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
+						//Adicionando Cartão de Débito no Cliente	
+						c.setCartaoDeDebito(cartaoDeDebitoNovo);
+						cartaoDeDebitoDao.adicionarCartaoDeDebito(cartaoDeDebitoNovo);
+						
+					}
+					
+					if(categoriaConta.equals("PREMIUM")) {
+						System.err.println("3 : "+categoriaConta);
+						
+						CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+								CategoriasDeConta.PREMIUM, TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
+						//Adicionando Cartão de Débito no Cliente 		
+						c.setCartaoDeDebito(cartaoDeDebitoNovo);
+						cartaoDeDebitoDao.adicionarCartaoDeDebito(cartaoDeDebitoNovo);
+						
+					}
+					
+					
+					
+					
+					
+			//		CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
+			//				c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
 				
 					
 					//Adicionando Cartão de Débito no Cliente	ou na conta?
-					c.setCartaoDeDebito(cartaoDeDebitoNovo);
+			//		c.setCartaoDeDebito(cartaoDeDebitoNovo);
 					
-					cartaoDeDebitoDao.adicionarCartaoDeDebito(cartaoDeDebitoNovo);
+//					cartaoDeDebitoDao.adicionarCartaoDeDebito(cartaoDeDebitoNovo);
 					
 					
 					System.out.println("\n"+TipoDeCartao.CARTAO_DE_DEBITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" vinculado a conta "+contaVinculadaAoCartao+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrado com sucesso!\n");

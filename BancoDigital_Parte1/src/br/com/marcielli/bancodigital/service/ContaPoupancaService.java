@@ -259,6 +259,7 @@ public class ContaPoupancaService {
 					 contaPoupancaDao.atualizarSaldo(saldoNovo);
 					 System.out.println("Cliente: "+cliente.getNome());
 					 System.out.println("Hoje ("+dataEsperada.getDayOfMonth()+") foi acrescentada uma taxa de "+cpe1.getAcrescimoTaxaRendimento()+" da conta número "+cpe1.getNumeroDaConta()+" do cliente "+cliente.getNome()+" portador do CPF "+cpe1.getCpfClienteDaConta()+" porque está cadastrado na conta "+cpe1.getCategoriaDeConta().getTipoDaCategoria());					
+					 System.out.println("Saldo Antigo: "+saldoAntigo);
 					 System.out.println("Saldo novo: "+cpe1.exibirSaldo()+"\n");
 				}
 	

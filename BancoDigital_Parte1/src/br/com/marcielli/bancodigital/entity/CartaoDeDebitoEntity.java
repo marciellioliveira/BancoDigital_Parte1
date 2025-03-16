@@ -9,20 +9,31 @@ public class CartaoDeDebitoEntity extends CartaoEntity {
 	
 	private float limiteDiarioDeTransacao;
 	private String numeroContaVinculada;
+	private float totalGastoMesDebito;
 
 	public CartaoDeDebitoEntity(String numeroDoCartao, String nomeDoDono, String cpfDoDono, TiposDeConta tipoDaConta,
 			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha, String numeroContaVinculada) {
 		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha);
 		
 		this.numeroContaVinculada = numeroContaVinculada;
+		
+		if(categoriaDaConta.equals(CategoriasDeConta.COMUM)) {
+			this.limiteDiarioDeTransacao = 1000f;			
+		}
+		
+		if(categoriaDaConta.equals(CategoriasDeConta.SUPER)) {
+			this.limiteDiarioDeTransacao = 5000f;
+			//setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);
+		}
+		
+		if(categoriaDaConta.equals(CategoriasDeConta.PREMIUM)) {
+			this.limiteDiarioDeTransacao = 10000f;
+			//setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);		
+		}
 	}
 
 	public float getLimiteDiarioDeTransacao() {
 		return limiteDiarioDeTransacao;
-	}
-
-	public void setLimiteDiarioDeTransacao(float limiteDiarioDeTransacao) {
-		this.limiteDiarioDeTransacao = limiteDiarioDeTransacao;
 	}
 
 	

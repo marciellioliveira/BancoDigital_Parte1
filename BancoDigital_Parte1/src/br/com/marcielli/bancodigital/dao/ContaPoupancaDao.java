@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
+import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public class ContaPoupancaDao {
@@ -38,6 +39,16 @@ public class ContaPoupancaDao {
 			}
 		}
 		return false;
+	}
+	
+	public String existeContaCadastradaNoCPF(String cpf, String contaVinculada) {
+		for(ContaPoupancaEntity cc : listaDeContasPoupanca) {
+			if(cpf.equals(cc.getCpfClienteDaConta()) && contaVinculada.equals(cc.getNumeroDaConta())) {
+				return cc.getCategoriaDeConta().toString();
+			}
+		}
+		
+		return null;
 	}
 	
 	

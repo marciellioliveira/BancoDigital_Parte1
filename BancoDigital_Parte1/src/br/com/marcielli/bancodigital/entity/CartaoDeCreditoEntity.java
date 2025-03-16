@@ -11,24 +11,25 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	private float taxaDeUtilizacao;
 	private float taxaSeguroViagem;
 	private String numeroContaVinculada;
+	private float totalGastoMesCredito;
 
 	public CartaoDeCreditoEntity(String numeroDoCartao, String nomeDoDono, String cpfDoDono, TiposDeConta tipoDaConta,
 			CategoriasDeConta categoriaDaConta, TipoDeCartao tipoDeCartao, boolean status, String senha, String numeroContaVinculada) {
 		super(numeroDoCartao, nomeDoDono, cpfDoDono, tipoDaConta, categoriaDaConta, tipoDeCartao, status, senha);		
 		
 		if(categoriaDaConta.equals(CategoriasDeConta.COMUM)) {
-			this.limiteDeCreditoPreAprovado = 1.000f;
-			setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);			
+			this.limiteDeCreditoPreAprovado = 1000f;
+			//setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);			
 		}
 		
 		if(categoriaDaConta.equals(CategoriasDeConta.SUPER)) {
-			this.limiteDeCreditoPreAprovado = 5.000f;
-			setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);
+			this.limiteDeCreditoPreAprovado = 5000f;
+			//setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);
 		}
 		
 		if(categoriaDaConta.equals(CategoriasDeConta.PREMIUM)) {
-			this.limiteDeCreditoPreAprovado = 10.000f;
-			setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);		
+			this.limiteDeCreditoPreAprovado = 10000f;
+			//setLimiteDeCreditoPreAprovado(limiteDeCreditoPreAprovado);		
 		}
 		
 		this.numeroContaVinculada = numeroContaVinculada;
@@ -40,6 +41,17 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	}
 	
 	public float taxaDeUtilizacao() {
+		//Acho que ta errado
+	
+//		float porcentoDeTotalGasto = (80 * getLimiteDeCreditoPreAprovado())/100;
+//		
+//		if(totalGastoMes > porcentoDeTotalGasto) {
+//			float res = totalGastoMes - (5 * totalGastoMes)/100;
+//		}
+//		
+		//Saber o total gasto no mês (Taxa tira do limite do crédito ou do saldo da conta do cartão?)
+		//Se total gasto no mês for maior que 80%, aplicar 5% sobre o total		
+		
 		//- **Taxa de Utilização:** 5% sobre o total gasto no mês, aplicável apenas se o total de gastos exceder 80% do limite de crédito.
 		return 0.0f;
 	}
@@ -92,7 +104,7 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	@Override
 	public String toString() {
 		String texto = "";	
-		texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+getNumeroDoCartao()+" vinculado à conta "+getNumeroContaVinculada()+" e ao cpf "+getCpfDoDono()+", cadastrado com limite inicial de R$ "+getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+taxaDeUtilizacao;
+		texto = getTipoDeCartao().getDescricaoDoTipoDeCartao()+": número "+getNumeroDoCartao()+" vinculado à conta "+getNumeroContaVinculada()+" e ao cpf "+getCpfDoDono()+", cadastrado com limite de crédito pré-aprovado de R$ "+getLimiteDeCreditoPreAprovado()+" e taxa de utilização de "+taxaDeUtilizacao;
 		return texto;
 		
 	}	

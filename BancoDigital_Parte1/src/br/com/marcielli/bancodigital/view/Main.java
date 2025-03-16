@@ -597,7 +597,7 @@ public class Main { //VIEW
 											
 				for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
 					if(contasCliente.getContaCorrente() != null || contasCliente.getContaPoupanca() != null || contasCliente.getCartaoDeCredito() != null || contasCliente.getCartaoDeDebito() != null) {
-						System.out.println("\nCliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaContaCliente()+"\nEndereço: "+contasCliente.getEndereco());
+						System.out.println("\nCliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nEndereço: "+contasCliente.getEndereco());
 					} 
 					if(!(contasCliente.getContaCorrente() == null)) {
 						System.out.println(contasCliente.getContaCorrente());
@@ -607,13 +607,16 @@ public class Main { //VIEW
 						System.out.println(contasCliente.getContaPoupanca());
 					} 									
 					
-					if(!(contasCliente.getCartaoDeCredito() == null)) {						
-		
+					if(!(contasCliente.getCartaoDeCredito() == null)) {		
+//						System.err.println("MAIN");
+//						System.err.println("Cartão de Crédito numero conta vinculada: "+contasCliente.getCartaoDeCredito().getNumeroContaVinculada());
+//						System.err.println("Cartão de Crédito cpf cliente: "+contasCliente.getCartaoDeCredito().getCpfDoDono());
+						
 						cartaoDeCreditoService.buscarCartoesDeCredito(contasCliente.getCpf());
 					}
 					
-					if(!(contasCliente.getCartaoDeCredito() == null)) {						
-					
+					if(!(contasCliente.getCartaoDeDebito() == null)) {						
+					//	System.err.println("Categoria da Contta main debito: "+contasCliente.getCategoriaDeConta());
 						cartaoDeDebitoService.buscarCartoesDeDebito(contasCliente.getCpf());
 					}
 
