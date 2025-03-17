@@ -24,6 +24,7 @@ import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
 import br.com.marcielli.bancodigital.exception.DiaEMesNascimentoDiferente2Exception;
 import br.com.marcielli.bancodigital.exception.EscolhaDosCartoesFalhouException;
+import br.com.marcielli.bancodigital.exception.ExisteContaCadastradaException;
 import br.com.marcielli.bancodigital.exception.MesmosCaracteresEmStringException;
 import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.NumeroContasTransferenciasIguaisException;
@@ -44,7 +45,7 @@ import br.com.marcielli.bancodigital.service.ContaService;
 public class Main { //VIEW
 	
 	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
-	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException, AnoNascimentoDiferente4Exception, DiaEMesNascimentoDiferente2Exception, MesmosCaracteresEmStringException, CidadeComNumerosIguaisException, ContaComCPFExistenteException, ContaATransferirNaoExisteException, ContaAReceberNaoExisteException, NumeroContasTransferenciasIguaisException, EscolhaDosCartoesFalhouException, TransferirValorMenorOuIgualAZeroException, SemSaldoParaTransferenciaException  {	
+	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException, AnoNascimentoDiferente4Exception, DiaEMesNascimentoDiferente2Exception, MesmosCaracteresEmStringException, CidadeComNumerosIguaisException, ContaComCPFExistenteException, ContaATransferirNaoExisteException, ContaAReceberNaoExisteException, NumeroContasTransferenciasIguaisException, EscolhaDosCartoesFalhouException, TransferirValorMenorOuIgualAZeroException, SemSaldoParaTransferenciaException, ExisteContaCadastradaException  {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
@@ -431,9 +432,10 @@ public class Main { //VIEW
 			break;
 			case 4:
 				System.out.println("\nABRIR CONTA");
-				System.out.println("Você pode abrir conta para os clientes cadastrados abaixo:");
 				
-				if(clienteService.listarClientesDaoEmEntity().size() != 0) {	
+				
+				if(clienteService.listarClientesDaoEmEntity().size() != 0) {
+					System.out.println("Você pode abrir conta para os clientes cadastrados abaixo:");
 				System.out.println("\nClientes cadastrados: ");		
 				
 				for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
@@ -540,7 +542,10 @@ public class Main { //VIEW
 			break;
 			case 5:
 				System.out.println("\nVER CONTAS/CARTÕES\n");	
-				if(clienteService.listarClientesDaoEmEntity().size() != 0) {
+				
+				
+				
+				if(clienteService.listarClientesDaoEmEntity().size() != 0 && contaCorrenteService.verContasCorrentesCadastradasDao().size() != 0 || contaPoupancaService.verContasPoupancaCadastradasDao().size() != 0) {
 				
 				for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
 					
@@ -574,7 +579,7 @@ public class Main { //VIEW
 			break;
 			case 6:
 				System.out.println("\nVER FUNÇÃO DE TAXA E DESCONTO FUNCIONANDO");
-				if(clienteService.listarClientesDaoEmEntity().size() != 0) {
+				if(clienteService.listarClientesDaoEmEntity().size() != 0 && contaCorrenteService.verContasCorrentesCadastradasDao().size() != 0 || contaPoupancaService.verContasPoupancaCadastradasDao().size() != 0) {
 				
 				System.out.println("\nConta Corrente com valor descontado: ");
 				System.out.println("---------------------------------------");
@@ -602,7 +607,7 @@ public class Main { //VIEW
 			case 7:
 				System.out.println("\nEMITIR CARTÃO");
 				
-				if(clienteService.listarClientesDaoEmEntity().size() != 0) {
+				if(clienteService.listarClientesDaoEmEntity().size() != 0 && contaCorrenteService.verContasCorrentesCadastradasDao().size() != 0 || contaPoupancaService.verContasPoupancaCadastradasDao().size() != 0) {
 											
 				for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
 					if(contasCliente.getContaCorrente() != null || contasCliente.getContaPoupanca() != null || contasCliente.getCartaoDeCredito() != null || contasCliente.getCartaoDeDebito() != null) {
@@ -726,13 +731,27 @@ public class Main { //VIEW
 			break;
 			case 8:
 				System.out.println("\nFAZER TRANSFERÊNCIA: PIX");	
-				System.out.println("Veja as contas cadatradas que podem enviar/receber pix:");
-				if(clienteService.listarClientesDaoEmEntity().size() != 0) {
+				
+				
+				if(clienteService.listarClientesDaoEmEntity().size() != 0 && contaCorrenteService.verContasCorrentesCadastradasDao().size() != 0 && contaPoupancaService.verContasPoupancaCadastradasDao().size() != 0) {
+					
+					
+					System.out.println("Veja as contas cadatradas que podem enviar/receber pix:");
 				
 					for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
 						if(contasCliente.getContaCorrente() != null || contasCliente.getContaPoupanca() != null || contasCliente.getCartaoDeCredito() != null || contasCliente.getCartaoDeDebito() != null) {
 							System.out.println("\nCliente: "+contasCliente.getNome()+"\nCPF (Chave Pix): "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nEndereço: "+contasCliente.getEndereco());
 						} 
+						
+						if(!(contasCliente.getContaCorrente() == null)) {
+							System.out.println("Conta Corrente: "+contasCliente.getContaCorrente()+" - Saldo: "+contasCliente.getContaCorrente().exibirSaldo());
+						} 
+						
+						if(!(contasCliente.getContaPoupanca() == null)) {
+							System.out.println("Conta Poupança: "+contasCliente.getContaPoupanca()+" - Saldo: "+contasCliente.getContaPoupanca().exibirSaldo());
+						} 
+						
+						
 //						if(!(contasCliente.getContaCorrente() == null)) {
 //							System.out.println(contasCliente.getContaCorrente());
 //						} 
@@ -813,36 +832,18 @@ public class Main { //VIEW
 								}
 								
 								
-								
-//								System.out.println("\nDigite o número da conta para enviar PIX: ");
-//								String cTransferir1 = input.nextLine();
-								
-//								System.out.println("\nDigite\n1 - Transferir com Cartão de crédito\n2 - Transferir com Cartão de Débito: ");
-//								int escCartao = input.nextInt(); //Futuramente perguntar qual cartão, porque pode ter mais de um	
-//								input.nextLine();
-								
-//								
-//								System.out.println("Transferência via PIX:\nDigite o PIX(CPF) do cliente: ");
-//								String receberPix = input.nextLine();
-//								
-//								System.out.println("\nDigite o número da conta para receber: ");
-//								String cReceber1 = input.nextLine();
-//								
+								String cpf1 = cpfParaTransferir;
+								String cpf2 = cpfParaReceber;
 								
 								System.out.println("\nDigite o valor: ");
 								float cTransferirValor = input.nextFloat();
 								
 								
-								System.out.println("\nDigite\n1 - Fazer PIX para Conta Corrente\n2 - Fazer PIX para Conta Poupança: ");
-								int tipoContaPix = input.nextInt(); 
+								System.out.println("\nDigite\n1 - Enviar PIX da Conta Corrente\n2 - Enviar PIX da Conta Poupança: ");
+								int tipoContaPixEnviar = input.nextInt(); 
 								
-								
-								if(tipoContaPix == 1) {
-									//Conta Corrente
-									
-									
-									//No service eu vou retirar do dao os valores.
-//									contaCorrenteService.enviarPix(cpfParaTransferir, cTransferirValor);
+								if(tipoContaPixEnviar == 1) {
+									//Enviar pix da Conta Corrente
 									
 									for(ClienteEntity clienteEnviar : clienteService.listarClientesDaoEmEntity()) {
 										
@@ -850,17 +851,97 @@ public class Main { //VIEW
 											for(ClienteEntity clienteReceber : clienteService.listarClientesDaoEmEntity()) {
 												if(clienteReceber.getCpf().equals(cpfParaReceber)) {
 													
+													System.err.println("Enviar PIX da Conta Corrente -> ");
+													
+													//Enviar Pix da Conta Corrente
+													contaCorrenteService.temContaCorrente(cpfParaTransferir);
 													System.out.println("\nConta de "+clienteEnviar.getNome());
 													System.out.println("Saldo Antigo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
 													contaCorrenteService.enviarPix(cpfParaTransferir, cTransferirValor);
-													System.out.println("Transferindo R$ "+cTransferirValor+" para "+clienteReceber.getNome()+" (PIX: "+cpfParaReceber+")");
+													System.out.println("Transferiu R$ "+cTransferirValor+" para "+clienteReceber.getNome()+" (PIX: "+cpfParaReceber+")");
 													System.out.println("Saldo Novo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
 													
 													
+//													contaCorrenteService.temContaCorrente(cpfParaReceber);
+//													System.out.println("\nConta de "+clienteReceber.getNome());
+//													System.out.println("Saldo Antigo R$ "+clienteReceber.getContaCorrente().exibirSaldo());
+//													contaCorrenteService.receberPix(cpfParaReceber, cTransferirValor);
+//													System.out.println("Recebeu R$ "+cTransferirValor+" de "+clienteEnviar.getNome()+" (PIX: "+cpfParaTransferir+")");
+//													System.out.println("Saldo Novo R$ "+clienteReceber.getContaCorrente().exibirSaldo());
+									
+													
+												}
+											}
+											
+											
+										}
+										
+									}
+								}
+								
+								if(tipoContaPixEnviar == 2) {
+									//Enviar pix da conta poupança
+									
+									for(ClienteEntity clienteEnviar : clienteService.listarClientesDaoEmEntity()) {
+										
+										if(clienteEnviar.getCpf().equals(cpfParaTransferir)) {
+											for(ClienteEntity clienteReceber : clienteService.listarClientesDaoEmEntity()) {
+												if(clienteReceber.getCpf().equals(cpfParaReceber)) {
+													
+													System.err.println("Enviar PIX da Conta Poupança -> ");
+													//Enviar pix da conta poupança
+													contaPoupancaService.temContaPoupanca(cpfParaTransferir);
+													System.out.println("\nConta de "+clienteEnviar.getNome());
+													System.out.println("Saldo Antigo R$ "+clienteEnviar.getContaPoupanca().exibirSaldo());
+													contaPoupancaService.enviarPix(cpfParaTransferir, cTransferirValor);
+													System.out.println("Transferiu R$ "+cTransferirValor+" para "+clienteReceber.getNome()+" (PIX: "+cpfParaReceber+")");
+													System.out.println("Saldo Novo R$ "+clienteEnviar.getContaPoupanca().exibirSaldo());
+										
+//													contaPoupancaService.temContaPoupanca(cpfParaReceber);
+//													System.out.println("\nConta de "+clienteReceber.getNome());
+//													System.out.println("Saldo Antigo R$ "+clienteReceber.getContaPoupanca().exibirSaldo());
+//													contaPoupancaService.receberPix(cpfParaReceber, cTransferirValor);
+//													System.out.println("Recebeu R$ "+cTransferirValor+" de "+clienteEnviar.getNome()+" (PIX: "+cpfParaTransferir+")");
+//													System.out.println("Saldo Novo R$ "+clienteReceber.getContaPoupanca().exibirSaldo());
+													
+												}
+											}
+											
+											
+										}
+										
+									}
+									
+								}	
+								
+								
+								System.out.println("\nDigite\n1 - Receber PIX na Conta Corrente\n2 - Receber PIX na Conta Poupança: ");
+								int tipoContaPixReceber = input.nextInt(); 
+								
+								
+								if(tipoContaPixReceber == 1) {
+									//Receber pix da Conta Corrente
+									
+									
+									for(ClienteEntity clienteEnviar : clienteService.listarClientesDaoEmEntity()) {
+										
+										if(clienteEnviar.getCpf().equals(cpfParaTransferir)) {
+											for(ClienteEntity clienteReceber : clienteService.listarClientesDaoEmEntity()) {
+												if(clienteReceber.getCpf().equals(cpfParaReceber)) {
+													
+//													System.err.println("Receber PIX na Conta Corrente <- ");
+//													System.out.println("\nConta de "+clienteEnviar.getNome());
+//													System.out.println("Saldo Antigo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
+//													contaCorrenteService.enviarPix(cpfParaTransferir, cTransferirValor);
+//													System.out.println("Transferiu R$ "+cTransferirValor+" para "+clienteReceber.getNome()+" (PIX: "+cpfParaReceber+")");
+//													System.out.println("Saldo Novo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
+													
+													System.err.println("Receber PIX na Conta Corrente <- ");
+													contaCorrenteService.temContaCorrente(cpfParaReceber);
 													System.out.println("\nConta de "+clienteReceber.getNome());
 													System.out.println("Saldo Antigo R$ "+clienteReceber.getContaCorrente().exibirSaldo());
 													contaCorrenteService.receberPix(cpfParaReceber, cTransferirValor);
-													System.out.println("Recebendo R$ "+cTransferirValor+" de "+clienteEnviar.getNome()+" (PIX: "+cpfParaTransferir+")");
+													System.out.println("Recebeu R$ "+cTransferirValor+" de "+clienteEnviar.getNome()+" (PIX: "+cpfParaTransferir+")");
 													System.out.println("Saldo Novo R$ "+clienteReceber.getContaCorrente().exibirSaldo());
 													
 												}
@@ -873,8 +954,8 @@ public class Main { //VIEW
 									
 								}
 								
-								if(tipoContaPix == 2) {
-									//Conta Poupança
+								if(tipoContaPixReceber == 2) {
+									//Receber pix da Conta Poupança
 									
 									
 									for(ClienteEntity clienteEnviar : clienteService.listarClientesDaoEmEntity()) {
@@ -883,18 +964,20 @@ public class Main { //VIEW
 											for(ClienteEntity clienteReceber : clienteService.listarClientesDaoEmEntity()) {
 												if(clienteReceber.getCpf().equals(cpfParaReceber)) {
 													
-													System.out.println("\nConta de "+clienteEnviar.getNome());
-													System.out.println("Saldo Antigo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
-													contaPoupancaService.enviarPix(cpfParaTransferir, cTransferirValor);
-													System.out.println("Transferindo R$ "+cTransferirValor+" para "+clienteReceber.getNome()+" (PIX: "+cpfParaReceber+")");
-													System.out.println("Saldo Novo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
-													
-													
+//													System.out.println("\nConta de "+clienteEnviar.getNome());
+//													System.out.println("Saldo Antigo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
+//													contaPoupancaService.enviarPix(cpfParaTransferir, cTransferirValor);
+//													System.out.println("Transferiu R$ "+cTransferirValor+" para "+clienteReceber.getNome()+" (PIX: "+cpfParaReceber+")");
+//													System.out.println("Saldo Novo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
+//													
+//													
+													System.err.println("Receber PIX na Conta Poupança <- ");
+													contaPoupancaService.temContaPoupanca(cpfParaReceber);
 													System.out.println("\nConta de "+clienteReceber.getNome());
-													System.out.println("Saldo Antigo R$ "+clienteReceber.getContaCorrente().exibirSaldo());
+													System.out.println("Saldo Antigo R$ "+clienteReceber.getContaPoupanca().exibirSaldo());
 													contaPoupancaService.receberPix(cpfParaReceber, cTransferirValor);
-													System.out.println("Recebendo R$ "+cTransferirValor+" de "+clienteEnviar.getNome()+" (PIX: "+cpfParaTransferir+")");
-													System.out.println("Saldo Novo R$ "+clienteReceber.getContaCorrente().exibirSaldo());
+													System.out.println("Recebeu R$ "+cTransferirValor+" de "+clienteEnviar.getNome()+" (PIX: "+cpfParaTransferir+")");
+													System.out.println("Saldo Novo R$ "+clienteReceber.getContaPoupanca().exibirSaldo());
 													
 												}
 											}
@@ -905,11 +988,6 @@ public class Main { //VIEW
 									}
 									
 									
-									
-									
-									
-									//contaPoupancaService.enviarPix(cpfParaTransferir, cTransferirValor);
-									//contaPoupancaService.receberPix(cpfParaReceber, cTransferirValor);
 								}
 								
 								
@@ -935,6 +1013,9 @@ public class Main { //VIEW
 //					} catch (NumeroContasTransferenciasIguaisException e) {
 //						
 //						System.err.println("\nErro: "+e.getMessage());
+						
+					} catch (ExisteContaCadastradaException e) {
+						System.err.println("\nErro: "+e.getMessage());
 					} catch (SemSaldoParaTransferenciaException  e) {
 						System.err.println("\nErro: "+e.getMessage());
 					} catch (TamanhoDoCpfException e) {

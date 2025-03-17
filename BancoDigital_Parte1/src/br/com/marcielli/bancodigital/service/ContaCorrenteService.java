@@ -27,6 +27,7 @@ import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.EscolhaDosCartoesFalhouException;
+import br.com.marcielli.bancodigital.exception.ExisteContaCadastradaException;
 import br.com.marcielli.bancodigital.exception.NumeroContasTransferenciasIguaisException;
 import br.com.marcielli.bancodigital.exception.NumeroDaContaGeradoExistenteException;
 import br.com.marcielli.bancodigital.exception.SemSaldoParaTransferenciaException;
@@ -78,13 +79,33 @@ public class ContaCorrenteService {
 	}
 	
 	
-	public void enviarPix(String cpfEnviarPix, float valor) throws SemSaldoParaTransferenciaException {
+	public boolean temContaCorrente(String cpf) throws ExisteContaCadastradaException{
+		for(ClienteEntity cliente : clienteDao.buscarClientes()) {
+			
+			for(ContaCorrenteEntity contaCorrente : contaCorrenteDao.verContasCorrenteAdicionadas()) {				
+				if(!cpf.equals(contaCorrente.getCpfClienteDaConta())) {
+					throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta corrente cadastrada.");
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	public void enviarPix(String cpfEnviarPix, float valor) throws SemSaldoParaTransferenciaException{
 		
 		if(valor <= 0) {
 			throw new SemSaldoParaTransferenciaException("Você digitou um valor inválido para transferência");
 		}
 			
 		for(ClienteEntity clienteEnviar : clienteDao.buscarClientes()) {
+			
+//			for(ContaCorrenteEntity contaCorrenteEnviar : contaCorrenteDao.verContasCorrenteAdicionadas()) {				
+//				if(!cpfEnviarPix.equals(contaCorrenteEnviar.getCpfClienteDaConta())) {
+//					throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta corrente cadastrada.");
+//				}
+//			}
 			
 			
 			if(cpfEnviarPix.equals(clienteEnviar.getCpf())) {
@@ -105,9 +126,15 @@ public class ContaCorrenteService {
 	
 	}
 	
-	public void receberPix(String cpfReceberPix, float valor) {	
+	public void receberPix(String cpfReceberPix, float valor)  {	
 		
 		for(ClienteEntity clienteReceber : clienteDao.buscarClientes()) {
+			
+//			for(ContaCorrenteEntity contaCorrenteReceber : contaCorrenteDao.verContasCorrenteAdicionadas()) {				
+//				if(!cpfReceberPix.equals(contaCorrenteReceber.getCpfClienteDaConta())) {
+//					throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta corrente cadastrada.");
+//				}
+//			}
 			
 			if(cpfReceberPix.equals(clienteReceber.getCpf())) {				
 			

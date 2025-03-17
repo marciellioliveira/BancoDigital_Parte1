@@ -52,8 +52,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 	}
 
 	@Override
-	public float exibirSaldo() {
-		
+	public float exibirSaldo() {		
 		return getSaldo();
 	}
 
@@ -67,8 +66,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 		setSaldo(getSaldo() + valor);		
 	}
 	
-	public void acrescentarTaxaRendimento(ClienteEntity cliente) {
-		
+	public void acrescentarTaxaRendimento(ClienteEntity cliente) {		
 		ContaPoupancaService cps = new ContaPoupancaService();
 		cps.creditarTaxaVigenteMensal(cliente);
 	}

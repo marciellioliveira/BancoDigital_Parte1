@@ -22,6 +22,7 @@ import br.com.marcielli.bancodigital.exception.ContaATransferirNaoExisteExceptio
 import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.ExisteContaCadastradaException;
 import br.com.marcielli.bancodigital.exception.SemSaldoParaTransferenciaException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
@@ -64,6 +65,18 @@ public class ContaPoupancaService {
 		
 	}
 	
+	public boolean temContaPoupanca(String cpf) throws ExisteContaCadastradaException{
+		for(ClienteEntity cliente : clienteDao.buscarClientes()) {
+			
+			for(ContaPoupancaEntity contaPoupancaEnviar : contaPoupancaDao.verContasPoupancaAdicionadas()) {				
+			if(!cpf.equals(contaPoupancaEnviar.getCpfClienteDaConta())) {
+				throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta poupança cadastrada.");
+			}
+		}
+		}
+		
+		return true;
+	}
 
 	
 	public void enviarPix(String cpfEnviarPix, float valor) throws SemSaldoParaTransferenciaException {
@@ -74,32 +87,44 @@ public class ContaPoupancaService {
 			
 		for(ClienteEntity clienteEnviar : clienteDao.buscarClientes()) {
 			
+//			for(ContaPoupancaEntity contaPoupancaEnviar : contaPoupancaDao.verContasPoupancaAdicionadas()) {				
+//				if(!cpfEnviarPix.equals(contaPoupancaEnviar.getCpfClienteDaConta())) {
+//					throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta poupança cadastrada.");
+//				}
+//			}
+			
 			
 			if(cpfEnviarPix.equals(clienteEnviar.getCpf())) {
 				
-				if(clienteEnviar.getContaCorrente().exibirSaldo() <= 0) {
+				if(clienteEnviar.getContaPoupanca().exibirSaldo() <= 0) {
 					throw new SemSaldoParaTransferenciaException("Você não tem saldo suficiente para fazer essa transferência.");
 				}				
 				
-				if(valor > clienteEnviar.getContaCorrente().exibirSaldo()) {
+				if(valor > clienteEnviar.getContaPoupanca().exibirSaldo()) {
 					throw new SemSaldoParaTransferenciaException("Você não tem saldo suficiente para fazer essa transferência.");
 				}
 				
 				
-				clienteEnviar.getContaCorrente().enviarPix(valor);				
+				clienteEnviar.getContaPoupanca().enviarPix(valor);				
 				
 			}
 		}
 	
 	}
 	
-	public void receberPix(String cpfReceberPix, float valor) {	
+	public void receberPix(String cpfReceberPix, float valor) throws ExisteContaCadastradaException{	
 		
 		for(ClienteEntity clienteReceber : clienteDao.buscarClientes()) {
 			
+//			for(ContaPoupancaEntity contaPoupancaReceber : contaPoupancaDao.verContasPoupancaAdicionadas()) {				
+//				if(!cpfReceberPix.equals(contaPoupancaReceber.getCpfClienteDaConta())) {
+//					throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta poupança cadastrada.");
+//				}
+//			}
+			
 			if(cpfReceberPix.equals(clienteReceber.getCpf())) {				
 			
-				clienteReceber.getContaCorrente().receberPix(valor);
+				clienteReceber.getContaPoupanca().receberPix(valor);
 		
 			}
 		}		
