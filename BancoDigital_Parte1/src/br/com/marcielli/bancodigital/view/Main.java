@@ -23,8 +23,10 @@ import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
 import br.com.marcielli.bancodigital.exception.DiaEMesNascimentoDiferente2Exception;
+import br.com.marcielli.bancodigital.exception.DiaNascMenor0OuMaior31Exception;
 import br.com.marcielli.bancodigital.exception.EscolhaDosCartoesFalhouException;
 import br.com.marcielli.bancodigital.exception.ExisteContaCadastradaException;
+import br.com.marcielli.bancodigital.exception.MesNascMenor0OuMaior12Exception;
 import br.com.marcielli.bancodigital.exception.MesmosCaracteresEmStringException;
 import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.NumeroContasTransferenciasIguaisException;
@@ -45,7 +47,12 @@ import br.com.marcielli.bancodigital.service.ContaService;
 public class Main { //VIEW
 	
 	public static void main(String[] args) throws TamanhoDoCpfException, CpfJaCadastradoException, IndexOutOfBoundsException, 
-	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException, AnoNascimentoDiferente4Exception, DiaEMesNascimentoDiferente2Exception, MesmosCaracteresEmStringException, CidadeComNumerosIguaisException, ContaComCPFExistenteException, ContaATransferirNaoExisteException, ContaAReceberNaoExisteException, NumeroContasTransferenciasIguaisException, EscolhaDosCartoesFalhouException, TransferirValorMenorOuIgualAZeroException, SemSaldoParaTransferenciaException, ExisteContaCadastradaException  {	
+	ValidarUltimosNumerosDoCpfException, TamanhoDoCepException, DataDeNascMenor18Exception, NomeMenor2EMaior100Exception, 
+	CaracterEspecialNoNomeException, CpfComNumerosIguaisException, ClienteNuloNoDaoException, AnoNascimentoDiferente4Exception, 
+	DiaEMesNascimentoDiferente2Exception, MesmosCaracteresEmStringException, CidadeComNumerosIguaisException, ContaComCPFExistenteException, 
+	ContaATransferirNaoExisteException, ContaAReceberNaoExisteException, NumeroContasTransferenciasIguaisException, EscolhaDosCartoesFalhouException, 
+	TransferirValorMenorOuIgualAZeroException, SemSaldoParaTransferenciaException, ExisteContaCadastradaException, MesNascMenor0OuMaior12Exception,
+	DiaNascMenor0OuMaior31Exception {	
 		
 		int opcao = -1;
 		Scanner input = new Scanner(System.in);	
@@ -166,6 +173,9 @@ public class Main { //VIEW
 					}  catch (DiaEMesNascimentoDiferente2Exception e) {
 						System.err.println("\nErro: "+e.getMessage());	
 						flagMesNascimento = true;
+					} catch (MesNascMenor0OuMaior12Exception e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagMesNascimento = true;
 					} catch (InputMismatchException e) {
 						System.err.println("\nErro: "+e.getMessage());	
 						flagMesNascimento = true;		
@@ -180,7 +190,9 @@ public class Main { //VIEW
 						clienteService.validarDiaNascimento(dia);
 						diaNascimento = Integer.parseInt(dia);
 						flagDiaNascimento = false;
-						
+					} catch (DiaNascMenor0OuMaior31Exception e) {
+						System.err.println("\nErro: "+e.getMessage());	
+						flagDiaNascimento = true;
 					}  catch (DiaEMesNascimentoDiferente2Exception e) {
 						System.err.println("\nErro: "+e.getMessage());	
 						flagDiaNascimento = true;
@@ -497,7 +509,7 @@ public class Main { //VIEW
 							
 							contaPoupancaService.verSeTemContaComEsseCPF(abrirContaCpf, tipoDeContaEscolhida);
 							
-						} else if(tipoDeContaEscolhida > 2) {
+						} else if(tipoDeContaEscolhida > 2 || tipoDeContaEscolhida <= 0) {
 							System.err.println("\nErro: Digite um valor correspondente\n");	
 							break;							
 						}
@@ -508,11 +520,18 @@ public class Main { //VIEW
 					} catch (InputMismatchException e) {
 						System.err.println("\nErro: Digite um valor correspondente");						
 						input.nextLine();
+						break;
 					}	
 				
+					try {	
 					System.out.println("Digite o valor do primeiro depósito: ");
-					float primeiroDeposito = input.nextFloat();				
-				
+					float primeiroDeposito = input.nextFloat();		
+					
+					if(primeiroDeposito < 0) {
+						System.err.println("\nErro: Digite um valor correspondente");						
+						input.nextLine();
+						break;
+					}				
 					
 					if(tipoDeContaEscolhida == 1) {				
 						TiposDeConta contaCorrente;
@@ -528,7 +547,12 @@ public class Main { //VIEW
 						
 						contaPoupancaService.adicionarContaPoupancaEntityEmDao(abrirContaCpf, primeiroDeposito, contaPoupanca, categoriaCliente);		
 					
-					}			
+					} 	
+					} catch (InputMismatchException e) {
+						System.err.println("\nErro: Digite um valor correspondente");						
+						input.nextLine();
+						break;
+					}	
 				
 				
 				
@@ -717,7 +741,7 @@ public class Main { //VIEW
 				
 				} catch (InputMismatchException e) {
 					
-					System.err.println("\nErro: "+e.getMessage());						
+					System.err.println("\nErro: Digite um valor correspondente");						
 					input.nextLine();					
 				}					
 				

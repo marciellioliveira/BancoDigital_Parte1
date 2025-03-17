@@ -20,6 +20,8 @@ import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
 import br.com.marcielli.bancodigital.exception.DataDeNascMenor18Exception;
 import br.com.marcielli.bancodigital.exception.DiaEMesNascimentoDiferente2Exception;
+import br.com.marcielli.bancodigital.exception.DiaNascMenor0OuMaior31Exception;
+import br.com.marcielli.bancodigital.exception.MesNascMenor0OuMaior12Exception;
 import br.com.marcielli.bancodigital.exception.MesmosCaracteresEmStringException;
 import br.com.marcielli.bancodigital.exception.NomeMenor2EMaior100Exception;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCepException;
@@ -628,18 +630,30 @@ public class ClienteService {
 
 	}
 	
-	public void validarMesNascimento (String mesNac) throws DiaEMesNascimentoDiferente2Exception {		
+	public void validarMesNascimento (String mesNac) throws DiaEMesNascimentoDiferente2Exception, MesNascMenor0OuMaior12Exception {		
 		
 		if(mesNac.length() != 2) {
 			throw new DiaEMesNascimentoDiferente2Exception("Você digitou o número: "+mesNac+". O mês de nascimento deve ter 2 dígitos. Exemplo: 01");
 		}
 
+		int mes = Integer.parseInt(mesNac);
+		
+		if(mes <= 0 || mes > 12) {
+			throw new MesNascMenor0OuMaior12Exception("O mês de nascimento deve estar entre 1 a 12.");
+		}
+
 	}
 	
-	public void validarDiaNascimento (String diaNasc) throws DiaEMesNascimentoDiferente2Exception {	
+	public void validarDiaNascimento (String diaNasc) throws DiaEMesNascimentoDiferente2Exception, DiaNascMenor0OuMaior31Exception {	
 		
 		if(diaNasc.length() != 2) {
 			throw new DiaEMesNascimentoDiferente2Exception("Você digitou o número: "+diaNasc+". O dia de nascimento deve ter 2 dígitos. Exemplo: 01");
+		}
+		
+		int dia = Integer.parseInt(diaNasc);
+		
+		if(dia <= 0 || dia >31) {
+			throw new DiaNascMenor0OuMaior31Exception("O dia de nascimento deve estar entre 01 e 31");
 		}
 
 	}
