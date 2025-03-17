@@ -5,17 +5,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import br.com.marcielli.bancodigital.dao.CartaoDeCreditoDao;
+import br.com.marcielli.bancodigital.dao.CartaoDeDebitoDao;
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
 import br.com.marcielli.bancodigital.dao.ContaPoupancaDao;
+import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
+import br.com.marcielli.bancodigital.entity.CartaoDeDebitoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
+import br.com.marcielli.bancodigital.exception.ContaAReceberNaoExisteException;
+import br.com.marcielli.bancodigital.exception.ContaATransferirNaoExisteException;
 import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.SemSaldoParaTransferenciaException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
@@ -25,6 +32,9 @@ public class ContaPoupancaService {
 
 	ContaPoupancaDao contaPoupancaDao = new ContaPoupancaDao().getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();
+	
+	CartaoDeCreditoDao cartaoDeCreditoDao = CartaoDeCreditoDao.getInstancia();
+	CartaoDeDebitoDao cartaoDeDebitoDao = CartaoDeDebitoDao.getInstancia();
 	
 	public boolean adicionarContaPoupancaEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
 			
@@ -53,6 +63,174 @@ public class ContaPoupancaService {
 		return true;
 		
 	}
+	
+
+	
+	public void enviarPix(String cpfEnviarPix, float valor) throws SemSaldoParaTransferenciaException {
+		
+		if(valor <= 0) {
+			throw new SemSaldoParaTransferenciaException("Você digitou um valor inválido para transferência");
+		}
+			
+		for(ClienteEntity clienteEnviar : clienteDao.buscarClientes()) {
+			
+			
+			if(cpfEnviarPix.equals(clienteEnviar.getCpf())) {
+				
+				if(clienteEnviar.getContaCorrente().exibirSaldo() <= 0) {
+					throw new SemSaldoParaTransferenciaException("Você não tem saldo suficiente para fazer essa transferência.");
+				}				
+				
+				if(valor > clienteEnviar.getContaCorrente().exibirSaldo()) {
+					throw new SemSaldoParaTransferenciaException("Você não tem saldo suficiente para fazer essa transferência.");
+				}
+				
+				
+				clienteEnviar.getContaCorrente().enviarPix(valor);				
+				
+			}
+		}
+	
+	}
+	
+	public void receberPix(String cpfReceberPix, float valor) {	
+		
+		for(ClienteEntity clienteReceber : clienteDao.buscarClientes()) {
+			
+			if(cpfReceberPix.equals(clienteReceber.getCpf())) {				
+			
+				clienteReceber.getContaCorrente().receberPix(valor);
+		
+			}
+		}		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	public void verSeContaPoupancaReceberExiste(String contaATransferir, String codigoTransferencia, float valor, String contaAReceber) throws ContaAReceberNaoExisteException  {
+//		
+//		/* Transferir da Conta corrente com Cartão de Crédito = "11"	
+//		 * Transferir da Conta corrente com Cartão de Débito= "12"
+//		 * Transferir da Conta Poupança com Cartão de Crédito = "21"
+//		 * Transferir da Conta Poupança com Cartão de Débito = "22"
+//		 */
+//		System.err.println("Teste imprimior poupança: "+codigoTransferencia);
+//		
+//		for(ClienteEntity contasClienteOpBanc : clienteDao.buscarClientes()) {
+//			if(!contaAReceber.equals(contasClienteOpBanc.getContaPoupanca().getNumeroDaConta())) {
+//				throw new ContaAReceberNaoExisteException("A conta que você digitou não existe!\nDigite uma conta existente para que o valor da transferência chegue na conta correta.");
+//			}	
+//			
+//			if(contaAReceber.equals(contasClienteOpBanc.getContaPoupanca().getNumeroDaConta())) { //Numero da Conta Poupança existe
+//				System.err.println("A conta "+contaATransferir+" está enviando um valor de R$ "+valor+" para a conta "+contaAReceber);
+//			}
+//		}
+//		
+//	}
+//	
+//	public void verSeContaPoupancaTransferirExiste(String contaATransferir) throws ContaATransferirNaoExisteException  {
+//		
+//		for(ClienteEntity contasClienteOpBanc : clienteDao.buscarClientes()) {
+//			
+//			if(!contaATransferir.equals(contasClienteOpBanc.getContaPoupanca().getNumeroDaConta())) {
+//				throw new ContaATransferirNaoExisteException("A conta POUPANÇA que você digitou não existe!\nDigite uma conta existente para fazer a transferência.");
+//			}			
+//			
+//			if(contaATransferir.equals(contasClienteOpBanc.getContaPoupanca().getNumeroDaConta())) { //Numero da Conta poupança existe
+//				
+//				System.out.println("\n--- CARTÕES DE CRÉDITO VINCULADOS À CONTA POUPANÇA: "+contasClienteOpBanc.getCartaoDeDebito().getNumeroContaVinculada());
+//				for(CartaoDeCreditoEntity cartaoC : cartaoDeCreditoDao.buscarCartoesDeCredito()) {
+//					if(contasClienteOpBanc.getCartaoDeCredito().getNumeroContaVinculada().equals(cartaoC.getNumeroContaVinculada())) {	
+//						
+//						System.out.println("Nome: "+cartaoC.getNomeDoDono());
+//						System.out.println("CPF: "+cartaoC.getCpfDoDono());						
+//						System.out.println("Número do Cartão: "+cartaoC.getNumeroDoCartao());
+//						System.out.println("Categoria: "+cartaoC.getCategoriaDaConta());
+//						System.out.println("Saldo da Conta: "+contasClienteOpBanc.getContaPoupanca().exibirSaldo());
+//					}
+//				}
+//				
+//				System.out.println("\n--- CARTÕES DE DÉBITO VINCULADOS À CONTA POUPANÇA: "+contasClienteOpBanc.getCartaoDeDebito().getNumeroContaVinculada());
+//				for(CartaoDeDebitoEntity cartaoD : cartaoDeDebitoDao.buscarCartoesDeDebito()) {
+//					if(contasClienteOpBanc.getCartaoDeCredito().getNumeroContaVinculada().equals(cartaoD.getNumeroContaVinculada())) {
+//						
+//						System.out.println("Nome: "+cartaoD.getNomeDoDono());
+//						System.out.println("CPF: "+cartaoD.getCpfDoDono());						
+//						System.out.println("Número do Cartão: "+cartaoD.getNumeroDoCartao());
+//						System.out.println("Categoria: "+cartaoD.getCategoriaDaConta()+"\n");
+//						System.out.println("Saldo da Conta: "+contasClienteOpBanc.getContaPoupanca().exibirSaldo());
+//						
+//					}
+//				}
+//				
+//			}
+//			
+//		}
+//		
+//	}
+//	
+//	
+//	
+//	
+//	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public void verSeTemContaComEsseCPF(String cpf, int tipoDeContaEscolhida) throws ContaComCPFExistenteException {

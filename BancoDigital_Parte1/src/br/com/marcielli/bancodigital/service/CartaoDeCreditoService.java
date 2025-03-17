@@ -14,6 +14,9 @@ import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
+import br.com.marcielli.bancodigital.exception.EscolhaDosCartoesFalhouException;
+import br.com.marcielli.bancodigital.exception.NumeroContasTransferenciasIguaisException;
+import br.com.marcielli.bancodigital.exception.TransferirValorMenorOuIgualAZeroException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TipoDeCartao;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
@@ -30,8 +33,7 @@ public class CartaoDeCreditoService {
 		
 		try {
 			
-			String categoriaConta = "";
-			
+			String categoriaConta = "";			
 		
 			for(ClienteEntity c : clienteDao.buscarClientes()) {
 				if(cpfClienteEmitirCartao.equals(c.getCpf())) {					
@@ -70,7 +72,7 @@ public class CartaoDeCreditoService {
 					
 						
 					if(categoriaConta.equals("COMUM")) {
-						System.err.println("1 : "+categoriaConta);
+						//System.err.println("1 : "+categoriaConta);
 						
 						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.COMUM, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
@@ -81,7 +83,7 @@ public class CartaoDeCreditoService {
 					}
 					
 					if(categoriaConta.equals("SUPER")) {
-						System.err.println("2 : "+categoriaConta);
+					//	System.err.println("2 : "+categoriaConta);
 						
 						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.SUPER, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
@@ -92,7 +94,7 @@ public class CartaoDeCreditoService {
 					}
 					
 					if(categoriaConta.equals("PREMIUM")) {
-						System.err.println("3 : "+categoriaConta);
+						//System.err.println("3 : "+categoriaConta);
 						
 						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.PREMIUM, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
@@ -127,6 +129,93 @@ public class CartaoDeCreditoService {
 			System.err.println(e.getMessage());
 		}			
 	}
+	
+	
+	public void transferirContaCorrente(String cTransferir, int escCartao, float cTransferirValor, String cReceber, int cod) throws NumeroContasTransferenciasIguaisException, EscolhaDosCartoesFalhouException, TransferirValorMenorOuIgualAZeroException {
+		
+		//escCartao = 1 = Cartão de Crédito
+		//escCartao = 2 = Cartão de Débito
+		
+		//Conta Corrente -> Conta Corrente = cod 11
+		//Conta Corrente -> Conta Poupança = cod 12
+		
+		if(cTransferir.equals(cReceber)) {
+			throw new NumeroContasTransferenciasIguaisException("Não é possível fazer transferência para si mesmo. \nDigite uma conta diferente para receber o valor.");
+		}	
+		
+		if(escCartao != 1 && escCartao != 2) {
+			throw new EscolhaDosCartoesFalhouException("Escolha 1 para transferir por cartão de crédito ou 2 para transferir por cartão de débito.");
+		}
+		
+		if(cTransferirValor <= 0) {
+			throw new TransferirValorMenorOuIgualAZeroException("Esse valor não é transferível");
+		}		
+		
+		if(cod != 11 && cod != 12) {
+			
+		}
+		
+	//	ArrayList<ClienteEntity> clienteTransferir = new ArrayList<ClienteEntity>();
+	//	ArrayList<ClienteEntity> clienteReceber = new ArrayList<ClienteEntity>();
+		
+		float saldoAntigo = 0;
+		float saldoNovo = 0;		
+		
+	
+		if(cod == 11) { //Conta Corrente -> Conta Corrente = cod 11
+			
+			for(ContaCorrenteEntity contaC : contaCorrenteDao.verContasCorrenteAdicionadas()) {	
+				
+				for(ClienteEntity cliente : clienteDao.buscarClientes()) {
+					
+					if(cTransferir.equals(contaC.getNumeroDaConta())) {
+						
+						
+						if(cliente.getContaCorrente().getNumeroDaConta().equals(contaC.getNumeroDaConta())) {
+				
+							//clienteTransferir.add(cliente);
+							
+							saldoAntigo = cliente.getContaCorrente().getSaldo();
+							saldoNovo = saldoAntigo - cTransferirValor;
+							
+							//cliente.getCartaoDeCredito().
+							System.err.println("Saldo antigo transferir: "+saldoAntigo);
+							System.err.println("Saldo novo transferir: "+saldoNovo);
+							
+							//
+						}
+						
+						
+						
+					}
+				
+					if(cReceber.equals(contaC.getNumeroDaConta())) {
+						
+						if(cliente.getContaCorrente().getNumeroDaConta().equals(contaC.getNumeroDaConta())) {
+					
+							saldoAntigo = cliente.getContaCorrente().getSaldo();
+							saldoNovo = saldoAntigo + cTransferirValor;
+							//clienteReceber.add(cliente);
+							
+							//cliente.getContaCorrente().fazerTransferenciaViaTed(saldoAntigo, saldoNovo);
+							System.err.println("Saldo antigo receber: "+saldoAntigo);
+							System.err.println("Saldo novo receber: "+saldoNovo);
+						}
+						
+					}
+					
+				}
+					
+					//contaC.fazerTransferenciaViaTed(cTransferir, valorAntigo, valorNovo, cReceber);
+					
+					//contaC.fazerTransferenciaViaTed(cTransferir, clienteTransferir, escCartao, cTransferirValor, clienteReceber);					
+			}
+		}
+	}
+	
+	
+	
+	
 
 
 	public void buscarCartoesDeCredito(String cpf) {	

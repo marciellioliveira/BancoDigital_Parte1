@@ -47,7 +47,7 @@ public class CartaoDeDebitoService {
 					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");	
 					
 					if(categoriaConta.equals("COMUM")) {
-						System.err.println("1 : "+categoriaConta);
+						//System.err.println("1 : "+categoriaConta);
 						
 						CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.COMUM, TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
@@ -58,7 +58,7 @@ public class CartaoDeDebitoService {
 					}
 					
 					if(categoriaConta.equals("SUPER")) {
-						System.err.println("2 : "+categoriaConta);
+						//System.err.println("2 : "+categoriaConta);
 						
 						CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.SUPER, TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);
@@ -69,7 +69,7 @@ public class CartaoDeDebitoService {
 					}
 					
 					if(categoriaConta.equals("PREMIUM")) {
-						System.err.println("3 : "+categoriaConta);
+						//System.err.println("3 : "+categoriaConta);
 						
 						CartaoDeDebitoEntity cartaoDeDebitoNovo = new CartaoDeDebitoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.PREMIUM, TipoDeCartao.CARTAO_DE_DEBITO, true, senha, contaVinculadaAoCartao);

@@ -58,8 +58,13 @@ public class ContaPoupancaEntity extends ContaEntity {
 	}
 
 	@Override
-	public void fazerTransferenciaViaPix() {		
-		
+	public void enviarPix(float valor) {		
+		setSaldo(getSaldo() - valor); 
+	}
+	
+	@Override
+	public void receberPix(float valor) {
+		setSaldo(getSaldo() + valor);		
 	}
 	
 	public void acrescentarTaxaRendimento(ClienteEntity cliente) {
@@ -87,7 +92,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfClienteDaConta())) {
-				texto = "Conta Poupança: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento()+".";
+				texto = "Conta Poupança: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo de R$ "+exibirSaldo()+" e taxa de rendimento anual de "+getAcrescimoTaxaRendimento()+".";
 			}
 		}		
 		return texto;		

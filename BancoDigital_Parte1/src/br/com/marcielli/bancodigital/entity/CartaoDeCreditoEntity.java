@@ -40,6 +40,8 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 		 * */
 	}
 	
+	
+	
 	public float taxaDeUtilizacao() {
 		//Acho que ta errado
 	
@@ -92,6 +94,8 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	@Override
 	public float ajustarLimite() {
 		
+		
+		
 		return 0;
 	}
 
@@ -99,6 +103,8 @@ public class CartaoDeCreditoEntity extends CartaoEntity {
 	public float fazerPagamento() {
 		
 		return 0;
+		
+	
 	}
 	
 	@Override

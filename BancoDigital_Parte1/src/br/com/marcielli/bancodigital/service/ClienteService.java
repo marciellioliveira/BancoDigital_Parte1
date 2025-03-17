@@ -81,9 +81,18 @@ public class ClienteService {
 						
 	}
 	
+	
+	
+	
+	//Ver qual conta é, corrente ou poupança
+	//Se for corrente, envia pra corrente
+	//se for poupança, envia pra poupança
+	
+	
 	public ArrayList<ClienteEntity> verClientesCadastradosDao() {
 		return clienteDao.verClientesCadastrados();
 	}
+	
 	
 	
 	

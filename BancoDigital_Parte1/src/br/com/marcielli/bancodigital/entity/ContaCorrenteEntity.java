@@ -15,7 +15,6 @@ public class ContaCorrenteEntity extends ContaEntity {
 	private String nomeClienteDonoDaConta;
 
 	
-	
 	public ContaCorrenteEntity(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta, CategoriasDeConta categoriaDeConta,  String numeroDaConta) {
 		super(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, numeroDaConta);
 		
@@ -72,9 +71,54 @@ public class ContaCorrenteEntity extends ContaEntity {
 	}
 
 	@Override
-	public void fazerTransferenciaViaPix() {		
-		
+	public void enviarPix(float valor) {		
+		setSaldo(getSaldo() - valor); 
 	}
+	
+	@Override
+	public void receberPix(float valor) {
+		setSaldo(getSaldo() + valor);		
+	}
+		
+		
+		
+		
+		
+		
+		//		float saldoAntigoContaCorrente = 0;
+//		float novoSaldoContaCorrente = 0;			
+//		
+//		for(ClienteEntity t : cTransferir) {
+//		
+//			if(numContaTransf.equals(t.getContaCorrente().getNumeroDaConta())) {	
+//				
+//				System.err.println("numContaTransf: "+numContaTransf);
+//				System.err.println("t.getContaCorrente().getNumeroDaConta(): "+t.getContaCorrente().getNumeroDaConta());
+//			
+//					saldoAntigoContaCorrente = t.getContaCorrente().getSaldo();
+//					t.getContaCorrente().setSaldo(saldoAntigoContaCorrente - cTransferirValor);
+//					novoSaldoContaCorrente = t.getContaCorrente().exibirSaldo();
+//				
+//				
+//				
+//				
+//				
+//				
+//			}					
+//		}
+//		
+//		System.err.println("Saldo Antigo: "+saldoAntigoContaCorrente);
+//		System.err.println("Saldo Novo: "+novoSaldoContaCorrente);
+//		
+//		
+
+
+		
+		
+		
+		
+		
+	
 	
 	
 	public ArrayList<CartaoEntity> salvarCartoesDaConta() {
@@ -110,11 +154,15 @@ public class ContaCorrenteEntity extends ContaEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfClienteDaConta())) {
-				texto = "Conta Corrente: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo inicial de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal()+".";
+				texto = "Conta Corrente: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal()+".";
 			}
 		}		
 		return texto;		
 	}
+
+
+
+
 
 	
 }

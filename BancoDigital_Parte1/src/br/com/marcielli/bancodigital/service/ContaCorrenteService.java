@@ -12,16 +12,26 @@ import br.com.marcielli.bancodigital.dao.CartaoDeCreditoDao;
 import br.com.marcielli.bancodigital.dao.CartaoDeDebitoDao;
 import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.dao.ContaCorrenteDao;
+import br.com.marcielli.bancodigital.dao.ContaPoupancaDao;
 import br.com.marcielli.bancodigital.entity.CartaoDeCreditoEntity;
+import br.com.marcielli.bancodigital.entity.CartaoDeDebitoEntity;
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
 import br.com.marcielli.bancodigital.entity.ContaEntity;
+import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
+import br.com.marcielli.bancodigital.exception.CartoesRelacionadosContaTransfExistemException;
 import br.com.marcielli.bancodigital.exception.ClienteNuloNoDaoException;
+import br.com.marcielli.bancodigital.exception.ContaAReceberNaoExisteException;
+import br.com.marcielli.bancodigital.exception.ContaATransferirNaoExisteException;
 import br.com.marcielli.bancodigital.exception.ContaComCPFExistenteException;
 import br.com.marcielli.bancodigital.exception.CpfComNumerosIguaisException;
 import br.com.marcielli.bancodigital.exception.CpfJaCadastradoException;
+import br.com.marcielli.bancodigital.exception.EscolhaDosCartoesFalhouException;
+import br.com.marcielli.bancodigital.exception.NumeroContasTransferenciasIguaisException;
 import br.com.marcielli.bancodigital.exception.NumeroDaContaGeradoExistenteException;
+import br.com.marcielli.bancodigital.exception.SemSaldoParaTransferenciaException;
 import br.com.marcielli.bancodigital.exception.TamanhoDoCpfException;
+import br.com.marcielli.bancodigital.exception.TransferirValorMenorOuIgualAZeroException;
 import br.com.marcielli.bancodigital.exception.ValidarUltimosNumerosDoCpfException;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
@@ -31,10 +41,11 @@ import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 public class ContaCorrenteService {
 	
 	ContaCorrenteDao contaCorrenteDao = ContaCorrenteDao.getInstancia();
+	ContaPoupancaDao contaPoupancaDao = ContaPoupancaDao.getInstancia();
 	ClienteDao clienteDao = ClienteDao.getInstancia();	
 	
-	//CartaoDeCreditoDao cartaoDeCreditoDao = CartaoDeCreditoDao.getInstancia();
-	//CartaoDeDebitoDao cartaoDeDebitoDao = CartaoDeDebitoDao.getInstancia();
+	CartaoDeCreditoDao cartaoDeCreditoDao = CartaoDeCreditoDao.getInstancia();
+	CartaoDeDebitoDao cartaoDeDebitoDao = CartaoDeDebitoDao.getInstancia();
 	
 	
 	public boolean adicionarContaCorrenteEntityEmDao(String cpfClienteDaConta, float saldo, TiposDeConta tipoDeConta,  CategoriasDeConta categoriaDeConta) throws ClienteNuloNoDaoException {
@@ -66,11 +77,47 @@ public class ContaCorrenteService {
 		return true;
 	}
 	
-//	public boolean contaCorrenteFoiAdicionada() {
-//		
-//		if
-//		
-//	}
+	
+	public void enviarPix(String cpfEnviarPix, float valor) throws SemSaldoParaTransferenciaException {
+		
+		if(valor <= 0) {
+			throw new SemSaldoParaTransferenciaException("Você digitou um valor inválido para transferência");
+		}
+			
+		for(ClienteEntity clienteEnviar : clienteDao.buscarClientes()) {
+			
+			
+			if(cpfEnviarPix.equals(clienteEnviar.getCpf())) {
+				
+				if(clienteEnviar.getContaCorrente().exibirSaldo() <= 0) {
+					throw new SemSaldoParaTransferenciaException("Você não tem saldo suficiente para fazer essa transferência.");
+				}				
+				
+				if(valor > clienteEnviar.getContaCorrente().exibirSaldo()) {
+					throw new SemSaldoParaTransferenciaException("Você não tem saldo suficiente para fazer essa transferência.");
+				}
+				
+				
+				clienteEnviar.getContaCorrente().enviarPix(valor);				
+				
+			}
+		}
+	
+	}
+	
+	public void receberPix(String cpfReceberPix, float valor) {	
+		
+		for(ClienteEntity clienteReceber : clienteDao.buscarClientes()) {
+			
+			if(cpfReceberPix.equals(clienteReceber.getCpf())) {				
+			
+				clienteReceber.getContaCorrente().receberPix(valor);
+		
+			}
+		}		
+	}
+
+
 	
 	public void verSeTemContaComEsseCPF(String cpf, int tipoDeContaEscolhida) throws ContaComCPFExistenteException {
 		

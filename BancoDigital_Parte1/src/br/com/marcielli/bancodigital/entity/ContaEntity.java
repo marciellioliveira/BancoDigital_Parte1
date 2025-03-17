@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
+import br.com.marcielli.bancodigital.helpers.OperacaoBancaria;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public abstract class ContaEntity {
@@ -14,6 +15,7 @@ public abstract class ContaEntity {
 	private float saldo;
 	//private ContasDoCliente contasDoClientePorCpf;
 	private String numeroDaConta;
+	private OperacaoBancaria operacaoBancaria;
 	
 	
 	
@@ -54,7 +56,9 @@ public abstract class ContaEntity {
 	
 	public abstract float exibirSaldo();
 	
-	public abstract void fazerTransferenciaViaPix();	
+	public abstract void enviarPix(float valor);
+	public abstract void receberPix(float valor);
+	
 	
 	//public abstract ArrayList<CartaoEntity> salvarCartoesDaConta();
 	
