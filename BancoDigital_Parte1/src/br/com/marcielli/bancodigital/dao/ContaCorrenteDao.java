@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
 import br.com.marcielli.bancodigital.entity.ContaCorrenteEntity;
+import br.com.marcielli.bancodigital.entity.ContaEntity;
 import br.com.marcielli.bancodigital.entity.ContaPoupancaEntity;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
@@ -54,17 +55,52 @@ public class ContaCorrenteDao {
 		return null;
 	}
 	
-	public void adicionarContaCorrente(ContaCorrenteEntity contaCorrente) {
-		listaDeContasCorrente.add(contaCorrente);
-	}	
+//	public void adicionarContaCorrente(ContaCorrenteEntity contaCorrente) {
+//		
+//		if(listaDeContasCorrente.size() != 0) {
+//			for(ContaCorrenteEntity cc : listaDeContasCorrente) {
+//				if(cc.getCpfClienteDaConta().equals(contaCorrente.getCpfClienteDaConta())) {
+//					cc.setCategoriaDeConta(contaCorrente.getCategoriaDeConta());
+//			
+//				}
+//			}
+//		} 
+//			listaDeContasCorrente.add(contaCorrente);
+//			
+//	
+//	}	
 	
+	
+	
+	public boolean adicionarContaCorrente(ContaCorrenteEntity contaCorrente) {
+		
+		if(listaDeContasCorrente.isEmpty()) {
+			listaDeContasCorrente.add(contaCorrente);
+			return true;
+		}
+
+		for(ContaCorrenteEntity c : listaDeContasCorrente) {
+				if(!contaCorrente.getCpfClienteDaConta().equals(c.getCpfClienteDaConta())) {
+					listaDeContasCorrente.add(contaCorrente);
+				}
+			
+				return true;
+			}
+			
+		
+		return false;
+	}
+	
+
+	
+
 	public ArrayList<ContaCorrenteEntity> verContasCorrenteAdicionadas(){
 		return listaDeContasCorrente;
 	}
 
-	public ArrayList<ContaCorrenteEntity> getListaDeContasCorrente() {
-		return listaDeContasCorrente;
-	}
+//	public ArrayList<ContaCorrenteEntity> getListaDeContasCorrente() {
+//		return listaDeContasCorrente;
+//	}
 
 	public void setListaDeContasCorrente(ArrayList<ContaCorrenteEntity> listaDeContasCorrente) {
 		this.listaDeContasCorrente = listaDeContasCorrente;

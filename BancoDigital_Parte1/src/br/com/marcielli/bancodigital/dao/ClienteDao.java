@@ -3,6 +3,7 @@ package br.com.marcielli.bancodigital.dao;
 import java.util.ArrayList;
 
 import br.com.marcielli.bancodigital.entity.ClienteEntity;
+import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 
 public class ClienteDao {	
 	
@@ -43,7 +44,22 @@ public class ClienteDao {
 	}
 	
 	
-	
+	public boolean atualizarCategoriaDaConta(String cpfClienteDaConta, CategoriasDeConta categoriaDeConta) {
+		if(!listaDeClientes.isEmpty()) {
+			
+			for(ClienteEntity c : listaDeClientes) {
+				
+				if(cpfClienteDaConta.equals(c.getCpf())) {
+					c.setCategoriaDeConta(categoriaDeConta);
+				}
+				
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
 	
 	
 	

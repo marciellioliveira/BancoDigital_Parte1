@@ -16,7 +16,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 				
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;
-			setCategoriaDeConta(categoriaDeConta);
+			super.setCategoriaDeConta(categoriaDeConta);
 			this.acrescimoTaxaRendimento = 0.005f;
 			
 			this.taxaMensal = Math.pow(1+acrescimoTaxaRendimento, 1.0/12) - 1;
@@ -28,7 +28,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 		
 		if(saldo > 1000 && saldo <= 5000) {
 			categoriaDeConta = CategoriasDeConta.SUPER;
-			setCategoriaDeConta(categoriaDeConta);
+			super.setCategoriaDeConta(categoriaDeConta);
 			this.acrescimoTaxaRendimento = 0.007f;
 			
 			this.taxaMensal = Math.pow(1+acrescimoTaxaRendimento, 1.0/12) - 1;
@@ -40,7 +40,7 @@ public class ContaPoupancaEntity extends ContaEntity {
 		
 		if(saldo > 5000) {
 			categoriaDeConta = CategoriasDeConta.PREMIUM;
-			setCategoriaDeConta(categoriaDeConta);
+			super.setCategoriaDeConta(categoriaDeConta);
 			this.acrescimoTaxaRendimento = 0.009f;
 			
 			this.taxaMensal = Math.pow(1+acrescimoTaxaRendimento, 1.0/12) - 1;
@@ -49,6 +49,38 @@ public class ContaPoupancaEntity extends ContaEntity {
 			System.out.println("Categoria: "+categoriaDeConta);
 			System.out.println("Taxa de Rendimento Anual: "+acrescimoTaxaRendimento);
 		}
+	}
+	
+	public void atualizaCategoria(float valor, int enviaOuRecebe) {
+		CategoriasDeConta categoria;
+		
+		float total = 0;
+		//Valor que ta enviando ou recebendo do pix
+		
+		if(enviaOuRecebe == 1) { //enviaOuRecebe = 1 (Envia pix)
+			total = this.exibirSaldo() - valor;
+		}
+		
+		if(enviaOuRecebe == 2) { //enviaOuRecebe = 2 (Recebe Pix)
+			total = this.exibirSaldo() + valor;
+		}
+		
+		
+		if(total <= 1000) {
+			categoria = CategoriasDeConta.COMUM;
+			super.setCategoriaDeConta(categoria);
+		}
+		if(total > 1000 && total <= 5000) {
+			categoria = CategoriasDeConta.SUPER;
+			super.setCategoriaDeConta(categoria);		
+		}
+		
+		if(total > 5000) {
+			categoria = CategoriasDeConta.PREMIUM;
+			super.setCategoriaDeConta(categoria);
+			
+		}
+		
 	}
 
 	@Override

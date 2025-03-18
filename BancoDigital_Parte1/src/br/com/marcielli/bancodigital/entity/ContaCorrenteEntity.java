@@ -21,14 +21,16 @@ public class ContaCorrenteEntity extends ContaEntity {
 		//this.contasDoClientePorCpf = contasDoClientePorCpf;
 		
 		//System.out.println("ContaCorrenteEn tity: "+contasDoClientePorCpf);			
-		
+		this.taxaManutencaoMensal = setTaxaManutencaoMensal(saldo);
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;
 			super.setCategoriaDeConta(categoriaDeConta);
-			this.taxaManutencaoMensal = 12.00f;
+			//this.taxaManutencaoMensal = 12.00f;
+			
 			System.out.println("Saldo: "+saldo);
 			System.out.println("Categoria: "+categoriaDeConta);
-			System.out.println("Taxa de Manutenção Mensal: "+taxaManutencaoMensal);
+			System.out.println("Taxa de Manutenção Mensal: "+getTaxaManutencaoMensal());
+			//System.out.println("Taxa de Manutenção Mensal: "+taxaManutencaoMensal);
 			
 			
 			for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
@@ -46,7 +48,8 @@ public class ContaCorrenteEntity extends ContaEntity {
 			this.taxaManutencaoMensal = 8.00f;
 			System.out.println("Saldo: "+saldo);
 			System.out.println("Categoria: "+categoriaDeConta);
-			System.out.println("Taxa de Manutenção Mensal: "+taxaManutencaoMensal);
+			System.out.println("Taxa de Manutenção Mensal: "+getTaxaManutencaoMensal());
+			//System.out.println("Taxa de Manutenção Mensal: "+taxaManutencaoMensal);
 			
 			this.nomeClienteDonoDaConta = getNomeClienteDonoDaConta();
 		}
@@ -57,13 +60,47 @@ public class ContaCorrenteEntity extends ContaEntity {
 			this.taxaManutencaoMensal = 0f;
 			System.out.println("Saldo: "+saldo);
 			System.out.println("Categoria: "+categoriaDeConta);
-			System.out.println("Taxa de Manutenção Mensal: "+taxaManutencaoMensal);
+			System.out.println("Taxa de Manutenção Mensal: "+getTaxaManutencaoMensal());
+			//System.out.println("Taxa de Manutenção Mensal: "+taxaManutencaoMensal);
 			
 			this.nomeClienteDonoDaConta = getNomeClienteDonoDaConta();
 		}
 	}
 	
 	public ContaCorrenteEntity() {}		
+	
+	public void atualizaCategoria(float valor, int enviaOuRecebe) {
+		CategoriasDeConta categoria;
+		
+		float total = 0;
+		//Valor que ta enviando ou recebendo do pix
+		
+		if(enviaOuRecebe == 1) { //enviaOuRecebe = 1 (Envia pix)
+			total = this.exibirSaldo() - valor;
+		}
+		
+		if(enviaOuRecebe == 2) { //enviaOuRecebe = 2 (Recebe Pix)
+			total = this.exibirSaldo() + valor;
+		}
+		
+		
+		if(total <= 1000) {
+			categoria = CategoriasDeConta.COMUM;
+			super.setCategoriaDeConta(categoria);
+		}
+		if(total > 1000 && total <= 5000) {
+			categoria = CategoriasDeConta.SUPER;
+			super.setCategoriaDeConta(categoria);		
+		}
+		
+		if(total > 5000) {
+			categoria = CategoriasDeConta.PREMIUM;
+			super.setCategoriaDeConta(categoria);
+			
+		}
+		
+	}
+	
 
 	@Override
 	public float exibirSaldo() {		
@@ -80,54 +117,6 @@ public class ContaCorrenteEntity extends ContaEntity {
 		setSaldo(getSaldo() + valor);		
 	}
 		
-		
-		
-		
-		
-		
-		//		float saldoAntigoContaCorrente = 0;
-//		float novoSaldoContaCorrente = 0;			
-//		
-//		for(ClienteEntity t : cTransferir) {
-//		
-//			if(numContaTransf.equals(t.getContaCorrente().getNumeroDaConta())) {	
-//				
-//				System.err.println("numContaTransf: "+numContaTransf);
-//				System.err.println("t.getContaCorrente().getNumeroDaConta(): "+t.getContaCorrente().getNumeroDaConta());
-//			
-//					saldoAntigoContaCorrente = t.getContaCorrente().getSaldo();
-//					t.getContaCorrente().setSaldo(saldoAntigoContaCorrente - cTransferirValor);
-//					novoSaldoContaCorrente = t.getContaCorrente().exibirSaldo();
-//				
-//				
-//				
-//				
-//				
-//				
-//			}					
-//		}
-//		
-//		System.err.println("Saldo Antigo: "+saldoAntigoContaCorrente);
-//		System.err.println("Saldo Novo: "+novoSaldoContaCorrente);
-//		
-//		
-
-
-		
-		
-		
-		
-		
-	
-	
-	
-	public ArrayList<CartaoEntity> salvarCartoesDaConta() {
-		
-		return null;
-	}		
-
-	
-
 	public void descontarTaxaManutencaoMensal(ClienteEntity cliente) {	
 		ContaCorrenteService ccService = new ContaCorrenteService();
 		ccService.descontarTaxaManutencaoMensal(cliente);		
@@ -145,8 +134,20 @@ public class ContaCorrenteEntity extends ContaEntity {
 		return taxaManutencaoMensal;
 	}
 
-	public void setTaxaManutencaoMensal(float taxaManutencaoMensal) {
-		this.taxaManutencaoMensal = taxaManutencaoMensal;
+	public float setTaxaManutencaoMensal(float valor) {
+		
+		if(valor <= 1000) {		
+			this.taxaManutencaoMensal = 12.00f;		
+		}
+		
+		if(valor  > 1000 && valor  <= 5000) {			
+			this.taxaManutencaoMensal = 8.00f;			
+		}
+		
+		if(valor  > 5000) {		
+			this.taxaManutencaoMensal = 0f;		
+		}
+		return taxaManutencaoMensal;
 	}
 
 	@Override
@@ -154,7 +155,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 		String texto = "";
 		for(ClienteEntity cli : ClienteDao.getInstancia().buscarClientes()) {
 			if(cli.getCpf().equals(getCpfClienteDaConta())) {
-				texto = "Conta Corrente: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo de R$ "+exibirSaldo()+" e taxa de manutenção anual de "+getTaxaManutencaoMensal()+".";
+				texto = "Conta Corrente: - número "+getNumeroDaConta()+" do cpf "+getCpfClienteDaConta()+" cadastrada na "+getCategoriaDeConta().getTipoDaCategoria()+" com saldo de R$ "+exibirSaldo()+" e taxa de manutenção mensal de "+getTaxaManutencaoMensal()+".";
 			}
 		}		
 		return texto;		

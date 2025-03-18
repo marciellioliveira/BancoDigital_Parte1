@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
+import br.com.marcielli.bancodigital.dao.ClienteDao;
 import br.com.marcielli.bancodigital.helpers.CategoriasDeConta;
 
 public class ClienteEntity { //IDÉIA DO CLIENTE
@@ -27,7 +28,8 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 		this.nome = nome;
 		this.dataNascimento = dataNascimentoDATE;
 		this.endereco = endereco;
-		this.categoriaDeConta = categoriaDeConta;		
+	//	this.categoriaDeConta = categoriaDeConta;	
+		//this.categoriaDeConta = getCategoriaDeConta();
 	}
 	
 	public ClienteEntity(ContaCorrenteEntity contaCorrente) {
@@ -117,22 +119,41 @@ public class ClienteEntity { //IDÉIA DO CLIENTE
 		this.endereco = endereco;
 	}	
 	
-	public CategoriasDeConta getCategoriaContaCliente() {
-		return categoriaDeConta;
-	}
+//	public CategoriasDeConta getCategoriaContaCliente() {
+//		return categoriaDeConta;
+//	}
 	
 	public CategoriasDeConta getCategoriaDeConta() {
 		return categoriaDeConta;
 	}
 
 	public void setCategoriaDeConta(CategoriasDeConta categoriaDeConta) {
+		
 		this.categoriaDeConta = categoriaDeConta;
+	}
+	
+	public void setCategoriaDeConta(float valor) {
+		
+		if(valor <= 1000) {
+			this.categoriaDeConta = CategoriasDeConta.COMUM;		
+		}
+		
+		if(valor > 1000 && valor <= 5000) {
+			this.categoriaDeConta = CategoriasDeConta.SUPER;
+			
+		}
+		
+		if(valor > 5000) {
+			this.categoriaDeConta = CategoriasDeConta.PREMIUM;		
+		}
+		
+		
 	}
 
 	@Override
 	public String toString() {			
 		
-		return "NOME: " + nome + ", CPF: "+cpf+", DATA DE NASCIMENTO: " + dataNascimento + ", CATEGORIA DE CONTA: "+getCategoriaContaCliente()+"\nENDEREÇO "
+		return "NOME: " + nome + ", CPF: "+cpf+", DATA DE NASCIMENTO: " + dataNascimento + ", CATEGORIA DE CONTA: "+getCategoriaDeConta()+"\nENDEREÇO "
 				+ endereco;
 	}
 

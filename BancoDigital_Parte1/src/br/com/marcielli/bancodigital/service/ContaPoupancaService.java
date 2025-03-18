@@ -51,7 +51,10 @@ public class ContaPoupancaService {
 				
 				//Adicionando Conta Poupançã no Cliente			
 				c.setContaPoupanca(contaPoupanca);
+				c.setCategoriaDeConta(saldo);
 				
+				
+				clienteDao.atualizarCategoriaDaConta(cpfClienteDaConta, categoriaDeConta);
 				contaPoupancaDao.adicionarContaPoupanca(contaPoupanca);
 				System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" número "+numeroDaConta+" do cliente portador do cpf número "+cpfClienteDaConta+" foi cadastrada com sucesso!\n");				
 				
@@ -66,33 +69,26 @@ public class ContaPoupancaService {
 	}
 	
 	public boolean temContaPoupanca(String cpf) throws ExisteContaCadastradaException{
-		for(ClienteEntity cliente : clienteDao.buscarClientes()) {
+		//for(ClienteEntity cliente : clienteDao.buscarClientes()) {
 			
 			for(ContaPoupancaEntity contaPoupancaEnviar : contaPoupancaDao.verContasPoupancaAdicionadas()) {				
 			if(!cpf.equals(contaPoupancaEnviar.getCpfClienteDaConta())) {
 				throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta poupança cadastrada.");
 			}
 		}
-		}
+	//	}
 		
 		return true;
 	}
 
 	
-	public void enviarPix(String cpfEnviarPix, float valor) throws SemSaldoParaTransferenciaException {
+	public boolean enviarPix(String cpfEnviarPix, float valor) throws SemSaldoParaTransferenciaException {
 		
 		if(valor <= 0) {
 			throw new SemSaldoParaTransferenciaException("Você digitou um valor inválido para transferência");
 		}
 			
 		for(ClienteEntity clienteEnviar : clienteDao.buscarClientes()) {
-			
-//			for(ContaPoupancaEntity contaPoupancaEnviar : contaPoupancaDao.verContasPoupancaAdicionadas()) {				
-//				if(!cpfEnviarPix.equals(contaPoupancaEnviar.getCpfClienteDaConta())) {
-//					throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta poupança cadastrada.");
-//				}
-//			}
-			
 			
 			if(cpfEnviarPix.equals(clienteEnviar.getCpf())) {
 				
@@ -105,31 +101,28 @@ public class ContaPoupancaService {
 				}
 				
 				
-				clienteEnviar.getContaPoupanca().enviarPix(valor);				
+				clienteEnviar.getContaPoupanca().enviarPix(valor);	
+				clienteEnviar.getContaPoupanca().atualizaCategoria(valor, 1); //1 = envia pix
 				
 			}
 		}
-	
+	return true;
 	}
 	
-	public void receberPix(String cpfReceberPix, float valor) throws ExisteContaCadastradaException{	
+	public boolean receberPix(String cpfReceberPix, float valor) throws ExisteContaCadastradaException{	
 		
 		for(ClienteEntity clienteReceber : clienteDao.buscarClientes()) {
-			
-//			for(ContaPoupancaEntity contaPoupancaReceber : contaPoupancaDao.verContasPoupancaAdicionadas()) {				
-//				if(!cpfReceberPix.equals(contaPoupancaReceber.getCpfClienteDaConta())) {
-//					throw new ExisteContaCadastradaException("Você não pode fazer a transferência porque não tem uma conta poupança cadastrada.");
-//				}
-//			}
 			
 			if(cpfReceberPix.equals(clienteReceber.getCpf())) {				
 			
 				clienteReceber.getContaPoupanca().receberPix(valor);
+				clienteReceber.getContaPoupanca().atualizaCategoria(valor, 1); //1 = envia pix
 		
 			}
 		}		
+		
+		return true;
 	}
-	
 	
 	
 	
