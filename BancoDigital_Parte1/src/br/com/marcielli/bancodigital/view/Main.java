@@ -211,7 +211,7 @@ public class Main { //VIEW
 						System.out.println("Digite o cep - EX: 12630-000: ");	
 						cep = input.nextLine();	
 						clienteService.validarCep(cep);
-						endereco.setCep(cep);
+						
 						flagCep = false;	
 					} catch (TamanhoDoCepException e) {
 						System.err.println("\nErro: "+e.getMessage());	
@@ -226,13 +226,14 @@ public class Main { //VIEW
 					}	
 				}			
 				
+				endereco.setCep(cep);
 				
 				while(flagCidade) { 
 					try {						
 						System.out.println("\nDigite sua cidade: ");	
 						cidade = input.nextLine();	
 						clienteService.validarCidade(cidade);
-						endereco.setCidade(cidade);
+						
 						flagCidade = false;		
 					} catch (MesmosCaracteresEmStringException e) {
 						System.err.println("\nErro: "+e.getMessage());	
@@ -247,14 +248,14 @@ public class Main { //VIEW
 					}	
 				}
 				
-				
+				endereco.setCidade(cidade);
 				
 				while(flagEstado) { 
 					try {						
 						System.out.println("\nDigite seu estado: ");	
 						estado = input.nextLine();	
 						clienteService.validarCidade(estado);
-						endereco.setEstado(estado);
+						
 						flagEstado = false;		
 					} catch (MesmosCaracteresEmStringException e) {
 						System.err.println("\nErro: "+e.getMessage());	
@@ -269,14 +270,14 @@ public class Main { //VIEW
 					}	
 				}
 				
-				
+				endereco.setEstado(estado);
 				
 				while(flagRua) { 
 					try {						
 						System.out.println("\nDigite sua rua: ");	
 						rua = input.nextLine();	
 						clienteService.validarRua(rua);
-						endereco.setRua(rua);
+						
 						flagRua = false;		
 					} catch (MesmosCaracteresEmStringException e) {
 						System.err.println("\nErro: "+e.getMessage());	
@@ -291,14 +292,14 @@ public class Main { //VIEW
 					}	
 				}
 				
-				
+				endereco.setRua(rua);
 				
 				while(flagNumero) { 
 					try {						
 						System.out.println("\nDigite o número: ");	
 						numero = input.nextLine();	
 						clienteService.validarNumero(numero);
-						endereco.setNumero(numero);
+						
 						flagNumero = false;		
 					} catch (MesmosCaracteresEmStringException e) {
 						System.err.println("\nErro: "+e.getMessage());	
@@ -320,7 +321,7 @@ public class Main { //VIEW
 						System.out.println("\nDigite o bairro: ");	
 						bairro = input.nextLine();	
 						clienteService.validarBairro(bairro);
-						endereco.setBairro(bairro);
+						
 						flagBairro = false;		
 					} catch (MesmosCaracteresEmStringException e) {
 						System.err.println("\nErro: "+e.getMessage());	
@@ -335,12 +336,14 @@ public class Main { //VIEW
 					}	
 				}
 				
+				endereco.setBairro(bairro);
+				
 				while(flagComplemento) { 
 					try {						
 						System.out.println("\nDigite o complemento: ");	
 						complemento = input.nextLine();	
 						clienteService.validarComplemento(complemento);
-						endereco.setComplemento(complemento);
+						
 						flagComplemento = false;		
 					} catch (MesmosCaracteresEmStringException e) {
 						System.err.println("\nErro: "+e.getMessage());	
@@ -355,7 +358,11 @@ public class Main { //VIEW
 					}	
 				}
 				
-				if(clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco, categoriaCliente)) {
+				endereco.setComplemento(complemento);
+				
+				Endereco endereco1 = new Endereco(cep, cidade, estado, rua, numero, bairro, complemento);
+				
+				if(clienteService.adicionarClienteEntityEmDao(cpf, nome, dataNascimentoDATE, endereco1, categoriaCliente)) {
 					flagNome = true;
 					flagCpf = true;
 					flagAnoNascimento = true;
@@ -875,7 +882,7 @@ public class Main { //VIEW
 											for(ClienteEntity clienteReceber : clienteService.listarClientesDaoEmEntity()) {
 												if(clienteReceber.getCpf().equals(cpfParaReceber)) {
 													
-													System.err.println("Enviar PIX da Conta Corrente -> ");
+													System.out.println("Enviar PIX da Conta Corrente -> ");
 													
 													//Enviar Pix da Conta Corrente
 													contaCorrenteService.temContaCorrente(cpfParaTransferir);
@@ -912,7 +919,7 @@ public class Main { //VIEW
 											for(ClienteEntity clienteReceber : clienteService.listarClientesDaoEmEntity()) {
 												if(clienteReceber.getCpf().equals(cpfParaReceber)) {
 													
-													System.err.println("Enviar PIX da Conta Poupança -> ");
+													System.out.println("Enviar PIX da Conta Poupança -> ");
 													//Enviar pix da conta poupança
 													contaPoupancaService.temContaPoupanca(cpfParaTransferir);
 													System.out.println("\nConta de "+clienteEnviar.getNome());
@@ -960,7 +967,7 @@ public class Main { //VIEW
 //													System.out.println("Transferiu R$ "+cTransferirValor+" para "+clienteReceber.getNome()+" (PIX: "+cpfParaReceber+")");
 //													System.out.println("Saldo Novo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
 													
-													System.err.println("Receber PIX na Conta Corrente <- ");
+													System.out.println("Receber PIX na Conta Corrente <- ");
 													contaCorrenteService.temContaCorrente(cpfParaReceber);
 													System.out.println("\nConta de "+clienteReceber.getNome());
 													System.out.println("Saldo Antigo R$ "+clienteReceber.getContaCorrente().exibirSaldo());
@@ -995,7 +1002,7 @@ public class Main { //VIEW
 //													System.out.println("Saldo Novo R$ "+clienteEnviar.getContaCorrente().exibirSaldo());
 //													
 //													
-													System.err.println("Receber PIX na Conta Poupança <- ");
+													System.out.println("Receber PIX na Conta Poupança <- ");
 													contaPoupancaService.temContaPoupanca(cpfParaReceber);
 													System.out.println("\nConta de "+clienteReceber.getNome());
 													System.out.println("Saldo Antigo R$ "+clienteReceber.getContaPoupanca().exibirSaldo());
@@ -1062,7 +1069,7 @@ public class Main { //VIEW
 					
 	
 				}else {
-					System.err.println("Você precisa ter clientes e contas cadastradas para realizar essa ação!");
+					System.err.println("Você precisa ter clientes, mais de uma conta cadastrada e cartões emitidos para realizar essa ação!");
 				}
 				opcao = -1;
 			break;

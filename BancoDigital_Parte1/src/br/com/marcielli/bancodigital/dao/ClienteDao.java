@@ -19,14 +19,34 @@ public class ClienteDao {
         return instancia;
 	}
 	
-	public void adicionarCliente(ClienteEntity cliente) {
-//		for(ClienteEntity a : listaDeClientes) {
-//			if(cliente.getCpf().equals(a.getCpf())) {
-//				
-//			}
-//		}
-		listaDeClientes.add(cliente);
+//	public void adicionarCliente(ClienteEntity cliente) {
+//		listaDeClientes.add(cliente);
+//	}
+	
+	
+	public boolean adicionarCliente(ClienteEntity cliente) {
+		
+		if(listaDeClientes.isEmpty()) {
+			listaDeClientes.add(cliente);
+			return true;
+		}
+
+		for(ClienteEntity c : listaDeClientes) {
+			
+			if(!cliente.getCpf().equals(c.getCpf())) {
+				listaDeClientes.add(cliente);
+				return true;
+			}
+		}		
+		
+		return false;
 	}
+	
+	
+	
+	
+	
+	
 	
 	public ArrayList<ClienteEntity> verClientesCadastrados() {
 		return listaDeClientes;
@@ -72,15 +92,15 @@ public class ClienteDao {
 	
 	public boolean removerCliente(String cpf) {
 
-			for(ClienteEntity c : listaDeClientes) {
-				
-				if(cpf.equals(c.getCpf())) {
-					listaDeClientes.remove(c);
-					return true;
-				}
-			}		
+		for(ClienteEntity c : listaDeClientes) {
 			
-			return false;
+			if(cpf.equals(c.getCpf())) {
+				listaDeClientes.remove(c);
+				return true;
+			}
+		}		
+		
+		return false;
 	}
 
 

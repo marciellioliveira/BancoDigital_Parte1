@@ -48,38 +48,28 @@ public class ClienteService {
 		clienteEntity.setEndereco(endereco);
 		clienteEntity.setCategoriaDeConta(categoriaCliente);
 		
-		//Começando as contas com dados inicias 
-		
-//		CartaoDeCreditoEntity cartaoDeCreditoCad = new CartaoDeCreditoEntity("", nome, cpf, TiposDeConta.CONTA_CADASTRO,
-//				categoriaCliente, TipoDeCartao.CARTAO_CADASTRO, false, "0");
-//		clienteEntity.setCartaoDeCredito(cartaoDeCreditoCad);
-//		
-//		CartaoDeDebitoEntity cartaoDeDebitoCad = new CartaoDeDebitoEntity("", nome, cpf, TiposDeConta.CONTA_CADASTRO, categoriaCliente, TipoDeCartao.CARTAO_CADASTRO, false, "0");
-//		clienteEntity.setCartaoDeDebito(cartaoDeDebitoCad);
-		
-	
-		
-		if(clienteDao.buscarClientes().size() == 0) {
-			clienteDao.adicionarCliente(clienteEntity);
-			
+		if(clienteDao.adicionarCliente(clienteEntity)) {
 			return true;
 		}
-	
-		for(ClienteEntity cli : clienteDao.buscarClientes()) {
-			String cpfParaValidar = cli.getCpf().replace("-", "").replace(".", "");
-			if(!cpf.equals(cpfParaValidar)) {
-				clienteDao.adicionarCliente(clienteEntity);
-				return true;
-				
-				
-			}else {
-				return false;
-//				System.err.println("CPF: "+cpf);
-//				System.err.println("CLI GETCPF: "+cpfParaValidar);
-			}
-		}
-		
 		return false;
+//		if(clienteDao.buscarClientes().size() == 0) {
+//			clienteDao.adicionarCliente(clienteEntity);			
+//			return true;
+//		}
+//	
+//		for(ClienteEntity cli : clienteDao.buscarClientes()) {
+//			String cpfParaValidar = cli.getCpf().replace("-", "").replace(".", "");
+//			if(!cpf.equals(cpfParaValidar)) {
+//				clienteDao.adicionarCliente(clienteEntity);
+//				return true;
+//				
+//				
+//			}else {
+//				return false;
+//			}
+//		}
+//		
+//		return false;
 						
 	}
 	
