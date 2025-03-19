@@ -37,12 +37,7 @@ public class CartaoDeCreditoService {
 		
 			for(ClienteEntity c : clienteDao.buscarClientes()) {
 				if(cpfClienteEmitirCartao.equals(c.getCpf())) {					
-					
-					//Pegar o numero da conta contaEmitirCartao = contaVinculadaAoCartao
-					//Procurar se é corrente ou poupança
-					//Pegar a categoria dela
-					//colocar no lugar de c.getCategoriaDeConta() onde ta criando o cartão - pq sempre ta criando um cartão comum
-					
+						
 					if(!(contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao) == null)) {
 						categoriaConta = contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
 					}
@@ -50,74 +45,41 @@ public class CartaoDeCreditoService {
 					if(!(contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao) == null)) {
 						categoriaConta = contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
 					}
-					
-//					System.err.println("Conta Poupança: "+contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao));
-//					System.err.println("Conta Corrente: "+contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao));
-				//	System.err.println("GET Categoria>: "+categoriaConta);
-					
-					
-					
-//					System.err.println("Conta Poupança");
-//					contaPoupancaDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
-//					
-//					System.err.println("Conta Corrente");
-//					contaCorrenteDao.existeContaCadastradaNoCPF(cpfClienteEmitirCartao, contaVinculadaAoCartao);
-					
+
 					String numeroDoCartaoDeCredito = geraNumeroDoCartaoDeCredito();	
 					TiposDeConta tpc= buscarTipoDaContaDoCliente(cpfClienteEmitirCartao);
 					String numeroDaConta = buscarNumeroDaConta(cpfClienteEmitirCartao);
-					
-					//System.out.println("\nO Cartão de Crédito "+numeroDoCartaoDeCredito+" foi cadastrado no cpf "+cpfClienteEmitirCartao+" do titular:\n");	
-					
-					
 						
 					if(categoriaConta.equals("COMUM")) {
-						//System.err.println("1 : "+categoriaConta);
 						
 						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.COMUM, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
-						//Adicionando Cartão de Crédito no Cliente 		
+						
 						c.setCartaoDeCredito(cartaoDeCreditoNovo);
 						cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
 						
 					}
 					
 					if(categoriaConta.equals("SUPER")) {
-					//	System.err.println("2 : "+categoriaConta);
-						
+										
 						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.SUPER, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
-						//Adicionando Cartão de Crédito no Cliente 		
+					
 						c.setCartaoDeCredito(cartaoDeCreditoNovo);
 						cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
 						
 					}
 					
 					if(categoriaConta.equals("PREMIUM")) {
-						//System.err.println("3 : "+categoriaConta);
 						
 						CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
 								CategoriasDeConta.PREMIUM, TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
-						//Adicionando Cartão de Crédito no Cliente 		
+	
 						c.setCartaoDeCredito(cartaoDeCreditoNovo);
 						cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
 						
 					}
-					
 
-					
-//					CartaoDeCreditoEntity cartaoDeCreditoNovo = new CartaoDeCreditoEntity(numeroDoCartaoDeCredito, c.getNome(), cpfClienteEmitirCartao, tpc,
-//							c.getCategoriaDeConta(), TipoDeCartao.CARTAO_DE_CREDITO, true, senha, contaVinculadaAoCartao);
-					
-					//Adicionando Cartão de Crédito no Cliente 		
-//					c.setCartaoDeCredito(cartaoDeCreditoNovo);
-			
-					
-					
-					
-//					cartaoDeCreditoDao.adicionarCartaoDeCredito(cartaoDeCreditoNovo);
-					
-					
 					System.out.println("\n"+TipoDeCartao.CARTAO_DE_CREDITO.getDescricaoDoTipoDeCartao()+" número "+numeroDoCartaoDeCredito+" vinculado a conta "+contaVinculadaAoCartao+" do cliente portador do cpf número "+cpfClienteEmitirCartao+" foi cadastrado com sucesso!\n");
 					
 				}
@@ -155,9 +117,6 @@ public class CartaoDeCreditoService {
 			
 		}
 		
-	//	ArrayList<ClienteEntity> clienteTransferir = new ArrayList<ClienteEntity>();
-	//	ArrayList<ClienteEntity> clienteReceber = new ArrayList<ClienteEntity>();
-		
 		float saldoAntigo = 0;
 		float saldoNovo = 0;		
 		
@@ -171,18 +130,14 @@ public class CartaoDeCreditoService {
 					if(cTransferir.equals(contaC.getNumeroDaConta())) {
 						
 						
-						if(cliente.getContaCorrente().getNumeroDaConta().equals(contaC.getNumeroDaConta())) {
-				
-							//clienteTransferir.add(cliente);
-							
+						if(cliente.getContaCorrente().getNumeroDaConta().equals(contaC.getNumeroDaConta())) {				
+						
 							saldoAntigo = cliente.getContaCorrente().getSaldo();
 							saldoNovo = saldoAntigo - cTransferirValor;
 							
-							//cliente.getCartaoDeCredito().
 							System.err.println("Saldo antigo transferir: "+saldoAntigo);
 							System.err.println("Saldo novo transferir: "+saldoNovo);
-							
-							//
+
 						}
 						
 						
@@ -195,28 +150,18 @@ public class CartaoDeCreditoService {
 					
 							saldoAntigo = cliente.getContaCorrente().getSaldo();
 							saldoNovo = saldoAntigo + cTransferirValor;
-							//clienteReceber.add(cliente);
 							
-							//cliente.getContaCorrente().fazerTransferenciaViaTed(saldoAntigo, saldoNovo);
 							System.err.println("Saldo antigo receber: "+saldoAntigo);
 							System.err.println("Saldo novo receber: "+saldoNovo);
 						}
 						
 					}
 					
-				}
-					
-					//contaC.fazerTransferenciaViaTed(cTransferir, valorAntigo, valorNovo, cReceber);
-					
-					//contaC.fazerTransferenciaViaTed(cTransferir, clienteTransferir, escCartao, cTransferirValor, clienteReceber);					
+				}			
 			}
 		}
 	}
 	
-	
-	
-	
-
 
 	public void buscarCartoesDeCredito(String cpf) {	
 		
@@ -310,22 +255,4 @@ public class CartaoDeCreditoService {
 		return false;
 	}
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

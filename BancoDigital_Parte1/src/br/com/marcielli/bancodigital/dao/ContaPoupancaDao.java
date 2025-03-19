@@ -51,12 +51,30 @@ public class ContaPoupancaDao {
 		return null;
 	}
 	
+	public boolean adicionarContaPoupanca(ContaPoupancaEntity contaPoupanca) {
+		
+		if(listaDeContasPoupanca.isEmpty()) {
+			listaDeContasPoupanca.add(contaPoupanca);
+			return true;
+		}
+
+		for(ContaPoupancaEntity cp : listaDeContasPoupanca) {
+				if(!contaPoupanca.getCpfClienteDaConta().equals(cp.getCpfClienteDaConta())) {
+					listaDeContasPoupanca.add(contaPoupanca);
+				}
+			
+				return true;
+			}
+			
+		
+		return false;
+	}
 	
 	
-	public void adicionarContaPoupanca(ContaPoupancaEntity contaPoupanca) {
-		listaDeContasPoupanca.add(contaPoupanca);
-	}	
-	
+//	public void adicionarContaPoupanca(ContaPoupancaEntity contaPoupanca) {
+//		listaDeContasPoupanca.add(contaPoupanca);
+//	}	
+//	
 	public ArrayList<ContaPoupancaEntity> verContasPoupancaAdicionadas(){
 		return listaDeContasPoupanca;
 	}

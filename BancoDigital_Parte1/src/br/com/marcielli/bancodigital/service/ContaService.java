@@ -27,8 +27,7 @@ public class ContaService {
 		for(ContaCorrenteEntity contaC : contaCorrenteDao.verContasCorrenteAdicionadas()) {
 				
 			if(conta.equals(contaC.getNumeroDaConta())) { //Conta a transferir é conta corrente
-				//System.err.println("Conta a transferir é Conta Corrente: "+cTransferir);
-				//System.err.println("chamar a função da conta corrente service aqui ");
+
 				return true;
 			}
 			
@@ -44,8 +43,7 @@ public class ContaService {
 		for(ContaPoupancaEntity contaP : contaPoupancaDao.verContasPoupancaAdicionadas()) {
 			
 			if(conta.equals(contaP.getNumeroDaConta())) { //Conta a receber é conta poupança
-				//System.err.println("Conta a receber é Conta Poupança: "+cTransferir);
-				//System.err.println("chamar a função da conta poupança service aqui");
+
 				return true;
 			}	
 			

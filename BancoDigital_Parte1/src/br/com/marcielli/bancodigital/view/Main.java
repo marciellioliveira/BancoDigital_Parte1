@@ -401,12 +401,7 @@ public class Main { //VIEW
 					
 					System.out.println();					
 				}	
-				
-//				for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
-//
-//					
-//					System.out.println("Cliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaDeConta()+"\nEndereço: "+contasCliente.getEndereco()+"\n");
-//				}
+
 			break;
 			case 2:
 				System.out.println("\nLISTAR");
@@ -435,29 +430,7 @@ public class Main { //VIEW
 						
 						System.out.println();					
 					}	
-				
-				
-//				for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
-//					System.out.println("Cliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaDeConta().getTipoDaCategoria()+"\nEndereço: "+contasCliente.getEndereco());
-//					if(!(contasCliente.getContaCorrente() == null)) {
-//						System.out.println(contasCliente.getContaCorrente());
-//					} 
-//					
-//					if(!(contasCliente.getContaPoupanca() == null)) {
-//						System.out.println(contasCliente.getContaPoupanca());
-//					} 
-//					
-//					if(!(contasCliente.getCartaoDeCredito() == null)) {
-//						System.out.println(contasCliente.getCartaoDeCredito());
-//					}
-//					
-//					if(!(contasCliente.getCartaoDeDebito() == null)) {
-//						System.out.println(contasCliente.getCartaoDeDebito());
-//					}
-//					
-//					System.out.println();
-//					
-//				}
+
 				}else {
 					System.err.println("Você precisa ter um cliente cadastrado para realizar essa ação!");
 				}
@@ -491,9 +464,6 @@ public class Main { //VIEW
 						
 						System.out.println();					
 					}
-//					for(ClienteEntity contasCliente : clienteService.listarClientesDaoEmEntity()) {
-//						System.out.println("Cliente: "+contasCliente.getNome()+"\nCPF: "+contasCliente.getCpf()+"\nData de Nascimento: "+contasCliente.getDataNascimento()+"\nCategoria da Conta: "+contasCliente.getCategoriaDeConta()+"\nEndereço: "+contasCliente.getEndereco()+"\n");
-//					}
 					
 					System.out.println("Digite o CPF do cliente que deseja remover: ");
 					String removerCPF = input.next();
@@ -723,15 +693,12 @@ public class Main { //VIEW
 					} 									
 					
 					if(!(contasCliente.getCartaoDeCredito() == null)) {		
-//						System.err.println("MAIN");
-//						System.err.println("Cartão de Crédito numero conta vinculada: "+contasCliente.getCartaoDeCredito().getNumeroContaVinculada());
-//						System.err.println("Cartão de Crédito cpf cliente: "+contasCliente.getCartaoDeCredito().getCpfDoDono());
-						
+
 						cartaoDeCreditoService.buscarCartoesDeCredito(contasCliente.getCpf());
 					}
 					
 					if(!(contasCliente.getCartaoDeDebito() == null)) {						
-					//	System.err.println("Categoria da Contta main debito: "+contasCliente.getCategoriaDeConta());
+
 						cartaoDeDebitoService.buscarCartoesDeDebito(contasCliente.getCpf());
 					}
 

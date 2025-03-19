@@ -25,7 +25,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 		if(saldo <= 1000) {
 			categoriaDeConta = CategoriasDeConta.COMUM;
 			super.setCategoriaDeConta(categoriaDeConta);
-			//this.taxaManutencaoMensal = 12.00f;
+		//	this.taxaManutencaoMensal = 12.00f;
 			
 			System.out.println("Saldo: "+saldo);
 			System.out.println("Categoria: "+categoriaDeConta);
@@ -45,7 +45,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 		if(saldo > 1000 && saldo <= 5000) {
 			categoriaDeConta = CategoriasDeConta.SUPER;
 			super.setCategoriaDeConta(categoriaDeConta);
-			this.taxaManutencaoMensal = 8.00f;
+			//this.taxaManutencaoMensal = 8.00f;
 			System.out.println("Saldo: "+saldo);
 			System.out.println("Categoria: "+categoriaDeConta);
 			System.out.println("Taxa de Manutenção Mensal: "+getTaxaManutencaoMensal());
@@ -57,7 +57,7 @@ public class ContaCorrenteEntity extends ContaEntity {
 		if(saldo > 5000) {
 			categoriaDeConta = CategoriasDeConta.PREMIUM;
 			super.setCategoriaDeConta(categoriaDeConta);
-			this.taxaManutencaoMensal = 0f;
+			//this.taxaManutencaoMensal = 0f;
 			System.out.println("Saldo: "+saldo);
 			System.out.println("Categoria: "+categoriaDeConta);
 			System.out.println("Taxa de Manutenção Mensal: "+getTaxaManutencaoMensal());
@@ -69,36 +69,33 @@ public class ContaCorrenteEntity extends ContaEntity {
 	
 	public ContaCorrenteEntity() {}		
 	
-	public void atualizaCategoria(float valor, int enviaOuRecebe) {
+	public void atualizaCategoria(float valorAntigo, float valor, int enviaOuRecebe) {
 		CategoriasDeConta categoria;
 		
-		float total = 0;
+		float total = (float) 0.0;
 		//Valor que ta enviando ou recebendo do pix
 		
 		if(enviaOuRecebe == 1) { //enviaOuRecebe = 1 (Envia pix)
-			total = this.exibirSaldo() - valor;
+			total += valorAntigo - valor;
+		} else if (enviaOuRecebe == 2) { //enviaOuRecebe = 2 (Recebe Pix)
+			total += valorAntigo + valor;
 		}
-		
-		if(enviaOuRecebe == 2) { //enviaOuRecebe = 2 (Recebe Pix)
-			total = this.exibirSaldo() + valor;
-		}
-		
-		
+					
 		if(total <= 1000) {
 			categoria = CategoriasDeConta.COMUM;
-			super.setCategoriaDeConta(categoria);
-		}
-		if(total > 1000 && total <= 5000) {
-			categoria = CategoriasDeConta.SUPER;
-			super.setCategoriaDeConta(categoria);		
-		}
-		
-		if(total > 5000) {
-			categoria = CategoriasDeConta.PREMIUM;
 			super.setCategoriaDeConta(categoria);
 			
 		}
 		
+		if(total > 1000 && total <= 5000) {
+			categoria = CategoriasDeConta.SUPER;
+			super.setCategoriaDeConta(categoria);
+		}
+		
+		if(total > 5000) {
+			categoria = CategoriasDeConta.PREMIUM;
+			super.setCategoriaDeConta(categoria);			
+		}			
 	}
 	
 
@@ -110,11 +107,13 @@ public class ContaCorrenteEntity extends ContaEntity {
 	@Override
 	public void enviarPix(float valor) {		
 		setSaldo(getSaldo() - valor); 
+		//atualizaCategoria(valor, 1);
 	}
 	
 	@Override
 	public void receberPix(float valor) {
 		setSaldo(getSaldo() + valor);		
+		//atualizaCategoria(valor, 2);
 	}
 		
 	public void descontarTaxaManutencaoMensal(ClienteEntity cliente) {	
@@ -149,6 +148,39 @@ public class ContaCorrenteEntity extends ContaEntity {
 		}
 		return taxaManutencaoMensal;
 	}
+	
+	public float atualizaTaxaManutencaoMensal(float valorAntigo, float valor, int enviaOuRecebe) {
+			
+		float total = (float) 0.0;
+		//Valor que ta enviando ou recebendo do pix
+		
+		if(enviaOuRecebe == 1) { //enviaOuRecebe = 1 (Envia pix)
+			total += valorAntigo - valor;
+		}
+		
+		if(enviaOuRecebe == 2) { //enviaOuRecebe = 2 (Recebe Pix)
+			total += valorAntigo + valor;
+		}
+		
+		
+		if(total <= 1000) {
+			this.taxaManutencaoMensal = 12.00f;		
+		}
+		if(total > 1000 && total <= 5000) {
+			this.taxaManutencaoMensal = 8.00f;			
+		}
+		
+		if(total > 5000) {
+			this.taxaManutencaoMensal = 0f;	
+		}
+		
+		return taxaManutencaoMensal;
+	}
+	
+	
+	
+	
+	
 
 	@Override
 	public String toString() {

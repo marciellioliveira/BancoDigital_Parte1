@@ -32,8 +32,7 @@ import br.com.marcielli.bancodigital.helpers.TipoDeCartao;
 import br.com.marcielli.bancodigital.helpers.TiposDeConta;
 
 public class ClienteService {
-	
-	//private ClienteDao clienteDao = new ClienteDao();	
+
 	ClienteDao clienteDao = ClienteDao.getInstancia();
 	
 	@SuppressWarnings("finally")
@@ -52,61 +51,12 @@ public class ClienteService {
 			return true;
 		}
 		return false;
-//		if(clienteDao.buscarClientes().size() == 0) {
-//			clienteDao.adicionarCliente(clienteEntity);			
-//			return true;
-//		}
-//	
-//		for(ClienteEntity cli : clienteDao.buscarClientes()) {
-//			String cpfParaValidar = cli.getCpf().replace("-", "").replace(".", "");
-//			if(!cpf.equals(cpfParaValidar)) {
-//				clienteDao.adicionarCliente(clienteEntity);
-//				return true;
-//				
-//				
-//			}else {
-//				return false;
-//			}
-//		}
-//		
-//		return false;
-						
+					
 	}
-	
-	
-	
-	
-	//Ver qual conta é, corrente ou poupança
-	//Se for corrente, envia pra corrente
-	//se for poupança, envia pra poupança
-	
 	
 	public ArrayList<ClienteEntity> verClientesCadastradosDao() {
 		return clienteDao.verClientesCadastrados();
 	}
-	
-	
-	
-	
-	
-	//public void verExisteClienteComCpf(String cpf) {	
-		
-		
-		//System.err.println("CPF "+cpf);
-//		for(ClienteEntity c : clienteDao.buscarClientes()) {
-//			if(cpf.equals(c.getCpf())) {
-//				System.err.println("CPF: "+cpf);
-//				System.err.println("C CPF: "+c.getCpf());
-//			}
-//		}
-//		System.err.println("Teste");
-		
-		//return clienteDao.buscarClienteComCpfCadastrado(cpf);	
-	//}
-	
-//	public ClienteEntity verExisteClienteComCpf(String cpf) {		
-//		return clienteDao.buscarClienteComCpfCadastrado(cpf);	
-//	}
 	
 	public boolean clienteExisteNoDao(String cpf) {
 		if(clienteDao.temCpf(cpf)) {			
@@ -157,10 +107,6 @@ public class ClienteService {
 		
 		return contasDoCliente;
 	}
-	
-	
-	
-	
 	
 	public void validarCpfSemAutenticar(String cpf) throws TamanhoDoCpfException, ValidarUltimosNumerosDoCpfException, CpfComNumerosIguaisException  {
 		
@@ -375,9 +321,7 @@ public class ClienteService {
 	//Validar CEP
 	
 	public void validarCep(String cep) throws TamanhoDoCepException, CpfComNumerosIguaisException {
-	
-			//cep = cep.replace(".", "").replace("-", "");
-		
+			
 		if(!cep.contains("-")) {
 			if(cep.length() != 9) {				
 				throw new TamanhoDoCepException("Você digitou um cep com "+cep.length()+" caracteres. Digite um CEP com 9 caracteres com traço no final.");		
@@ -387,11 +331,6 @@ public class ClienteService {
 		if(cep.length() != 9) {				
 			throw new TamanhoDoCepException("Você digitou um cep com "+cep.length()+" caracteres. Digite um CEP com 9 caracteres com traço no final.");		
 		}	
-			
-//			if(cep.length() != 8) {				
-//				throw new TamanhoDoCepException("Você digitou um cep com "+cep.length()+" caracteres. Digite um CEP com 8 caracteres sem caracteres especiais.");		
-//			}	
-			
 			
 			int numOcorrencias = 1;		
 			HashMap<Character, Integer> findDuplicated = new HashMap<Character, Integer>();

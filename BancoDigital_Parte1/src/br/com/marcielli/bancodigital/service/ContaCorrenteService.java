@@ -59,23 +59,15 @@ public class ContaCorrenteService {
 			System.out.println("\nA conta número "+numeroDaConta+" foi cadastrada no cpf "+cpfClienteDaConta+" do titular:\n");			
 			
 			ContaCorrenteEntity contaCorrente = new ContaCorrenteEntity(cpfClienteDaConta, saldo, tipoDeConta, categoriaDeConta, numeroDaConta);	
-			
-			//Adicionando Conta Corrente no Cliente			
+				
 			c.setContaCorrente(contaCorrente);
 			c.setCategoriaDeConta(saldo);
 		
 			clienteDao.atualizarCategoriaDaConta(cpfClienteDaConta, categoriaDeConta);
 			contaCorrenteDao.adicionarContaCorrente(contaCorrente);
 			
-			
-			
-			
 			System.out.println("\n"+tipoDeConta.getDescricaoDaConta()+" número "+numeroDaConta+" do cliente portador do cpf número "+cpfClienteDaConta+" foi cadastrada com sucesso!\n");			
 			
-			
-			
-			
-			//descontarTaxaManutencaoMensal(c);
 		} 
 		
 	}
@@ -116,9 +108,11 @@ public class ContaCorrenteService {
 					throw new SemSaldoParaTransferenciaException("Você não tem saldo suficiente para fazer essa transferência.");
 				}
 								
-				clienteEnviar.getContaCorrente().enviarPix(valor);	
-				clienteEnviar.getContaCorrente().atualizaCategoria(valor, 1); //1 = envia pix
-
+				float valorEnviaAntigo = clienteEnviar.getContaCorrente().getSaldo();
+			
+				clienteEnviar.getContaCorrente().atualizaCategoria(valorEnviaAntigo, valor, 1); //1 = envia pix
+				clienteEnviar.getContaCorrente().atualizaTaxaManutencaoMensal(valorEnviaAntigo, valor, 1); 
+				clienteEnviar.getContaCorrente().enviarPix(valor);			
 			}
 		}
 		
@@ -132,9 +126,10 @@ public class ContaCorrenteService {
 
 			if(cpfReceberPix.equals(clienteReceber.getCpf())) {				
 			
+				float valorRecebeAntigo = clienteReceber.getContaCorrente().getSaldo();
+				clienteReceber.getContaCorrente().atualizaCategoria(valorRecebeAntigo, valor, 2); //2 = envia pix
+				clienteReceber.getContaCorrente().atualizaTaxaManutencaoMensal(valorRecebeAntigo, valor, 2); 
 				clienteReceber.getContaCorrente().receberPix(valor);
-				clienteReceber.getContaCorrente().atualizaCategoria(valor, 2); //2 = envia pix
-				
 			}
 		}	
 		
@@ -157,8 +152,7 @@ public class ContaCorrenteService {
 			TiposDeConta contaPoupanca;
 			contaPoupanca = TiposDeConta.CONTA_POUPANCA;
 		}
-		
-		
+			
 
 	}
 	
@@ -178,10 +172,6 @@ public class ContaCorrenteService {
 		if(!clienteDao.temCpf(cpf)) {
 			throw new CpfJaCadastradoException("O "+cpf+" não está vinculado a nenhum cliente.\nAdicione um cliente e cadastre o CPF nele para criar uma conta.\n");
 		}
-		
-//		if(clienteDao.temCpf(cpf)) {
-//			throw new CpfJaCadastradoException("O cpf "+cpf+" já está cadastrado com outro usuário.\nAdicione um CPF único para cada cliente.\n");
-//		}
 		
 		//Validar ultimos numeros do cpf
 		int valor = 0;

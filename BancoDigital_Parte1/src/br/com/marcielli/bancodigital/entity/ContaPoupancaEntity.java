@@ -51,36 +51,33 @@ public class ContaPoupancaEntity extends ContaEntity {
 		}
 	}
 	
-	public void atualizaCategoria(float valor, int enviaOuRecebe) {
+	public void atualizaCategoria(float valorAntigo, float valor, int enviaOuRecebe) {
 		CategoriasDeConta categoria;
 		
-		float total = 0;
+		float total = (float) 0.0;
 		//Valor que ta enviando ou recebendo do pix
 		
 		if(enviaOuRecebe == 1) { //enviaOuRecebe = 1 (Envia pix)
-			total = this.exibirSaldo() - valor;
+			total += valorAntigo - valor;
+		} else if (enviaOuRecebe == 2) { //enviaOuRecebe = 2 (Recebe Pix)
+			total += valorAntigo + valor;
 		}
-		
-		if(enviaOuRecebe == 2) { //enviaOuRecebe = 2 (Recebe Pix)
-			total = this.exibirSaldo() + valor;
-		}
-		
-		
+					
 		if(total <= 1000) {
 			categoria = CategoriasDeConta.COMUM;
-			super.setCategoriaDeConta(categoria);
-		}
-		if(total > 1000 && total <= 5000) {
-			categoria = CategoriasDeConta.SUPER;
-			super.setCategoriaDeConta(categoria);		
-		}
-		
-		if(total > 5000) {
-			categoria = CategoriasDeConta.PREMIUM;
 			super.setCategoriaDeConta(categoria);
 			
 		}
 		
+		if(total > 1000 && total <= 5000) {
+			categoria = CategoriasDeConta.SUPER;
+			super.setCategoriaDeConta(categoria);
+		}
+		
+		if(total > 5000) {
+			categoria = CategoriasDeConta.PREMIUM;
+			super.setCategoriaDeConta(categoria);			
+		}			
 	}
 
 	@Override
@@ -106,10 +103,23 @@ public class ContaPoupancaEntity extends ContaEntity {
 	public float getAcrescimoTaxaRendimento() {
 		return acrescimoTaxaRendimento;
 	}
-
+	
 	public void setAcrescimoTaxaRendimento(float acrescimoTaxaRendimento) {
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		this.acrescimoTaxaRendimento = acrescimoTaxaRendimento;
 	}
+
+//	public void setAcrescimoTaxaRendimento(float acrescimoTaxaRendimento) {
+//		this.acrescimoTaxaRendimento = acrescimoTaxaRendimento;
+//	}
 	
 	
 
