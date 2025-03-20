@@ -45,7 +45,6 @@ Você montou uma startup que desenvolve softwares para clientes. Seu primeiro cl
 
 ### Status do Projeto:
 🚧 Projeto em Andamento 🚧
-- 
 
 ### Tecnologia/Linguagem
 O sistema utiliza a seguinte tecnologia/linguagem:
