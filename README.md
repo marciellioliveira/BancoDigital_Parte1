@@ -1,12 +1,12 @@
 # BancoDigital_Parte1
-# Projeto Final do Bootcamp Educ360° - Parte 1.
-# Desenvolvimento de um Banco Digital em java para console e sem persistência de dados.
-Apresentação do Projeto no Youtube: https://www.youtube.com/watch?v=jwnL02cOuic&ab_channel=TecGirl
+
+
 
 ### O Projeto
 
 Você montou uma startup que desenvolve softwares para clientes. Seu primeiro cliente é de uma instituição financeira e quer um software na web que seja capaz de cadastrar dados de seus clientes como CPF, Nome, Data de nascimento e Endereço. Os clientes podem ser subdivididos em três categorias: Comum, Super e Premium e podem abrir contas de dois tipos: corrente e poupança, devendo estas realizar ações básicas, como exibir saldo e fazer transferências via Pix. A conta corrente possui uma taxa mensal de manutenção que deve ser descontada a cada mês e a conta poupança deve fazer o acréscimo conforme a taxa de rendimento no momento.
-
+- **Apresentação do Projeto no Youtube:** https://www.youtube.com/watch?v=jwnL02cOuic&ab_channel=TecGirl
+  
 ### Regras de Negócio
 
 1. **Cadastro de Clientes:** O sistema deve permitir o cadastro de novos clientes com CPF, nome, data de nascimento e endereço, classificando-os em categorias Comum, Super ou Premium.
