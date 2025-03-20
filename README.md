@@ -37,7 +37,9 @@ Você montou uma startup que desenvolve softwares para clientes. Seu primeiro cl
 2. Limite de Crédito.
    
 - Deve ser definido com base no cliente, 1 mil (COMUM), 5 mil (SUPER), 10 mil (PREMIUM).
-- Taxa de Utilização: 5% sobre o total gasto no mês, aplicável apenas se o total de gastos exceder 80% do limite de crédito. ### Seguros de Cartão de Crédito:
+- Taxa de Utilização: 5% sobre o total gasto no mês, aplicável apenas se o total de gastos exceder 80% do limite de crédito.
+
+### Seguros de Cartão de Crédito:
 **--- Seguro Viagem:** Gratuito para clientes Premium; opcional para clientes Comum e Super, com taxa de R$ 50,00 por mês.
 **--- Seguro de Fraude:** Cobertura automática para todos os cartões, com um valor de apólice base de R$ 5.000,00.
 
