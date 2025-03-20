@@ -1,6 +1,6 @@
 # BancoDigital_Parte1
-Projeto Final do Educ360° Parte 1 - Desenvolvimento de um Banco Digital em java para console e sem persistência de dados.
-
+# Projeto Final do Bootcamp Educ360° - Parte 1.
+# Desenvolvimento de um Banco Digital em java para console e sem persistência de dados.
 Apresentação do Projeto no Youtube: https://www.youtube.com/watch?v=jwnL02cOuic&ab_channel=TecGirl
 
 ### O Projeto
@@ -30,16 +30,58 @@ Você montou uma startup que desenvolve softwares para clientes. Seu primeiro cl
 
 1. **Conta Corrente:**
    - **Taxa de Manutenção Mensal:** R$ 12,00 para clientes Comuns, R$ 8,00 para clientes Super e isenta para clientes Premium.
-2. **Conta Poupança:** - **Taxa de Rendimento Anual:** 0,5% ao ano para clientes Comuns, 0,7% ao ano para clientes Super, e 0,9% ao ano para clientes Premium. O rendimento é calculado mensalmente usando a fórmula do juro composto, baseando-se no saldo presente na conta no último dia do mês.
+2. **Conta Poupança:**:**Taxa de Rendimento Anual:** 0,5% ao ano para clientes Comuns, 0,7% ao ano para clientes Super, e 0,9% ao ano para clientes Premium. O rendimento é calculado mensalmente usando a fórmula do juro composto, baseando-se no saldo presente na conta no último dia do mês.
 
 ### Cartões: 
+1. Cartão de Crédito,
+2. Limite de Crédito.
+   
+- Deve ser definido com base no cliente, 1 mil (COMUM), 5 mil (SUPER), 10 mil (PREMIUM).
+- Taxa de Utilização: 5% sobre o total gasto no mês, aplicável apenas se o total de gastos exceder 80% do limite de crédito. ### Seguros de Cartão de Crédito:
+**--- Seguro Viagem:** Gratuito para clientes Premium; opcional para clientes Comum e Super, com taxa de R$ 50,00 por mês.
+**--- Seguro de Fraude:** Cobertura automática para todos os cartões, com um valor de apólice base de R$ 5.000,00.
 
-- **Cartão de Crédito:** e **Limite de Crédito:**
-Deve ser definido com base no cliente, 1 mil (COMUM), 5 mil (SUPER), 10 mil (PREMIUM). 
-- **Taxa de Utilização:** 5% sobre o total gasto no mês, aplicável apenas se o total de gastos exceder 80% do limite de crédito.
-
-### Seguros de Cartão de Crédito:
-- **Seguro Viagem:** Gratuito para clientes Premium; opcional para clientes Comum e Super, com taxa de R$ 50,00 por mês.
-- **Seguro de Fraude:** Cobertura automática para todos os cartões, com um valor de apólice base de R$ 5.000,00.
-
+### Status do Projeto:
+🚧 Projeto em Andamento 🚧
 - 
+
+### Tecnologia/Linguagem
+O sistema utiliza a seguinte tecnologia/linguagem:
+- Java 21
+
+### Objetivos
+O objetivo principal do sistema é fornecer uma aplicação backend simples para gerenciamento de um banco digital.
+
+### Funcionalidades
+**Menu Principal**
+- Cadastro de Cliente
+- Listar Clientes
+- Remover Clientes
+- Abrir conta
+- Listar Cartões
+- Listar Contas
+- Listar taxas/descontos
+- Emitir Cartão
+- Fazer transferência
+- Sair
+- 
+**Cadastro de Cliente - Validações**
+- Campos vazios
+- Data de Nascimento
+- CPF com formatação e validação
+- CEP com formatação
+- Se cliente já possui cadastro
+
+**Abertura de conta**
+- Verificação de Cadastro do cliente
+- Abertura Conta Corrente / Poupança
+
+### Como executar
+- Instale o Eclipse/NetBeans e/ou programa de sua preferência e rodar o programa.
+
+### 1. Clone o Repositório:
+- Clone o repositório no seu diretório local,
+- git clone marciellioliveira/BancoDigital_Parte1
+
+### Dependências
+- Esse projeto não possui dependências.
